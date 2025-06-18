@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello there</h1>
+    <form action="/upload_file" method="POST" enctype="multipart/form-data" id="form">
+        <label for="file">Upload file</label>
+        <input
+            type="file"
+            id="file"
+            name="file"
+            accept=".csv, .xlsx, .xls"
+            onchange=show_second()
+            >
+        <input
+            type="hidden"
+            id="hidden"
+            name="file"
+            accept=".csv, .xlsx, .xls"
+            >
+        <button type="submit">Send</button>
+    </form>
+
+    <script src="/js/upload_files.js"></script>
+</body>
+</html>

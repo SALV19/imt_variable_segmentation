@@ -1,15 +1,24 @@
 import express, { Request, Response } from "express";
-import path from "path"
-import { fileURLToPath } from "url";
 import * as dotenv from "dotenv"
+import {path, __dirname} from "./utils/import_path"
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 dotenv.config({path: path.join(__dirname, "../../.env")})
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, "./public")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.set("view engine", "ejs")
+app.set("views", [
+    path.join(__dirname, "../../frontend/")
+])
+
 const port = process.env.PORT || 3000;
+if (!process.env.PORT) {
+    console.log("ENV not loaded")
+}
 
 import routes from "./routes/basic.route"
 
