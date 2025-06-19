@@ -1,21 +1,22 @@
-import * as fs from "fs"
-import {convert_to_csv} from "../utils/xlsx_to_csv"
-import {path, __dirname} from "../utils/import_path"
+import * as Aux from "../components/home_components"
 
+// GET
 export function get_home(req, res) {
 	res.render("home");
 }
 
+// POST
 export function upload_file(req, res) {
-	console.log("Success!");
+// Ingestion layer
+	// Convert files to .csv
+	Aux.verify_xlsx(req);
+	
+	// Process csv files into json objects
+	const measurements: Aux.IRI = Aux.process_data(req.files);
+	console.log(measurements)
 
-	for (let i = 0; i < Array(req.files).length; i++) {
-		if (req.files[i].filename.split(".")[1] == "xlsx") {
-			const path = req.files[i].path
-			req.files[i] = convert_to_csv(req.files[i])
-			fs.rmSync(path)
-		}
-	}
+	// Auxiliar.delete_temp_files(req)
 
+// Transformation layer
 	res.send("Success!")
 }

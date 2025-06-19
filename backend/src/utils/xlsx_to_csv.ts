@@ -10,9 +10,10 @@ export function convert_to_csv(file) {
   const csvData = XLSX.utils.sheet_to_csv(worksheet);
 
   const new_name = file.filename.split(".")[0] + ".csv"
-  const filename = path.join(__dirname, "../uploads/", new_name)
+  const filename = path.join(__dirname, "/uploads/", new_name)
 
   fs.writeFileSync(filename, csvData)
   file = {...file, filename: new_name, path: filename}
+  
   return file
 }

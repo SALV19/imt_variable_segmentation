@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "npx tsx --watch src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Starting test:\" && npx tsx src/test/process_data.test.ts "
   },
   "keywords": [],
   "author": "",
