@@ -1,6 +1,6 @@
 import {Router} from "express"
 import multer from "multer"
-import {path, __dirname} from "../utils/import_path"
+import {path, __dirname} from "../utils/import_path.ts"
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage: storage})
 
-import * as home from "../controller/home"
+import * as home from "../controller/home.controller.ts"
 
 const routes = Router()
 

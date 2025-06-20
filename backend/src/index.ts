@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import * as dotenv from "dotenv"
-import {path, __dirname} from "./utils/import_path"
+import * as path from "path"
 
 dotenv.config({path: path.join(__dirname, "../../.env")})
 
@@ -20,7 +20,7 @@ if (!process.env.PORT) {
     console.log("ENV not loaded")
 }
 
-import routes from "./routes/basic.route"
+import routes from "./routes/basic.route.ts"
 
 app.use("/", routes)
 

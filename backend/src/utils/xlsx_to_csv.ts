@@ -1,9 +1,8 @@
 import * as XLSX from "xlsx"
 import * as fs from "fs"
-import {path, __dirname} from "../utils/import_path"
+import * as path from "path"
 
-
-export function convert_to_csv(file) {
+export function convert_to_csv(file: Express.Multer.File) {
   const fileBuffer = fs.readFileSync(file.path)
   const workbook = XLSX.read(fileBuffer, {type: "array"})
   const worksheet = workbook.Sheets[workbook.SheetNames[0]];

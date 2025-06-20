@@ -1,38 +1,48 @@
 import * as fs from "fs"
-import {convert_to_csv} from "../utils/xlsx_to_csv"
-import {__dirname} from "../utils/import_path"
+import {convert_to_csv} from "../utils/xlsx_to_csv.ts"
+import "path"
+import { Request } from "express"
 
 // TypeStructure for IRI
 export interface IRI {
-	id: string,
-	measurements: number[],
-  distance: number,
-	iri: number[],
-	error: object,
+	id: string;
+	measurements: number[];
+  distance: number;
+	iri: number[];
+	error: object;
+  [key: string]: any;
 }
 
 // Auxiliar function, transforms excel files to csv
-export function verify_xlsx(req) {
-	for (let i = 0; i < req.files.length; i++) {
-		if (req.files[i].filename.split(".")[1] == "xlsx") {
-			const path = req.files[i].path
-			req.files[i] = convert_to_csv(req.files[i])
-			fs.rmSync(path)
-		}
+export function verify_xlsx(req: Request) {
+  if (Array.isArray(req.files)) {
+    for (let i = 0; i < req.files.length; i++) {
+        if (req.files[i].filename.split(".")[1] == "xlsx") {
+          const path = req.files[i].path
+          req.files[i] = convert_to_csv(req.files[i])
+          fs.rmSync(path)
+      }
+    }
 	}
+  else {
+    throw "Error: Files could not be processed at:\n\t verify_xlsx()"
+  }
 }
 
 // Auxiliar function: Deletes files after analizing 
-export function delete_temp_files(req) {
-	for (let i = 0; i < req.files.length; i++) {
-		fs.rmSync(req.files[i].path)
-	}
+export function delete_temp_files(req: Request) {
+	if (Array.isArray(req.files)) {
+    for (let i = 0; i < req.files.length; i++) {
+      fs.rmSync(req.files[i].path)
+    }
+  }
+  else {
+    throw "Error: files could not be deleted at:\n\t delete_temp_files()"
+  }
 }
 
 // Auxiliar function: process data from csv to json IRI
-export function process_data(files){
-	console.log("Process_data_start");
-
+export function process_data(files: string[]){
   const iri : IRI = {
 		id: "",
 		measurements: [],
@@ -42,10 +52,10 @@ export function process_data(files){
 	}
 
   const multi_file = []
-  const file_1 = fs.readFileSync(files[0].path, {encoding: "utf8"});
+  const file_1 = fs.readFileSync(files[0], {encoding: "utf8"});
   multi_file.push(file_1)
   if (files.length > 1) {
-    let file_2 = fs.readFileSync(files[1].path, {encoding: "utf8"})
+    let file_2 = fs.readFileSync(files[1], {encoding: "utf8"})
     multi_file.push(file_2)
   }
 
@@ -56,7 +66,7 @@ export function process_data(files){
 
 // Reads file and appends each parameter to 'iri' object
 // O(n)
-function create_iri(iri, multi_file) {
+function create_iri(iri: IRI, multi_file: string[]) {
   const type = ["id", "measurements", "end", "iri"]
 	let x = 0
   let buffer = ""
@@ -79,7 +89,7 @@ function create_iri(iri, multi_file) {
     // Complete parameter in buffer, insert into dataset
     else if (multi_file[0][i] == ',') {
       if (type[x] != "end") 
-        iri[type[x]].push(buffer)
+        iri[type[x]].push(parseInt(buffer))
       else end = buffer
 
       x = (x + 1) % 4
@@ -90,9 +100,10 @@ function create_iri(iri, multi_file) {
     // Complete IRI -> Insert value or average of two files
     else if (multi_file[0][i] == '\n') {
       if (!second_file_buffer) 
-        iri[type[x]].push(buffer)
+        iri[type[x]].push(parseFloat(buffer))
       else {
-        const average = ((Number(buffer) + Number(second_file_buffer)) / 2).toFixed(2)
+        const average = parseFloat(((Number(buffer) + Number(second_file_buffer)) / 2).toFixed(2))
+        if (isNaN(average)) throw ("Error with: " + buffer + " : " + second_file_buffer)
         iri[type[x]].push(average)
         second_file_buffer = ""
       }
@@ -106,12 +117,12 @@ function create_iri(iri, multi_file) {
 
     // Create buffer with read character
     buffer += multi_file[0][i]
-    if (type[x] == "iri") {
+    if (type[x] == "iri" && multi_file.length > 1) {
       second_file_buffer += multi_file[1][i]
     }
   }
 
   // Get distance difference and add final measurement of data
   iri.distance = iri.measurements[2] - iri.measurements[1]
-  iri.measurements.push(end)
+  iri.measurements.push(Number(end))
 }

@@ -1,19 +1,25 @@
 
-import { process_data } from "../components/home_components"
-import {path, __dirname} from "../utils/import_path"
-import * as response from "./test_responses"
+import { process_data } from "../components/home.components.ts"
+import * as path from "path"
+import * as response from "./test_responses.ts"
 // import "jest"
 
-// test("IRI object 1 file", () => {
-//   expect(process_data([
-//       {path: path.join(__dirname, "/test/file-1750347001368-147064266.csv")}, 
-//       {path: path.join(__dirname, "/test/file-1750347001368-147064266.csv")}
-//     ])).toBe(response.response_1)
-// })
+test("IRI object 1 file", () => {
+  expect(process_data([
+      path.join(__dirname, "/test_file_1.csv"), 
+    ])).toEqual(response.response_1_file)
+})
 
-const data = process_data([
-  {path: path.join(__dirname, "/test/test_file_1.csv")}, 
-  {path: path.join(__dirname, "/test/test_file_2.csv")}
-])
+test("IRI object 2 files", () => {
+  expect(process_data([
+      path.join(__dirname, "/test_file_1.csv"), 
+      path.join(__dirname, "/test_file_2.csv")
+    ])).toEqual(response.response_2_files)
+})
 
-console.log(data)
+// const data = process_data([
+//   path.join(__dirname, "/test_file_1.csv"), 
+//   // path.join(__dirname, "/test_file_2.csv")
+// ])
+
+// console.log(data)
