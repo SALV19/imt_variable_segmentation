@@ -10,7 +10,10 @@
     "lib": ["es2022", "dom"], 
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "types": ["node", "jest"]
+    "types": [
+      "node", 
+      "jest"
+    ]
   },
   "include": ["src/**/*.ts"], 
   "exclude": ["node_modules"]
