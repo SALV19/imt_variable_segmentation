@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import * as dotenv from "dotenv"
-import * as path from "path"
+import {path, __dirname} from "./utils/import_path.ts"
 
 dotenv.config({path: path.join(__dirname, "../../.env")})
 

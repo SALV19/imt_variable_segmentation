@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx"
 import * as fs from "fs"
-import * as path from "path"
+import {path, __dirname} from "../utils/import_path.ts"
 
 export function convert_to_csv(file: Express.Multer.File) {
   const fileBuffer = fs.readFileSync(file.path)

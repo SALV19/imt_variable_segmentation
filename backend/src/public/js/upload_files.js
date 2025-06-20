@@ -18,7 +18,8 @@ form.addEventListener("submit", (e) => {
     "method": "POST",
     "body": data
   })
-    .then((res) => {console.log("Success")})
+    .then((res) => res.json())
+    .then(json_response => console.log(json_response))
 })
 
 function show_second() {

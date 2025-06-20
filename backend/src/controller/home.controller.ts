@@ -18,10 +18,10 @@ export function upload_file(req: Request, res: Response) {
 	
 	// Process csv files into json objects
 	const measurements: Aux.IRI = Aux.process_data(file_paths);
-	console.log(measurements)
 
 	Aux.delete_temp_files(req)
 
+	console.log(measurements)
 // Transformation layer
-	res.send("Success!")
+	res.json(measurements)
 }

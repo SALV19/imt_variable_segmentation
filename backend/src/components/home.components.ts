@@ -1,6 +1,6 @@
 import * as fs from "fs"
 import {convert_to_csv} from "../utils/xlsx_to_csv.ts"
-import "path"
+import {path, __dirname} from "../utils/import_path.ts"
 import { Request } from "express"
 
 // TypeStructure for IRI
