@@ -7,7 +7,7 @@ export function get_home(req: Request, res: Response) {
 }
 
 // POST
-export function upload_file(req: Request, res: Response) {
+export async function upload_file(req: Request, res: Response) {
 // Ingestion layer
 	// Convert files to .csv
 	Aux.verify_xlsx(req);
@@ -17,11 +17,10 @@ export function upload_file(req: Request, res: Response) {
 		req.files.forEach(file => file_paths.push(file.path))
 	
 	// Process csv files into json objects
-	const measurements: Aux.IRI = Aux.process_data(file_paths);
+	const measurements: Aux.IRI = await Aux.process_data(file_paths);
 
 	Aux.delete_temp_files(req)
 
-	console.log(measurements)
 // Transformation layer
-	res.json(measurements)
+	res.status(200).json(measurements)
 }

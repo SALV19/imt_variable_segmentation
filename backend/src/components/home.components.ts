@@ -17,7 +17,7 @@ export interface IRI {
 export function verify_xlsx(req: Request) {
   if (Array.isArray(req.files)) {
     for (let i = 0; i < req.files.length; i++) {
-        if (req.files[i].filename.split(".")[1] == "xlsx") {
+        if (req.files[i].filename.split(".")[1] == "xlsx" || req.files[i].filename.split(".")[1] == "xlsm") {
           const path = req.files[i].path
           req.files[i] = convert_to_csv(req.files[i])
           fs.rmSync(path)
@@ -42,15 +42,10 @@ export function delete_temp_files(req: Request) {
 }
 
 // Auxiliar function: process data from csv to json IRI
-export function process_data(files: string[]){
-  const iri : IRI = {
-		id: "",
-		measurements: [],
-    distance: 0,
-		iri: [],
-		error: {},
-	}
+export async function process_data(files: string[]){
+  let iri : Promise<IRI>[];
 
+  // Read files
   const multi_file = []
   const file_1 = fs.readFileSync(files[0], {encoding: "utf8"});
   multi_file.push(file_1)
@@ -59,27 +54,52 @@ export function process_data(files: string[]){
     multi_file.push(file_2)
   }
 
-  create_iri(iri, multi_file)
+  // Process each file concurrently and indexes into an array
+  iri = await multi_file.map(file => create_iri(file))
 
-	return iri
+  // Joins the IRI by average when 2 files are sent, returns final IRI
+  if (files.length > 1) {
+    const iri_1 = (await iri[0]).iri
+    const iri_2 = (await iri[1]).iri
+
+    const new_iri = {
+      ...(await iri[0]), 
+      iri: iri_1.map(
+        (iri_value, idx) => parseFloat((((iri_2[idx]) + iri_value) / 2).toFixed(2))
+      )
+    }
+
+    return new_iri
+  }
+  else {
+    return iri[0]
+  }
+
 }
 
 // Reads file and appends each parameter to 'iri' object
 // O(n)
-function create_iri(iri: IRI, multi_file: string[]) {
+async function create_iri(file: string) : Promise<IRI>{
+  const iri: IRI = {
+    id: "",
+    measurements: [],
+    distance: 0,
+    iri: [],
+    error: {}
+  }
+
   const type = ["id", "measurements", "end", "iri"]
 	let x = 0
   let buffer = ""
-  let second_file_buffer = ""
   let end
 
-  for (let i = 0; i < multi_file[0].length; i++) {
+  for (let i = 0; i < file.length; i++) {
     // Basecase -> EOF
-    if (!multi_file[0][i]) {
+    if (!file[i]) {
       break
     }
     // First complete parameter -> insert as id
-    else if (multi_file[0][i] == ',' && iri.id == "") {
+    else if (file[i] == ',' && iri.id == "") {
       iri.id = buffer
       x = (x + 1) % 4
       
@@ -87,7 +107,7 @@ function create_iri(iri: IRI, multi_file: string[]) {
       continue
     }
     // Complete parameter in buffer, insert into dataset
-    else if (multi_file[0][i] == ',') {
+    else if (file[i] == ',') {
       if (type[x] != "end") 
         iri[type[x]].push(parseInt(buffer))
       else end = buffer
@@ -98,15 +118,8 @@ function create_iri(iri: IRI, multi_file: string[]) {
       continue
     }
     // Complete IRI -> Insert value or average of two files
-    else if (multi_file[0][i] == '\n') {
-      if (!second_file_buffer) 
-        iri[type[x]].push(parseFloat(buffer))
-      else {
-        const average = parseFloat(((Number(buffer) + Number(second_file_buffer)) / 2).toFixed(2))
-        if (isNaN(average)) throw ("Error with: " + buffer + " : " + second_file_buffer)
-        iri[type[x]].push(average)
-        second_file_buffer = ""
-      }
+    else if (file[i] == '\n') {
+      iri[type[x]].push(parseFloat(buffer))
       
       x = 1
       i += iri.id.length + 1
@@ -116,13 +129,11 @@ function create_iri(iri: IRI, multi_file: string[]) {
     }
 
     // Create buffer with read character
-    buffer += multi_file[0][i]
-    if (type[x] == "iri" && multi_file.length > 1) {
-      second_file_buffer += multi_file[1][i]
-    }
+    buffer += file[i]
   }
 
   // Get distance difference and add final measurement of data
   iri.distance = iri.measurements[2] - iri.measurements[1]
-  iri.measurements.push(Number(end))
+
+  return iri
 }
