@@ -15,11 +15,13 @@ export async function upload_file(req: Request, res: Response) {
 	const file_paths: string[] = []
 	Array.isArray(req.files) &&
 		req.files.forEach(file => file_paths.push(file.path))
-	
+	console.log(file_paths)
 	// Process csv files into json objects
 	const measurements: Aux.IRI = await Aux.process_data(file_paths);
 
 	Aux.delete_temp_files(req)
+
+	console.log(measurements)
 
 // Transformation layer
 	res.status(200).json(measurements)
