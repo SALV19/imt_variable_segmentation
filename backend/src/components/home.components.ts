@@ -14,43 +14,25 @@ export interface IRI {
 }
 
 // Auxiliar function, transforms excel files to csv
-export function verify_xlsx(req: Request) {
-  if (Array.isArray(req.files)) {
-    for (let i = 0; i < req.files.length; i++) {
-        if (req.files[i].filename.split(".")[1] == "xlsx" || req.files[i].filename.split(".")[1] == "xlsm") {
-          const path = req.files[i].path
-          req.files[i] = convert_to_csv(req.files[i])
-          fs.rmSync(path)
-      }
+export function verify_xlsx(files: Express.Multer.File[]) {
+  for (let i = 0; i < files.length; i++) {
+    if (files[i].originalname.split(".").at(-1) == "xlsx" || files[i].originalname.split(".").at(-1) == "xlsm") {      
+      convert_to_csv(files[i])
     }
-	}
-  else {
-    throw "Error: Files could not be processed at:\n\t verify_xlsx()"
-  }
-}
-
-// Auxiliar function: Deletes files after analizing 
-export function delete_temp_files(req: Request) {
-	if (Array.isArray(req.files)) {
-    for (let i = 0; i < req.files.length; i++) {
-      fs.rmSync(req.files[i].path)
-    }
-  }
-  else {
-    throw "Error: files could not be deleted at:\n\t delete_temp_files()"
   }
 }
 
 // Auxiliar function: process data from csv to json IRI
-export async function process_data(files: string[]){
+export async function process_data(files: Express.Multer.File[]){
   let iri : Promise<IRI>[];
 
   // Read files
   const multi_file = []
-  const file_1 = fs.readFileSync(files[0], {encoding: "utf8"});
+  // const file_1 = fs.readFileSync(files[0].buffer, {encoding: "utf8"});
+  const file_1: string = files[0].buffer.toString()
   multi_file.push(file_1)
   if (files.length > 1) {
-    let file_2 = fs.readFileSync(files[1], {encoding: "utf8"})
+    const file_2: string = files[1].buffer.toString()
     multi_file.push(file_2)
   }
 

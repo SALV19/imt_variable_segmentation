@@ -9,19 +9,20 @@ export function get_home(req: Request, res: Response) {
 // POST
 export async function upload_file(req: Request, res: Response) {
 // Ingestion layer
-	// Convert files to .csv
-	Aux.verify_xlsx(req);
-	
-	const file_paths: string[] = []
-	Array.isArray(req.files) &&
-		req.files.forEach(file => file_paths.push(file.path))
-	console.log(file_paths)
+	const files = req.files as Express.Multer.File[]
+
+	if (files.length === 0) {
+		res.status(400).send({error: "No data provided"})
+		return
+	}
+
+	// // Convert files to .csv
+	Aux.verify_xlsx(files);
+
 	// Process csv files into json objects
-	const measurements: Aux.IRI = await Aux.process_data(file_paths);
+	const measurements: Aux.IRI = await Aux.process_data(files);
 
-	Aux.delete_temp_files(req)
-
-	console.log(measurements)
+	// console.log(measurements)
 
 // Transformation layer
 	res.status(200).json(measurements)
