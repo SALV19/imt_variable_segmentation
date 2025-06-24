@@ -22,7 +22,7 @@ export async function upload_file(req: Request, res: Response) {
 	// Process csv files into json objects
 	const measurements: Aux.IRI = await Aux.process_data(files);
 
-	// console.log(measurements)
+	// const segmentation = Aux.cumsum(measurements)
 
 // Transformation layer
 	res.status(200).json(measurements)

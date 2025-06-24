@@ -23,7 +23,7 @@ export function verify_xlsx(files: Express.Multer.File[]) {
 }
 
 // Auxiliar function: process data from csv to json IRI
-export async function process_data(files: Express.Multer.File[]){
+export async function process_data(files: Express.Multer.File[] | {buffer: ArrayBuffer}[]){
   let iri : Promise<IRI>[];
 
   // Read files
@@ -118,4 +118,18 @@ async function create_iri(file: string) : Promise<IRI>{
   iri.distance = iri.measurements[2] - iri.measurements[1]
 
   return iri
+}
+
+export function cumsum(measurements: IRI) {
+  const length = measurements.iri.length
+  const avg = measurements.iri.reduce((acum, curr) => (curr + acum)) / length
+  const zk = measurements.iri.map((val, idx) => {
+    const sub_arr = measurements.iri.slice(0, idx)
+    let avg = sub_arr.reduce((acum, curr) => (curr + acum)) / length
+    return val + avg
+    // for (let i = 0; i < idx; i++) {
+    //   return measurements.iri[i] - avg
+    // }
+  })
+  console.log(cumsum)
 }

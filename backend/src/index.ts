@@ -23,6 +23,7 @@ if (!process.env.PORT) {
 import routes from "./routes/basic.route.ts"
 
 app.use("/", routes)
+app.get("", (req, res) => {res.status(404).send("Page not found")})
 
 // Start the Express server
 app.listen(port, () => {
