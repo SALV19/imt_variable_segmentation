@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs")
 app.set("views", [
-    path.join(__dirname, "../../frontend/")
+    path.join(__dirname, "../../frontend/views")
 ])
 
 const port = process.env.PORT || 3000;
