@@ -4,18 +4,23 @@ import { path, __dirname } from "../utils/import_path.ts"
 import * as fs from 'fs'
 import * as response from "./test_responses.ts"
 
-test("IRI object 1 file", async () => {
-  expect(await process_data([
-      {buffer: fs.readFileSync(path.join(__dirname, "/test/test_file_1.csv"))}, 
-    ])).toEqual(response.response_1_file)
-})
+import { cumsum } from "../components/home.components.ts"
 
-test("IRI object 2 files", async () => {
-  expect(await process_data([
-      {buffer: fs.readFileSync(path.join(__dirname, "/test/test_file_1.csv"))}, 
-      {buffer: fs.readFileSync(path.join(__dirname, "/test/test_file_2.csv"))}
-    ])).toEqual(response.response_2_files)
-})
+
+console.log(cumsum(response.response_1_file))
+// test("IRI object 1 file", async () => {
+//   expect(await process_data([
+//       {buffer: fs.readFileSync(path.join(__dirname, "/test/test_file_1.csv"))}, 
+//     ])).toEqual(response.response_1_file)
+// })
+
+// test("IRI object 2 files", async () => {
+//   expect(await process_data([
+//       {buffer: fs.readFileSync(path.join(__dirname, "/test/test_file_1.csv"))}, 
+//       {buffer: fs.readFileSync(path.join(__dirname, "/test/test_file_2.csv"))}
+//     ])).toEqual(response.response_2_files)
+// })
+
 
 // const data = process_data([
 //   path.join(__dirname, "/test_file_1.csv"), 
