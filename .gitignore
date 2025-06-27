@@ -3,3 +3,4 @@
 */node_modules
 
 /backend/src/uploads/*
+/backend/src/public/css/outpput.css

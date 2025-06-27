@@ -1,17 +1,30 @@
-<form action="/upload_file" method="POST" enctype="multipart/form-data" id="form">
-        <label for="file">Upload file</label>
-        <input
-            type="file"
-            id="file"
-            name="file"
-            accept=".csv, .xlsx, .xls"
-            onchange=show_second()
-            >
-        <input
-            type="hidden"
-            id="hidden"
-            name="file"
-            accept=".csv, .xlsx, .xls"
-            >
-        <button type="submit">Send</button>
-    </form>
+<form 
+	action="/upload_file" 
+	method="POST" 
+	enctype="multipart/form-data" id="form"
+	class="h-screen p-4 w-screen flex gap-10">
+			<div class="w-2/3 flex gap-20 justify-evenly">
+				<%- include ('../components/label.ejs', {input_form: 'file'})%>
+				<input
+					type="file"
+					id="file"
+					name="file"
+					accept=".csv, .xlsx, .xls"
+					onchange=show_second()
+					>
+				<%- include ('../components/label.ejs', {input_form: 'hidden'})%>
+				<input
+					type="hidden"
+					id="hidden"
+					name="file"
+					accept=".csv, .xlsx, .xls"
+					>
+			</div>
+
+			<div class="w-1/3 border-l-2 border-solid border-red-900 flex flex-col items-center align-bottom">
+				<button type="submit" class="p-2 bg-slate-500 hover:bg-slate-600 text-white font-bold text-xl px-6 rounded-sm">Send</button>
+			</div>
+
+</form>
+
+<script src="/js/upload_files.js"></script>

@@ -1,3 +1,53 @@
+:root {
+  --input-height: 30rem;
+  --input-width: calc(var(--input-height) * 0.75);
+}
+
 .hide {
-  display: none;
+  display: none !important;
+}
+@font-face {
+  font-family: 'GMX-Regular';
+  src: url(../fonts/GMX-Regular.ttf);
+}
+@font-face {
+  font-family: 'GMX-Bold';
+  src: url(../fonts/GMX-Black.ttf);
+}
+.font-gob-bold {
+  font-family: 'GMX-Bold';
+}
+
+input[type='file'] {
+  display: none
+}
+
+.insert_file {
+  display: flex;
+  justify-content: center;
+  padding: 6px 12px;
+  cursor: pointer;
+  outline: dashed #AAAA 4px;
+  height: var(--input-height);
+  width: var(--input-width);
+  border-radius: 20px;
+  align-items: center;
+  transition: outline-width, 0.1s, ease-in-out;
+}
+
+.label_input {
+  height: var(--input-height);
+  width: var(--input-width);
+}
+
+.dragover {
+  background-color: #EEE;
+}
+
+.logo-size {
+  width: 100px;
+}
+.logo {
+  margin-top: 0rem; 
+  margin-left: 6rem;
 }
