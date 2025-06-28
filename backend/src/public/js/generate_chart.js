@@ -1,13 +1,13 @@
 function create_data(json_response) {
   const measurements = json_response.measurements
+  const filter = json_response.filter_measurements
   const segmentation = json_response.segmentation
 
   form.classList.add("hide")
   const ctx = document.getElementById("myChart")
 
   let labels = measurements.measurements;
-  let dataset1Data = measurements.iri;
-  let dataset2Data = segmentation;
+  let iri = measurements.iri;
 
     options = {
           responsive: true,
@@ -47,7 +47,7 @@ function create_data(json_response) {
               position: 'right',
               title: {
                 display: true,
-                text: 'IRI',
+                text: 'Z_x',
                 font: {
                   size: 20,
                   weight: 'bold',
@@ -92,13 +92,19 @@ function create_data(json_response) {
         datasets: [
           {
             label: 'Iri',
-            data: dataset1Data,
+            data: iri,
             borderColor: 'blue',
             yAxisID: 'y'
           },
           {
+            label: 'Filtrado',
+            data: filter,
+            borderColor: 'green',
+            yAxisID: 'y'
+          },
+          {
             label: 'Segmentation',
-            data: dataset2Data,
+            data: segmentation,
             borderColor: 'red',
             yAxisID: 'y1'
           },

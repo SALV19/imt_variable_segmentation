@@ -120,10 +120,11 @@ async function create_iri(file: string) : Promise<IRI>{
   return iri
 }
 
-export function cumsum(measurements: IRI): number[] {
-  const length = measurements.iri.length
-  const avg = measurements.iri.reduce((acum, curr) => (curr+acum)) / length
-  const zk: number[] = aux_cumsum(measurements.iri, length, avg)
+export function cumsum(iri: number[]): number[] {
+  const length = iri.length
+  const avg = iri.reduce((acum, curr) => (curr+acum)) / length
+  const zk: number[] = aux_cumsum(iri, length, avg)
+  
   return zk
 }
 
@@ -136,4 +137,25 @@ function aux_cumsum(iri: number[], length: number, avg: number): number[] {
     zk.push(acum - i * avg)
   }
   return zk
+}
+
+export function filter(measurements: IRI, mov_avg: number) {
+  let acum = 0
+  let idx = 0
+  const xf: number[] = [];
+  for (let i = 0; i < mov_avg; i++) {
+    acum += measurements.iri[i]
+  }
+  for (let i = 0; i < mov_avg; i++) {
+    xf.push(acum / mov_avg)
+  }
+
+  const length = measurements.iri.length
+
+  for (let i = mov_avg; i < length; i++) {
+    acum += measurements.iri[i] - measurements.iri[idx]
+    idx++
+    xf.push(acum / mov_avg)
+  }
+  return xf
 }

@@ -1,6 +1,6 @@
 const form = document.querySelector("#form")
 const file_input_labels = document.querySelectorAll(".label_input")
-const input_elements = document.querySelectorAll("input")
+const input_elements = document.querySelectorAll("input[type=file], input[type=hidden]")
 
 // Drag and drop functionalities for file upload
 file_input_labels.forEach((labelElement) => {
@@ -67,7 +67,7 @@ form.addEventListener("submit", (e) => {
   e.preventDefault()
 
   const data = new FormData()
-  const file = document.querySelectorAll("input")
+  const file = document.querySelectorAll("input[type=file]")
 
   file.forEach(f => {
     if (f.files.length != 0) {
@@ -75,6 +75,8 @@ form.addEventListener("submit", (e) => {
     }
   })
 
+  const mov_avg = document.querySelector("#moving_avg").value
+  data.append("mov_avg", mov_avg)
   fetch("/upload_file", {
     "method": "POST",
     "body": data

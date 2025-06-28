@@ -10,23 +10,25 @@ export function get_home(req: Request, res: Response) {
 export async function upload_file(req: Request, res: Response) {
 // Ingestion layer
 	const files = req.files as Express.Multer.File[]
-
 	if (files.length === 0) {
 		res.status(400).send({error: "No data provided"})
 		return
 	}
-
 	// // Convert files to .csv
 	Aux.verify_xlsx(files);
 
 	// Process csv files into json objects
 	const measurements: Aux.IRI = await Aux.process_data(files);
 
-	const segmentation = Aux.cumsum(measurements)
+	const filter_measurements: number[] = await Aux.filter(measurements, req.body.mov_avg);
+	// console.log(filter_measurements)
+
+	const segmentation: number[] = Aux.cumsum(filter_measurements)
 
 // Transformation layer
 	res.status(200).json({
 		measurements,
+		filter_measurements,
 		segmentation,
 	})
 }
