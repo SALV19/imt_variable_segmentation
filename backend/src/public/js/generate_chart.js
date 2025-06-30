@@ -5,6 +5,7 @@ function create_data(json_response) {
 
   form.classList.add("hide")
   const ctx = document.getElementById("myChart")
+  ctx.parentElement.classList.remove("hide")
 
   let labels = measurements.measurements;
   let iri = measurements.iri;
