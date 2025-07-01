@@ -1,0 +1,55 @@
+@keyframes horizontal-shaking {
+  0% { transform: translateX(0) }
+  25% { transform: translateX(5px) }
+  50% { transform: translateX(-5px) }
+  75% { transform: translateX(5px) }
+  100% { transform: translateX(0) }
+}
+
+input[type='file'] {
+  display: none
+}
+
+.insert_file {
+  display: flex;
+  justify-content: center;
+  padding: 6px 12px;
+  cursor: pointer;
+  outline: dashed #AAAA 4px;
+  height: var(--input-height);
+  width: var(--input-width);
+  border-radius: 20px;
+  align-items: center;
+  transition: outline-width, 0.1s, ease-in-out;
+}
+
+.label_input {
+  height: var(--input-height);
+  width: var(--input-width);
+}
+
+.dragover {
+  background-color: #EEE;
+}
+
+.logo-size {
+  width: 100px;
+}
+.logo {
+  margin-top: 0rem; 
+  margin-left: 6rem;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  appearance: textfield;
+}
+
+.error {
+  animation: horizontal-shaking .3s calc(1);
+}

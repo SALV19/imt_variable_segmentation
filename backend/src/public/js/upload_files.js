@@ -2,6 +2,10 @@ const form = document.querySelector("#form")
 const file_input_labels = document.querySelectorAll(".label_input")
 const input_elements = document.querySelectorAll("input[type=file], input[type=hidden]")
 
+document.addEventListener("DOMContentLoaded", () => {
+  input_elements.forEach(i => i.value = null)
+})
+
 // Drag and drop functionalities for file upload
 file_input_labels.forEach((labelElement) => {
   const content = labelElement.querySelector(".insert_file")
@@ -68,15 +72,38 @@ form.addEventListener("submit", (e) => {
 
   const data = new FormData()
   const file = document.querySelectorAll("input[type=file]")
+  let emptyFile = true
 
-  file.forEach(f => {
-    if (f.files.length != 0) {
+  file.forEach(f => { 
+    if (f.files.length) {
       data.append("file", f.files[0])
+      emptyFile = false
     }
   })
 
-  const mov_avg = document.querySelector("#moving_avg").value
-  data.append("mov_avg", mov_avg)
+  // Error no file provided
+  if (emptyFile) {
+    console.log("Error")
+    const submit_btn = document.querySelector("#submit")
+    const error_message = document.querySelector("#error_message")
+
+    error_message.classList.remove("hidden")
+
+    submit_btn.classList.add('error', 'bg-red-600', 'hover:bg-red-700')
+    setInterval(() => {
+      submit_btn.classList.remove("error")
+    }, 1000)
+    return
+  }
+
+
+  const input_elements = document.querySelectorAll("input[type=number]")
+  input_elements.forEach(i => {
+    data.append(i.id, i.value)
+  })
+
+  
+
   fetch("/upload_file", {
     "method": "POST",
     "body": data

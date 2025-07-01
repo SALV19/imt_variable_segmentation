@@ -9,6 +9,7 @@ export function get_home(req: Request, res: Response) {
 // POST
 export async function upload_file(req: Request, res: Response) {
 // Ingestion layer
+
 	const files = req.files as Express.Multer.File[]
 	if (files.length === 0) {
 		res.status(400).send({error: "No data provided"})
@@ -20,7 +21,7 @@ export async function upload_file(req: Request, res: Response) {
 	// Process csv files into json objects
 	const measurements: Aux.IRI = await Aux.process_data(files);
 
-	const filter_measurements: number[] = await Aux.filter(measurements, req.body.mov_avg);
+	const filter_measurements: number[] = await Aux.filter(measurements, req.body.moving_avg);
 	// console.log(filter_measurements)
 
 	const segmentation: number[] = Aux.cumsum(filter_measurements)
