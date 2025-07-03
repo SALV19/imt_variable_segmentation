@@ -1,7 +1,5 @@
-import * as fs from "fs"
 import {convert_to_csv} from "../utils/xlsx_to_csv.ts"
-import {path, __dirname} from "../utils/import_path.ts"
-import { Request } from "express"
+import { __dirname} from "../utils/import_path.ts"
 
 // TypeStructure for IRI
 export interface IRI {
@@ -10,7 +8,14 @@ export interface IRI {
   distance: number;
 	iri: number[];
 	error: object;
+  average: number;
   [key: string]: any;
+}
+
+export interface Slope {
+  start: number;
+  end: number;
+  iri: number[];
 }
 
 // Auxiliar function, transforms excel files to csv
@@ -23,8 +28,9 @@ export function verify_xlsx(files: Express.Multer.File[]) {
 }
 
 // Auxiliar function: process data from csv to json IRI
-export async function process_data(files: Express.Multer.File[] | {buffer: ArrayBuffer}[]){
+export async function process_data(files: Express.Multer.File[] | {buffer: ArrayBuffer}[]): Promise<IRI>{
   let iri : Promise<IRI>[];
+  let final_iri: IRI;
 
   // Read files
   const multi_file = []
@@ -51,12 +57,17 @@ export async function process_data(files: Express.Multer.File[] | {buffer: Array
       )
     }
 
-    return new_iri
+    // return new_iri
+    final_iri = new_iri
   }
   else {
-    return iri[0]
+    final_iri = await iri[0]
   }
 
+  // Get average IRI O(n)
+  final_iri.average = final_iri.iri.reduce((acum, curr) => (curr+acum)) / final_iri.iri.length
+
+  return final_iri
 }
 
 // Reads file and appends each parameter to 'iri' object
@@ -67,6 +78,7 @@ async function create_iri(file: string) : Promise<IRI>{
     measurements: [],
     distance: 0,
     iri: [],
+    average: 0,
     error: {}
   }
 
@@ -120,6 +132,7 @@ async function create_iri(file: string) : Promise<IRI>{
   return iri
 }
 
+// O(n)
 export function cumsum(iri: number[]): number[] {
   const length = iri.length
   const avg = iri.reduce((acum, curr) => (curr+acum)) / length
@@ -129,6 +142,7 @@ export function cumsum(iri: number[]): number[] {
 }
 
 // Algorithm implementation
+// O(n)
 function aux_cumsum(iri: number[], length: number, avg: number): number[] {
   let acum = 0
   const zk = []
@@ -139,23 +153,79 @@ function aux_cumsum(iri: number[], length: number, avg: number): number[] {
   return zk
 }
 
+// Filter data with a moving average
+// O(n + m)
 export function filter(measurements: IRI, mov_avg: number) {
   let acum = 0
-  let idx = 0
   const xf: number[] = [];
+
+  // get first values for moving average
   for (let i = 0; i < mov_avg; i++) {
     acum += measurements.iri[i]
   }
-  for (let i = 0; i < mov_avg; i++) {
-    xf.push(acum / mov_avg)
-  }
 
+  xf.push(formatNumber(acum / mov_avg))
+
+  // Get values to a fixed window size
   const length = measurements.iri.length
-
-  for (let i = mov_avg; i < length; i++) {
-    acum += measurements.iri[i] - measurements.iri[idx]
-    idx++
-    xf.push(acum / mov_avg)
+  for (let i = mov_avg; i < mov_avg*2; i++) {
+    acum += measurements.iri[i]
+    xf.push(formatNumber(acum / i))
   }
+
+  // Get values within window until the end of the array
+  for (let i = mov_avg*2; i < length; i++) {
+    acum += measurements.iri[i] - measurements.iri[i - 2 * mov_avg]
+    xf.push(formatNumber(acum / (mov_avg*2 + 1)))
+  }
+  // Continiously decrease window size until reaching the last index
+  for (let i = length-mov_avg; i < length; i++) {
+    acum -= measurements.iri[i-mov_avg]
+    let B = Number(mov_avg)
+    xf.push(formatNumber(acum / ((B*2 + 1) - (i-length+B))))
+  }
+
+
   return xf
+}
+
+function formatNumber(value: number): number {
+  return parseFloat(value.toFixed(2))
+}
+
+export function slopeZ(iri: IRI): Slope[] {
+  let slpZ: Slope[] = [];
+  const slope_zk: number[] = []
+  const length = iri.measurements.length
+  let acum = 0;
+  let count = 0;
+
+  const curr_slope: Slope = {
+    start: 0,
+    end: 0,
+    iri: [],
+  };
+
+  curr_slope.start = iri.measurements[0]
+  acum += iri.iri[0]
+
+  for (let i = 1; i < length; i++) {
+    const zk_val: number = parseFloat(((iri.iri[i] - iri.iri[i-1]) / (iri.measurements[i] - iri.measurements[i-1])).toFixed(2))
+    acum += iri.iri[i]
+    if (slope_zk.at(-1) == 0) {
+      curr_slope.end = iri.measurements[i]
+
+      curr_slope.iri = new Array(i - count).fill(acum / (i - count))
+      count = i
+      acum = 0
+
+      slpZ.push(structuredClone(curr_slope))
+
+      curr_slope.start = iri.measurements[i]
+    }
+
+    slope_zk.push(zk_val)
+  }
+
+  return slpZ
 }

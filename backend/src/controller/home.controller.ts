@@ -22,7 +22,8 @@ export async function upload_file(req: Request, res: Response) {
 	const measurements: Aux.IRI = await Aux.process_data(files);
 
 	const filter_measurements: number[] = await Aux.filter(measurements, req.body.moving_avg);
-	// console.log(filter_measurements)
+	
+	const slopes: Aux.Slope[] = Aux.slopeZ(measurements)
 
 	const segmentation: number[] = Aux.cumsum(filter_measurements)
 
@@ -31,5 +32,6 @@ export async function upload_file(req: Request, res: Response) {
 		measurements,
 		filter_measurements,
 		segmentation,
+		slopes,
 	})
 }
