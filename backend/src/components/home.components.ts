@@ -193,12 +193,14 @@ function formatNumber(value: number): number {
   return parseFloat(value.toFixed(2))
 }
 
-export function slopeZ(iri: IRI): Slope[] {
+export function slopeZ(iri: IRI, segmentation: number[]): Slope[] {
   let slpZ: Slope[] = [];
   const slope_zk: number[] = []
   const length = iri.measurements.length
   let acum = 0;
   let count = 0;
+
+  let last_slope = false
 
   const curr_slope: Slope = {
     start: 0,
@@ -210,22 +212,35 @@ export function slopeZ(iri: IRI): Slope[] {
   acum += iri.iri[0]
 
   for (let i = 1; i < length; i++) {
-    const zk_val: number = parseFloat(((iri.iri[i] - iri.iri[i-1]) / (iri.measurements[i] - iri.measurements[i-1])).toFixed(2))
+    const zk_val: number = aux_segmentation(segmentation, iri.measurements, i)
     acum += iri.iri[i]
-    if (slope_zk.at(-1) == 0) {
+    if ((slope_zk.at(-1) == 0 || i == length-1) && last_slope) {
       curr_slope.end = iri.measurements[i]
+      
+      const avg = formatNumber(acum / (i - count))
 
-      curr_slope.iri = new Array(i - count).fill(acum / (i - count))
+      curr_slope.iri = new Array(i - count).fill(avg)
       count = i
       acum = 0
 
       slpZ.push(structuredClone(curr_slope))
 
       curr_slope.start = iri.measurements[i]
+
+      last_slope = false
     }
 
+    if (slope_zk.at(-1) != 0 && !last_slope) {
+      last_slope = true
+    }
     slope_zk.push(zk_val)
   }
 
+
   return slpZ
+}
+
+function aux_segmentation(segmentation: number[], iri: number[], i: number) {
+  return parseFloat(((segmentation[i] - segmentation[i-1]) /
+                      (iri[i] - iri[i-1])).toFixed(2))
 }

@@ -2,6 +2,8 @@ function create_data(json_response) {
   const measurements = json_response.measurements
   const filter = json_response.filter_measurements
   const segmentation = json_response.segmentation
+  const slopes = json_response.slopes_values
+  console.log(slopes)
 
   form.classList.add("hide")
   const ctx = document.getElementById("myChart")
@@ -82,7 +84,7 @@ function create_data(json_response) {
                     chart.update(); 
                 }
             }
-          }
+          },
         }
 
   // Creating line chart
@@ -91,6 +93,17 @@ function create_data(json_response) {
       data: {
         labels: labels,
         datasets: [
+          {
+            label: 'Segmentos Homogeneos',
+            data: slopes,
+            borderColor: 'black',
+            yAxisID: 'y',
+            tension: 0,
+            // segment: {
+            //     borderColor: (ctx) => 
+            //       ctx.p0.parsed.y === ctx.p1.parsed.y ? 'black' : 'transparent',
+            //   },
+          },
           {
             label: 'Iri',
             data: iri,

@@ -21,17 +21,19 @@ export async function upload_file(req: Request, res: Response) {
 	// Process csv files into json objects
 	const measurements: Aux.IRI = await Aux.process_data(files);
 
-	const filter_measurements: number[] = await Aux.filter(measurements, req.body.moving_avg);
+	const mov_avg = req.body.moving_avg / req.body.distance
+	const filter_measurements: number[] = await Aux.filter(measurements, mov_avg);
 	
-	const slopes: Aux.Slope[] = Aux.slopeZ(measurements)
-
 	const segmentation: number[] = Aux.cumsum(filter_measurements)
+
+	const slopes: Aux.Slope[] = Aux.slopeZ(measurements, segmentation)
+	const slopes_values = slopes.flatMap(s => s.iri)
 
 // Transformation layer
 	res.status(200).json({
 		measurements,
 		filter_measurements,
 		segmentation,
-		slopes,
+		slopes_values,
 	})
 }
