@@ -9,7 +9,6 @@ export function get_home(req: Request, res: Response) {
 // POST
 export async function upload_file(req: Request, res: Response) {
 // Ingestion layer
-
 	const files = req.files as Express.Multer.File[]
 	if (files.length === 0) {
 		res.status(400).send({error: "No data provided"})
@@ -26,7 +25,10 @@ export async function upload_file(req: Request, res: Response) {
 	
 	const segmentation: number[] = Aux.cumsum(filter_measurements)
 
-	const slopes: Aux.Slope[] = Aux.slopeZ(measurements, segmentation)
+	const slopes: Aux.Slope[] = Aux.slopeZ(
+		measurements, segmentation, req.body.join_segments,req.body.singular_points
+	)
+	
 	const slopes_values = slopes.flatMap(s => s.iri)
 
 // Transformation layer

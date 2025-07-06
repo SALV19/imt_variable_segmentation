@@ -97,7 +97,7 @@ form.addEventListener("submit", (e) => {
   }
 
 
-  const input_elements = document.querySelectorAll("input[type=number]")
+  const input_elements = document.querySelectorAll("input[type=number], input[type=float]")
   input_elements.forEach(i => {
     data.append(i.id, i.value)
   })

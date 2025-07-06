@@ -28,7 +28,9 @@ export function verify_xlsx(files: Express.Multer.File[]) {
 }
 
 // Auxiliar function: process data from csv to json IRI
-export async function process_data(files: Express.Multer.File[] | {buffer: ArrayBuffer}[]): Promise<IRI>{
+export async function process_data(
+  files: Express.Multer.File[] | {buffer: ArrayBuffer}[], 
+): Promise<IRI> {
   let iri : Promise<IRI>[];
   let final_iri: IRI;
 
@@ -113,7 +115,8 @@ async function create_iri(file: string) : Promise<IRI>{
     }
     // Complete IRI -> Insert value or average of two files
     else if (file[i] == '\n') {
-      iri[type[x]].push(parseFloat(buffer))
+      const curr_value = parseFloat(buffer) 
+      iri[type[x]].push(curr_value)
       
       x = 1
       i += iri.id.length + 1
@@ -193,7 +196,12 @@ function formatNumber(value: number): number {
   return parseFloat(value.toFixed(2))
 }
 
-export function slopeZ(iri: IRI, segmentation: number[]): Slope[] {
+export function slopeZ(
+  iri: IRI, 
+  segmentation: number[], 
+  join_segments: number, 
+  separate_segments: number
+): Slope[] {
   let slpZ: Slope[] = [];
   const slope_zk: number[] = []
   const length = iri.measurements.length
@@ -214,11 +222,15 @@ export function slopeZ(iri: IRI, segmentation: number[]): Slope[] {
   for (let i = 1; i < length; i++) {
     const zk_val: number = aux_segmentation(segmentation, iri.measurements, i)
     acum += iri.iri[i]
-    if ((slope_zk.at(-1) == 0 || i == length-1) && last_slope) {
+    if ((slope_zk.at(-1) == 0 || i == length-1) && last_slope ) {
+      const avg = formatNumber(acum / (i - count))
+      if (Math.abs(avg - iri.iri[i]) <= join_segments) {
+        continue
+      }
+      
+
       curr_slope.end = iri.measurements[i]
       
-      const avg = formatNumber(acum / (i - count))
-
       curr_slope.iri = new Array(i - count).fill(avg)
       count = i
       acum = 0
