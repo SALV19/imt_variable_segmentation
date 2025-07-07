@@ -1,76 +1,93 @@
-<link rel="stylesheet" href="/css/form.css">
-<form 
-	action="/upload_file" 
-	method="POST" 
-	enctype="multipart/form-data" id="form"
-	class="h-screen p-4 w-screen flex gap-10">
-			<div class="w-2/3 flex gap-20 justify-evenly">
-				<%- include ('../components/label.ejs', {input_form: 'file'})%>
-				<input 
-					type="file"
-					id="file"
-					name="file"
-					accept=".csv, .xlsx, .xls"
-					onchange=show_second()
-					>
-				<%- include ('../components/label.ejs', {input_form: 'hidden'})%>
-				<input 
-					type="hidden"
-					id="hidden"
-					name="file"
-					accept=".csv, .xlsx, .xls"
-					>
-			</div>
+<link rel="stylesheet" href="/css/form.css" />
+<div class="flex" id="form">
+  <div class="border-r-2 border-gray-400 font-montserrat w-1/5 px-4 py-4">
+    <h2 class="text-2xl text-gob font-semibold text-center mb-3">¿Qué es?</h2>
+    <p class="text-justify">
+      Esta herramienta divide un tramo de carretera mediante un algoritmo de
+      segmentación basado en el método de diferencias acumuladas que se describe
+      en la guía de diseño de pavimentos de AASHTO de 1993.
+    </p>
+  </div>
+  <form
+    action="/upload_file"
+    method="POST"
+    enctype="multipart/form-data"
+    class="h-screen p-4 w-screen flex gap-10"
+  >
+    <div
+      class="w-2/3 flex max-xl:flex-col gap-20 xl:justify-evenly max-xl:items-center"
+    >
+      <%- include ('../components/label.ejs', {input_form: 'file'})%>
+      <input
+        type="file"
+        id="file"
+        name="file"
+        accept=".csv, .xlsx, .xls"
+        onchange="show_second()"
+      />
+      <%- include ('../components/label.ejs', {input_form: 'hidden'})%>
+      <input type="hidden" id="hidden" name="file" accept=".csv, .xlsx, .xls" />
+    </div>
 
-			<div class="w-1/3 border-l-2 border-solid border-red-900 flex flex-col items-center align-bottom">
-				<div class="grid grid-cols-2 gap-2 ml-5">
-					<label >Diferencia para seleccionar puntos singulares</label>
-					<input 
-						required
-						type="float"
-						id="singular_points"
-						name="singular_points"
-						class="mb-5 border-2 border-gray-400 border-solid w-1/2 mx-auto"
-						>
-					<label >Diferencia para unir segmentos adyacentes</label>
-					<input 
-						required
-						type="float"
-						id="join_segments"
-						name="join_segments"
-						class="mb-5 border-2 border-gray-400 border-solid w-1/2 mx-auto"
-						>
-						<label >Percentil</label>
-					<input 
-						required
-						type="number"
-						id="percentil"
-						name="percentil"
-						class="mb-5 border-2 border-gray-400 border-solid w-1/2 mx-auto"
-						>
-					<label >Longitud de la media móvil</label>
-					<input 
-						required
-						type="number"
-						id="moving_avg"
-						name="moving_avg"
-						class="mb-5 border-2 border-gray-400 border-solid w-1/2 mx-auto"
-						>
-					<label>Metros en que fue medido el parámetro</label>
-					<input 
-						required
-						type="number"
-						id="distance"
-						name="distance"
-						class="mb-5 border-2 border-gray-400 border-solid w-1/2 mx-auto"
-						>
-				</div>
+    <div
+      class="w-1/3 border-l-2 border-solid border-red-900 flex flex-col items-center align-bottom -my-4 py-4"
+    >
+      <div class="grid grid-cols-2 gap-2 ml-5">
+        <label>Diferencia para seleccionar puntos singulares</label>
+        <input
+          required
+          type="float"
+          id="singular_points"
+          name="singular_points"
+          class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto"
+        />
+        <label>Diferencia para unir segmentos adyacentes</label>
+        <input
+          required
+          type="float"
+          id="join_segments"
+          name="join_segments"
+          class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto"
+        />
+        <label>Percentil</label>
+        <input
+          required
+          type="number"
+          id="percentil"
+          name="percentil"
+          class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto"
+        />
+        <label>Longitud de la media móvil</label>
+        <input
+          required
+          type="number"
+          id="moving_avg"
+          name="moving_avg"
+          class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto"
+        />
+        <label>Metros en que fue medido el parámetro</label>
+        <input
+          required
+          type="number"
+          id="distance"
+          name="distance"
+          class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto"
+        />
+      </div>
 
-				<button type="submit" id="submit" class=" tilt-shaking p-2 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xl px-6 rounded-sm">Send</button>
-				<p id="error_message" class="text-red-600 hidden">Error: Ingresa por lo menos un archivo</p>
-				<p class="hidden bg-red-600 hover:bg-red-700"></p>
-			</div>
-
-</form>
+      <button
+        type="submit"
+        id="submit"
+        class="tilt-shaking p-2 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xl px-6 rounded-sm mt-5"
+      >
+        Send
+      </button>
+      <p id="error_message" class="text-red-600 hidden">
+        Error: Ingresa por lo menos un archivo
+      </p>
+      <p class="hidden bg-red-600 hover:bg-red-700"></p>
+    </div>
+  </form>
+</div>
 
 <script src="/js/upload_files.js"></script>
