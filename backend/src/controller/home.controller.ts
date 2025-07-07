@@ -10,6 +10,7 @@ export function get_home(req: Request, res: Response) {
 export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
   const join_segments = req.body.join_segments;
+  const singular_points = req.body.singular_points;
 
   const files = req.files as Express.Multer.File[];
   if (files.length === 0) {
@@ -28,6 +29,13 @@ export async function upload_file(req: Request, res: Response) {
   // Filter / Smooth data
   const filter_measurements: number[] = await Aux.filter(measurements, mov_avg);
 
+  // Get abnormal points
+  const abnormal_points: Promise<{ x: number; y: number }[]> = Aux.get_uncommon(
+    measurements,
+    filter_measurements,
+    singular_points
+  );
+
   // Get slopes function
   const { zk: segmentation, average } = Aux.cumsum(filter_measurements);
 
@@ -35,8 +43,7 @@ export async function upload_file(req: Request, res: Response) {
   const slopes: Aux.Slope[] = Aux.slopeZ(
     measurements,
     segmentation,
-    join_segments,
-    req.body.singular_points
+    join_segments
   );
 
   // Flatten array and join segments
@@ -54,11 +61,13 @@ export async function upload_file(req: Request, res: Response) {
       return curr;
     });
 
+  const abnormalities = await abnormal_points;
   //
   res.status(200).json({
     measurements,
     filter_measurements,
     segmentation,
     slopes_values,
+    abnormalities,
   });
 }

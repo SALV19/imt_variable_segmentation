@@ -15,12 +15,15 @@ export interface IRI {
   [key: string]: any;
 }
 
+// Type struct for Slopes
 export interface Slope {
   start: number;
   end: number;
   iri: number[];
 }
 
+// In progress
+// Type struct for process's results
 export interface Result {
   media: number;
 }
@@ -152,30 +155,9 @@ async function create_iri(file: string): Promise<IRI> {
   return iri;
 }
 
-// O(n)
-export function cumsum(iri: number[]): { zk: number[]; average: number } {
-  const length = iri.length;
-  const avg = iri.reduce((acum, curr) => curr + acum) / length;
-  const zk: number[] = aux_cumsum(iri, length, avg);
-
-  return { zk: zk, average: avg };
-}
-
-// Algorithm implementation
-// O(n)
-function aux_cumsum(iri: number[], length: number, avg: number): number[] {
-  let acum = 0;
-  const zk = [];
-  for (let i = 0; i < length; i++) {
-    acum += iri[i];
-    zk.push(acum - i * avg);
-  }
-  return zk;
-}
-
 // Filter data with a moving average
 // O(n + m)
-export function filter(measurements: IRI, mov_avg: number) {
+export function filter(measurements: IRI, mov_avg: number): number[] {
   let acum = 0;
   const xf: number[] = [];
 
@@ -208,6 +190,43 @@ export function filter(measurements: IRI, mov_avg: number) {
   return xf;
 }
 
+export async function get_uncommon(
+  iri: IRI,
+  filter: number[],
+  singular_points: number
+): Promise<{ x: number; y: number }[]> {
+  const uncommon_points: { x: number; y: number }[] = [];
+  for (let i = 0; i < iri.measurements.length; i++) {
+    if (Math.abs(filter[i] - iri.iri[i]) > singular_points) {
+      uncommon_points.push({ x: iri.measurements[i], y: iri.iri[i] });
+      console.log("Abnormality at: ", uncommon_points.at(-1));
+    }
+  }
+
+  return uncommon_points;
+}
+
+// O(n)
+export function cumsum(iri: number[]): { zk: number[]; average: number } {
+  const length = iri.length;
+  const avg = iri.reduce((acum, curr) => curr + acum) / length;
+  const zk: number[] = aux_cumsum(iri, length, avg);
+
+  return { zk: zk, average: avg };
+}
+
+// Algorithm implementation
+// O(n)
+function aux_cumsum(iri: number[], length: number, avg: number): number[] {
+  let acum = 0;
+  const zk = [];
+  for (let i = 0; i < length; i++) {
+    acum += iri[i];
+    zk.push(acum - i * avg);
+  }
+  return zk;
+}
+
 function formatNumber(value: number): number {
   return parseFloat(value.toFixed(2));
 }
@@ -215,8 +234,7 @@ function formatNumber(value: number): number {
 export function slopeZ(
   iri: IRI,
   segmentation: number[],
-  join_segments: number,
-  separate_segments: number
+  join_segments: number
 ): Slope[] {
   let slpZ: Slope[] = [];
   const slope_zk: number[] = [];
@@ -238,10 +256,7 @@ export function slopeZ(
   for (let i = 1; i < length; i++) {
     const zk_val: number = aux_segmentation(segmentation, iri.measurements, i);
     acum += iri.iri[i];
-    if (
-      ((slope_zk.at(-1) == 0 || i == length - 1) && last_slope) ||
-      iri.iri[i] - iri.iri[i - 1] >= separate_segments
-    ) {
+    if ((slope_zk.at(-1) == 0 || i == length - 1) && last_slope) {
       const avg = formatNumber(acum / (i - count));
 
       curr_slope.end = iri.measurements[i];

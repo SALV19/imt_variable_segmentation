@@ -3,6 +3,9 @@ function create_data(json_response) {
   const filter = json_response.filter_measurements;
   const segmentation = json_response.segmentation;
   const slopes = json_response.slopes_values;
+  const abnormalities = json_response.abnormalities;
+
+  console.log(abnormalities);
 
   const chartArea = document.querySelector("#chartArea");
 
@@ -112,6 +115,15 @@ function create_data(json_response) {
             borderColor: (ctx) =>
               ctx.p0.parsed.y === ctx.p1.parsed.y ? "black" : "transparent",
           },
+        },
+        {
+          label: "Abnormality",
+          data: abnormalities,
+          showLine: false,
+          pointRadius: 4,
+          borderRadius: 2,
+          borderColor: "red",
+          yAxisID: "y",
         },
         {
           label: "Iri",
