@@ -5,9 +5,16 @@ const input_elements = document.querySelectorAll(
 );
 const percentile_avg = document.querySelector("#percentile-avg");
 const percentile_label = document.querySelector("#percentile-label");
+const percentile_input = document.querySelector("#percentil");
 
 percentile_avg.addEventListener("change", () => {
-  percentile_label.textContent = percentile_avg.checked ? "Media" : "Percentil";
+  if (percentile_avg.checked) {
+    percentile_label.textContent = "Media";
+    percentile_input.type = "hidden";
+  } else {
+    percentile_label.textContent = "Percentil";
+    percentile_input.type = "number";
+  }
 });
 
 document.addEventListener("DOMContentLoaded", () => {

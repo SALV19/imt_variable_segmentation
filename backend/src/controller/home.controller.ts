@@ -37,14 +37,10 @@ export async function upload_file(req: Request, res: Response) {
   );
 
   // Get slopes function
-  const { zk: segmentation, average } = Aux.cumsum(filter_measurements);
+  const segmentation = Aux.cumsum(filter_measurements);
 
   // Segmentate data
-  const slopes: Aux.Slope[] = Aux.slopeZ(
-    measurements,
-    segmentation,
-    join_segments
-  );
+  const slopes: Aux.Slope[] = Aux.slopeZ(measurements, segmentation);
 
   // Flatten array and join segments
   const slopes_values = slopes
@@ -62,7 +58,8 @@ export async function upload_file(req: Request, res: Response) {
     });
 
   const abnormalities = await abnormal_points;
-  //
+
+  // Response
   res.status(200).json({
     measurements,
     filter_measurements,

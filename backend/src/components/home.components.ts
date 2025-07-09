@@ -207,12 +207,12 @@ export async function get_uncommon(
 }
 
 // O(n)
-export function cumsum(iri: number[]): { zk: number[]; average: number } {
+export function cumsum(iri: number[]): number[] {
   const length = iri.length;
   const avg = iri.reduce((acum, curr) => curr + acum) / length;
   const zk: number[] = aux_cumsum(iri, length, avg);
 
-  return { zk: zk, average: avg };
+  return zk;
 }
 
 // Algorithm implementation
@@ -231,11 +231,7 @@ function formatNumber(value: number): number {
   return parseFloat(value.toFixed(2));
 }
 
-export function slopeZ(
-  iri: IRI,
-  segmentation: number[],
-  join_segments: number
-): Slope[] {
+export function slopeZ(iri: IRI, segmentation: number[]): Slope[] {
   let slpZ: Slope[] = [];
   const slope_zk: number[] = [];
   const length = iri.measurements.length;
