@@ -1,6 +1,6 @@
-import {Router} from "express"
-import multer from "multer"
-import {path, __dirname} from "../utils/import_path.ts"
+import { Router } from "express";
+import multer from "multer";
+import { path, __dirname } from "../utils/import_path.ts";
 
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -14,14 +14,16 @@ import {path, __dirname} from "../utils/import_path.ts"
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: {files: 2} 
-})
+  limits: { files: 2 },
+});
 
-import * as home from "../controller/home.controller.ts"
+import * as home from "../controller/home.controller.ts";
+import * as chart from "../controller/chart.controller.ts";
 
-const routes = Router()
+const routes = Router();
 
-routes.get("/", home.get_home)
-routes.post("/upload_file", upload.array("file"), home.upload_file)
+routes.get("/", home.get_home);
+routes.post("/upload_file", upload.array("file"), home.upload_file);
+routes.get("/create_chart", chart.create_chart);
 
-export default routes
+export default routes;
