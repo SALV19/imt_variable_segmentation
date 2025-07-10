@@ -7,6 +7,11 @@ const percentile_avg = document.querySelector("#percentile-avg");
 const percentile_label = document.querySelector("#percentile-label");
 const percentile_input = document.querySelector("#percentil");
 
+document.addEventListener("DOMContentLoaded", () => {
+  input_elements.forEach((i) => (i.value = null));
+  percentile_input.checked = false;
+});
+
 percentile_avg.addEventListener("change", () => {
   if (percentile_avg.checked) {
     percentile_label.textContent = "Media";
@@ -15,10 +20,6 @@ percentile_avg.addEventListener("change", () => {
     percentile_label.textContent = "Percentil";
     percentile_input.type = "number";
   }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  input_elements.forEach((i) => (i.value = null));
 });
 
 // Drag and drop functionalities for file upload

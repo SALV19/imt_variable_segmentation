@@ -2,10 +2,23 @@ function create_data(json_response) {
   const measurements = json_response.measurements;
   const filter = json_response.filter_measurements;
   const segmentation = json_response.segmentation;
-  const slopes = json_response.slopes_values;
+  const slopes = json_response.slopes;
   const abnormalities = json_response.abnormalities;
 
-  console.log(abnormalities);
+  const slopes_data = slopes
+    .map((val) => {
+      return [
+        {
+          x: val.start,
+          y: val.iri,
+        },
+        {
+          x: val.end,
+          y: val.iri,
+        },
+      ];
+    })
+    .flatMap((data) => data);
 
   const chartArea = document.querySelector("#chartArea");
 
@@ -107,7 +120,7 @@ function create_data(json_response) {
       datasets: [
         {
           label: "Segmentos Homogeneos",
-          data: slopes,
+          data: slopes_data,
           borderColor: "black",
           yAxisID: "y",
           tension: 0,

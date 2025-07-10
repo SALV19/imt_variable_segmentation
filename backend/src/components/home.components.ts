@@ -19,7 +19,7 @@ export interface IRI {
 export interface Slope {
   start: number;
   end: number;
-  iri: number[];
+  iri: number;
 }
 
 // In progress
@@ -231,10 +231,17 @@ function formatNumber(value: number): number {
   return parseFloat(value.toFixed(2));
 }
 
-export function slopeZ(iri: IRI, segmentation: number[]): Slope[] {
+export function slopeZ(
+  iri: IRI,
+  segmentation: number[],
+  percentile: number | null
+): Slope[] {
   let slpZ: Slope[] = [];
   const slope_zk: number[] = [];
+
   const length = iri.measurements.length;
+
+  let percentile_values: number[] = [];
   let acum = 0;
   let count = 0;
 
@@ -243,7 +250,7 @@ export function slopeZ(iri: IRI, segmentation: number[]): Slope[] {
   const curr_slope: Slope = {
     start: 0,
     end: 0,
-    iri: [],
+    iri: 0,
   };
 
   curr_slope.start = iri.measurements[0];
@@ -251,15 +258,28 @@ export function slopeZ(iri: IRI, segmentation: number[]): Slope[] {
 
   for (let i = 1; i < length; i++) {
     const zk_val: number = aux_segmentation(segmentation, iri.measurements, i);
-    acum += iri.iri[i];
+
+    if (percentile) percentile_values.push(iri.iri[i]);
+    else acum += iri.iri[i];
+
     if ((slope_zk.at(-1) == 0 || i == length - 1) && last_slope) {
-      const avg = formatNumber(acum / (i - count));
+      if (percentile) {
+        const percentile_idx = aux_percentile(
+          percentile,
+          percentile_values.length
+        );
+        const percentile_iri = percentile_values.sort()[percentile_idx];
+        curr_slope.iri = percentile_iri;
+      } else {
+        const avg = formatNumber(acum / (i - count));
+        curr_slope.iri = avg;
+      }
 
       curr_slope.end = iri.measurements[i];
 
-      curr_slope.iri = new Array(i - count).fill(avg);
       count = i;
       acum = 0;
+      percentile_values = [];
 
       slpZ.push(structuredClone(curr_slope));
 
@@ -282,4 +302,9 @@ function aux_segmentation(segmentation: number[], iri: number[], i: number) {
   return parseFloat(
     ((segmentation[i] - segmentation[i - 1]) / (iri[i] - iri[i - 1])).toFixed(2)
   );
+}
+
+function aux_percentile(p: number, length: number) {
+  const index = Math.round((p / 100) * length);
+  return index;
 }

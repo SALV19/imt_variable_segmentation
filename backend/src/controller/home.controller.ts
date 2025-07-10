@@ -11,6 +11,7 @@ export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
   const join_segments = req.body.join_segments;
   const singular_points = req.body.singular_points;
+  const percentile = req.body.percentil ?? null;
 
   const files = req.files as Express.Multer.File[];
   if (files.length === 0) {
@@ -37,25 +38,22 @@ export async function upload_file(req: Request, res: Response) {
   );
 
   // Get slopes function
-  const segmentation = Aux.cumsum(filter_measurements);
+  const segmentation: number[] = Aux.cumsum(filter_measurements);
 
   // Segmentate data
-  const slopes: Aux.Slope[] = Aux.slopeZ(measurements, segmentation);
+  let slopes: Aux.Slope[] = Aux.slopeZ(measurements, segmentation, percentile);
 
-  // Flatten array and join segments
-  const slopes_values = slopes
-    .flatMap((s) => s.iri)
-    // Join close segments
-    .map((curr, idx, arr) => {
-      if (idx > 0) {
-        if (Math.abs(curr - arr[idx - 1]) <= join_segments) {
-          arr[idx] = arr[idx - 1];
-          return arr[idx - 1];
-        }
+  // Join close segments and count total amount of segments in dataset
+  slopes = slopes.map((curr, idx, arr) => {
+    if (idx > 0) {
+      if (Math.abs(curr.iri - arr[idx - 1].iri) <= join_segments) {
+        arr[idx] = arr[idx - 1];
+        return { ...curr, iri: arr[idx - 1].iri };
       }
-      measurements.total += 1;
-      return curr;
-    });
+    }
+    measurements.total++;
+    return { ...curr, iri: curr.iri };
+  });
 
   const abnormalities = await abnormal_points;
 
@@ -64,7 +62,7 @@ export async function upload_file(req: Request, res: Response) {
     measurements,
     filter_measurements,
     segmentation,
-    slopes_values,
+    slopes,
     abnormalities,
   });
 }

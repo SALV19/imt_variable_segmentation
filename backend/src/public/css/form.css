@@ -67,7 +67,6 @@ input[type="number"] {
   animation: horizontal-shaking 0.3s calc(1);
 }
 
-/* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
@@ -75,14 +74,12 @@ input[type="number"] {
   height: 24px;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
