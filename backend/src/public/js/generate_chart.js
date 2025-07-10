@@ -172,4 +172,6 @@ function create_data(json_response) {
   min.innerHTML = measurements.min.toFixed(2);
   const total = document.querySelector("#total");
   total.innerHTML = measurements.total.toFixed(2);
+  const method = document.querySelector("#method");
+  method.innerHTML = json_response.method;
 }

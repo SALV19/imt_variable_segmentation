@@ -1,31 +1,57 @@
-import express, { Request, Response } from "express";
-import * as dotenv from "dotenv"
-import {path, __dirname} from "./utils/import_path.ts"
+import express from "express";
+import * as dotenv from "dotenv";
+import { path, __dirname } from "./utils/import_path.ts";
+import session from "express-session";
+import "express-session";
+import "body-parser";
 
-dotenv.config({path: path.join(__dirname, "../../.env")})
+// Enviroment variables
+dotenv.config({ path: path.join(__dirname, "../../.env") });
+
+// Set up session
+declare module "express-session" {
+  interface SessionData {
+    [key: string]: any;
+  }
+}
 
 const app = express();
 
+// Setup static files
 app.use(express.static(path.join(__dirname, "./public")));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.set("view engine", "ejs")
-app.set("views", [
-    path.join(__dirname, "../../frontend/views")
-])
+app.set("trust proxy", 1);
+app.use(
+  session({
+    secret: "secret_string_temp",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
-const port = process.env.PORT || 3000;
-if (!process.env.PORT) {
-    console.log("ENV not loaded")
-}
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-import routes from "./routes/basic.route.ts"
+// Set up front-end folder
+app.set("view engine", "ejs");
+app.set("views", [path.join(__dirname, "../../frontend/views")]);
 
-app.use("/", routes)
-app.get("", (req, res) => {res.status(404).send("Page not found")})
+// Setup routes
+import routes from "./routes/basic.route.ts";
+import bodyParser from "body-parser";
+
+app.use("/", routes);
+app.get("", (req, res) => {
+  res.status(404).send("Page not found");
+});
 
 // Start the Express server
+const port = process.env.PORT || 3000;
+if (!process.env.PORT) {
+  console.log("ENV not loaded");
+}
+
 app.listen(port, () => {
-    console.log(`The server is running at http://localhost:${port}`);
+  console.log(`The server is running at http://localhost:${port}`);
 });

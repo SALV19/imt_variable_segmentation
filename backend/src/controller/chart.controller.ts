@@ -5,6 +5,8 @@ import XLSXChart from "xlsx-chart";
 const xlsxChart = new XLSXChart();
 
 export function create_chart(req: Request, res: Response) {
+  console.log("Session details", req.session.generated_data);
+
   var opts = {
     file: "chart.xlsx",
     chart: "column",
@@ -39,13 +41,15 @@ export function create_chart(req: Request, res: Response) {
       return;
     }
 
-    res
-      .status(200)
-      .setHeader(
-        "Content-Disposition",
-        'attachment; filename="iri_segmentado.xlsx"'
-      )
-      .setHeader("Content-Type", "application/octet-stream")
-      .send(result);
+    res.status(200);
   });
+  //   res
+  //     .status(200)
+  //     .setHeader(
+  //       "Content-Disposition",
+  //       'attachment; filename="iri_segmentado.xlsx"'
+  //     )
+  //     .setHeader("Content-Type", "application/octet-stream")
+  //     .send(result);
+  // });
 }

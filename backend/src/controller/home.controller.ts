@@ -57,12 +57,18 @@ export async function upload_file(req: Request, res: Response) {
 
   const abnormalities = await abnormal_points;
 
-  // Response
-  res.status(200).json({
+  const generated_data = {
     measurements,
     filter_measurements,
     segmentation,
     slopes,
     abnormalities,
-  });
+    method: percentile ? "Percentil" : "Media",
+  };
+
+  req.session.generated_data = generated_data;
+  req.session.save();
+
+  // Response
+  res.status(200).json(generated_data);
 }

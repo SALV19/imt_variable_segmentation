@@ -5,7 +5,9 @@
     <canvas id="myChart"></canvas>
   </div>
 
-  <section class="pt-20 w-1/4 border-l-2 border-gray-400 pl-2">
+  <section
+    class="w-1/4 border-l-2 h-screen border-gray-400 pl-2 flex flex-col items-center pt-10"
+  >
     <h2 class="text-xl text-gob font-semibold text-center">Resultados</h2>
     <table class="table-fixed mx-auto">
       <tbody>
@@ -25,8 +27,20 @@
           <td class="w-32">Total de segmentos</td>
           <td id="total"></td>
         </tr>
+        <tr>
+          <td class="w-32">Método</td>
+          <td id="method"></td>
+        </tr>
       </tbody>
     </table>
+
+    <form action="/create_chart">
+        <button 
+          class="mt-7 px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded-sm font-semibold">
+          Descargar Excel
+        </button>
+      </input>
+    </form>
   </section>
 
   <script src="/js/generate_chart.js"></script>
