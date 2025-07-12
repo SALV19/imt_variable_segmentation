@@ -21,8 +21,7 @@
     "express-session": "^1.18.1",
     "fs": "^0.0.1-security",
     "multer": "^2.0.1",
-    "xlsx": "^0.17.1",
-    "xlsx-chart": "^0.4.3"
+    "xlsx": "^0.17.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

@@ -4,3 +4,7 @@
 
 /backend/src/uploads/*
 /backend/src/public/css/outpput.css
+/backend/src/test/*.xlsx
+/backend/src/python/myvenv
+/backend/src/python/testing.py
+

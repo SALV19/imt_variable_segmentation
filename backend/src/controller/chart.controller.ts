@@ -1,55 +1,50 @@
 import { Request, Response } from "express";
-
-// @ts-ignore
-import XLSXChart from "xlsx-chart";
-const xlsxChart = new XLSXChart();
+import { spawn } from "child_process";
+import path from "path";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export function create_chart(req: Request, res: Response) {
   console.log("Session details", req.session.generated_data);
 
-  var opts = {
-    file: "chart.xlsx",
-    chart: "column",
-    titles: ["Title 1", "Title 2", "Title 3"],
-    fields: ["Field 1", "Field 2", "Field 3", "Field 4"],
-    data: {
-      "Title 1": {
-        "Field 1": 5,
-        "Field 2": 10,
-        "Field 3": 15,
-        "Field 4": 20,
-      },
-      "Title 2": {
-        "Field 1": 10,
-        "Field 2": 5,
-        "Field 3": 20,
-        "Field 4": 15,
-      },
-      "Title 3": {
-        "Field 1": 20,
-        "Field 2": 15,
-        "Field 3": 10,
-        "Field 4": 5,
-      },
-    },
-  };
+  const script_path = path.join(__dirname, "../python/generate_excel.py");
+  const python_path = path.join(__dirname, "../python/myvenv/bin/python");
 
-  xlsxChart.generate(opts, function (err: any, result: any) {
-    if (err) {
-      console.error("ERRROR: ", err);
-      res.status(500).send(`ERROR: ${err}`);
-      return;
-    }
+  const python_process = spawn(python_path, [
+    script_path,
+    JSON.stringify(req.session.generated_data),
+  ]);
 
-    res.status(200);
+  let result = "";
+  python_process.stdout.on("data", (data) => {
+    result += data.toString();
   });
-  //   res
-  //     .status(200)
-  //     .setHeader(
-  //       "Content-Disposition",
-  //       'attachment; filename="iri_segmentado.xlsx"'
-  //     )
-  //     .setHeader("Content-Type", "application/octet-stream")
-  //     .send(result);
-  // });
+
+  python_process.stderr.on("data", (data) => {
+    console.error("Python error:", data.toString());
+  });
+
+  python_process.on("close", (code) => {
+    console.log("Python finished with code", code);
+    console.log("Full result:", result);
+
+    res
+      .status(200)
+      // .setHeader(
+      //   "Content-Disposition",
+      //   'attachment; filename="iri_segmentado.xlsx"'
+      // )
+      // .setHeader("Content-Type", "application/octet-stream")
+      .send(result);
+  });
+
+  // res
+  //   .status(200)
+  //   .setHeader(
+  //     "Content-Disposition",
+  //     'attachment; filename="iri_segmentado.xlsx"'
+  //   )
+  //   .setHeader("Content-Type", "application/octet-stream")
+  //   .send(result);
 }
