@@ -66,8 +66,7 @@ export async function upload_file(req: Request, res: Response) {
     method: percentile ? "Percentil" : "Media",
   };
 
-  req.session.generated_data = generated_data;
-  req.session.save();
+  req.session!.generated_data = generated_data;
 
   // Response
   res.status(200).json(generated_data);

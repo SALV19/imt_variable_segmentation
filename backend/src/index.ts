@@ -1,19 +1,11 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import { path, __dirname } from "./utils/import_path.ts";
-import session from "express-session";
-import "express-session";
+import cookieSession from "cookie-session";
 import "body-parser";
 
 // Enviroment variables
 dotenv.config({ path: path.join(__dirname, "../../.env") });
-
-// Set up session
-declare module "express-session" {
-  interface SessionData {
-    [key: string]: any;
-  }
-}
 
 const app = express();
 
@@ -23,10 +15,12 @@ app.use(express.json());
 
 app.set("trust proxy", 1);
 app.use(
-  session({
-    secret: "secret_string_temp",
-    resave: false,
-    saveUninitialized: false,
+  cookieSession({
+    name: "session",
+    keys: [process.env.SESSION_SECRET ?? "secret"],
+    maxAge: 60 * 60 * 1000,
+    secure: false,
+    sameSite: "lax",
   })
 );
 

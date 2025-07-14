@@ -6,12 +6,15 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export function create_chart(req: Request, res: Response) {
-  if (!req.session.generated_data) {
-    console.error("Error: no session");
-    res.send("No session");
+  if (!req.session) {
+    res.status(500).send("ERROR: no session");
     return;
   }
-  // console.log("Session details", req.session.generated_data);
+  console.log(req.session);
+  if (!req.session.generated_data) {
+    res.send("ERROR: no data stored");
+    return;
+  }
 
   const script_path = path.join(__dirname, "../python/generate_excel.py");
   const python_path = path.join(__dirname, "../python/myvenv/bin/python");
