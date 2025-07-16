@@ -14,7 +14,8 @@ measurements = generated_data["measurements"]
 filter_measurements = generated_data["filter_measurements"]
 segmentation = generated_data["segmentation"]
 slopes = generated_data["slopes"]
-slope_values = map(lambda item : 
+distance = measurements["distance"]
+slope_values: map = map(lambda item : 
                     list(map(lambda value : item[value], item)), 
                     slopes)
 
@@ -53,6 +54,7 @@ for idx, measurement in enumerate(measurements["measurements"]):
   ws.cell(row=row_val, column=4, value=filter_measurements[idx])
   ws.cell(row=row_val, column=5, value=segmentation[idx])
 
+slope_values = list(slope_values)
 
 for idx, value in enumerate(slope_values):
   row_val = idx+3 
@@ -60,15 +62,13 @@ for idx, value in enumerate(slope_values):
   ws.cell(row=row_val, column=8, value=value[1])
   ws.cell(row=row_val, column=9, value=value[2])
 
-# last = None
-# iri_segmentatio_values = list(slope_values)
-# i = 0
-# for idx, _ in enumerate(measurements["measurements"]):
-#   _iri = iri_segmentatio_values
-#   if last != _iri: 
-#     last = _iri
-#     i += 1
-#   ws.cell(row=idx+2, column=6 , value=last)
+last = None
+idx = 2
+for i in slope_values:
+  idx += 1
+  for j in range(i[0], i[1], distance):
+    ws2.cell(row=idx, column=1, value=i[2])
+    idx += 1
 
 
 c1 = LineChart()
@@ -81,13 +81,18 @@ measurement_values = Reference(ws, min_col=1, max_col=1, min_row=2, max_row=leng
 iri = Reference(ws, min_col=3, max_col=3, min_row=2, max_row=length)
 filter_data = Reference(ws, min_col=4, max_col=4, min_row=2, max_row=length)
 segmentation_data = Reference(ws, min_col=5, max_col=5, min_row=2, max_row=length)
-# slopes_data = Reference(ws2, min_col=9, max_col=9, min_row=3, max_row=length)
+slopes_data = Reference(ws2, min_col=1, max_col=1, min_row=1, max_row=length)
 
 c1.add_data(iri, titles_from_data=True)
 c1.add_data(filter_data, titles_from_data=True)
+c1.add_data(slopes_data, titles_from_data=True)
 c1.set_categories(measurement_values)
 c1.width = 25
 c1.height = 12
+
+s = c1.series[2]
+s.graphicalProperties.line.solidFill = "00000"
+
 ws.add_chart(c1, "K2")
 
 c2 = LineChart()

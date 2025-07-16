@@ -45,7 +45,6 @@ export function create_chart(req: Request, res: Response) {
       )
       .setHeader("Content-Type", "application/octet-stream")
       .send(buffer);
-    // .send(buffer);
   });
 
   // res
