@@ -8,7 +8,8 @@
     "tailwind": "npx tailwindcss -i ./src/input.css -o ./src/public/css/output.css --watch",
     "start": "npx tsx --watch src/index.ts",
     "test": "echo \"Starting test:\" && cross-env NODE_OPTIONS='--experimental-vm-modules' npx jest src/test/process_data.test.ts",
-    "info_test": "npx tsx src/test/process_data.test.ts"
+    "info_test": "npx tsx src/test/process_data.test.ts",
+    "build": "npm install && python3 -m venv src/python/myvenv && source src/python/myvenv/bin/activate && pip install -Ur src/python/requirements.txt"
   },
   "keywords": [],
   "author": "",

@@ -199,7 +199,6 @@ export async function get_uncommon(
   for (let i = 0; i < iri.measurements.length; i++) {
     if (Math.abs(filter[i] - iri.iri[i]) > singular_points) {
       uncommon_points.push({ x: iri.measurements[i], y: iri.iri[i] });
-      console.log("Abnormality at: ", uncommon_points.at(-1));
     }
   }
 
@@ -207,21 +206,33 @@ export async function get_uncommon(
 }
 
 // O(n)
-export function cumsum(iri: number[]): number[] {
+export function cumsum(iri: number[], singular_points: number): number[] {
   const length = iri.length;
   const avg = iri.reduce((acum, curr) => curr + acum) / length;
-  const zk: number[] = aux_cumsum(iri, length, avg);
+  const zk: number[] = aux_cumsum(iri, length, avg, singular_points);
 
   return zk;
 }
 
 // Algorithm implementation
 // O(n)
-function aux_cumsum(iri: number[], length: number, avg: number): number[] {
+function aux_cumsum(
+  iri: number[],
+  length: number,
+  avg: number,
+  singular_points: number
+): number[] {
   let acum = 0;
   const zk = [];
   for (let i = 0; i < length; i++) {
-    acum += iri[i];
+    if (i - 1 < 0) {
+      acum += iri[i];
+      continue;
+    } else if (Math.abs(iri[i] - iri[i - 1]) >= singular_points) {
+      acum += iri[i - 1];
+    } else {
+      acum += iri[i];
+    }
     zk.push(acum - i * avg);
   }
   return zk;
@@ -241,6 +252,10 @@ export function slopeZ(
 
   const length = iri.measurements.length;
 
+  const percentile_99_idx = aux_percentile(99, length);
+  const copy_iri = iri.iri.slice(0);
+  const percentile_99 = copy_iri.sort((a, b) => a - b)[percentile_99_idx];
+
   let percentile_values: number[] = [];
   let acum = 0;
   let count = 0;
@@ -259,10 +274,15 @@ export function slopeZ(
   for (let i = 1; i < length; i++) {
     const zk_val: number = aux_segmentation(segmentation, iri.measurements, i);
 
-    if (percentile) percentile_values.push(iri.iri[i]);
-    else acum += iri.iri[i];
+    if (percentile)
+      percentile_values.push(aux_99_percentile(percentile_99, iri.iri[i]));
+    else acum += aux_99_percentile(percentile_99, iri.iri[i]);
 
-    if ((slope_zk.at(-1) == 0 || i == length - 1) && last_slope) {
+    if (
+      (slope_zk.at(-1) == 0 || i == length - 1) &&
+      last_slope &&
+      !(i - count < length * 0.05)
+    ) {
       if (percentile) {
         const percentile_idx = aux_percentile(
           percentile,
@@ -307,4 +327,8 @@ function aux_segmentation(segmentation: number[], iri: number[], i: number) {
 function aux_percentile(p: number, length: number) {
   const index = Math.round((p / 100) * length);
   return index;
+}
+
+function aux_99_percentile(percentile_99: number, value: number) {
+  return value < percentile_99 ? value : percentile_99;
 }

@@ -28,7 +28,7 @@ export async function upload_file(req: Request, res: Response) {
   const mov_avg = Math.round(req.body.moving_avg / req.body.distance);
 
   // Filter / Smooth data
-  const filter_measurements: number[] = await Aux.filter(measurements, mov_avg);
+  let filter_measurements: number[] = await Aux.filter(measurements, mov_avg);
 
   // Get abnormal points
   const abnormal_points: Promise<{ x: number; y: number }[]> = Aux.get_uncommon(
@@ -38,7 +38,10 @@ export async function upload_file(req: Request, res: Response) {
   );
 
   // Get slopes function
-  const segmentation: number[] = Aux.cumsum(filter_measurements);
+  const segmentation: number[] = Aux.cumsum(
+    filter_measurements,
+    singular_points
+  );
 
   // Segmentate data
   let slopes: Aux.Slope[] = Aux.slopeZ(measurements, segmentation, percentile);
