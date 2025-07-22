@@ -43,7 +43,15 @@ function create_data(json_response) {
           autoSkip: false,
           stepSize: 1,
           callback: (val, idx) => {
-            const length = Math.floor(measurements.measurements.length / 20);
+            const length = measurements.measurements.length;
+            const ammount = Math.floor(length / 500);
+            if (length > 500)
+              return measurements.measurements[idx] % (500 * ammount) === 0
+                ? Math.floor(measurements.measurements[idx] / 1000) +
+                    "+" +
+                    (measurements.measurements[idx] % 1000) / 100 +
+                    "00"
+                : "";
             return measurements.measurements[idx] % 500 === 0
               ? Math.floor(measurements.measurements[idx] / 1000) +
                   "+" +
