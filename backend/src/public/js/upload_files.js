@@ -1,24 +1,20 @@
 const form = document.querySelector("#form");
 const file_input_labels = document.querySelectorAll(".label_input");
 const input_elements = document.querySelectorAll(
-  "input[type=file], input[type=hidden]"
+  "#file_upload_input, #file_upload_input_2"
 );
+
 const percentile_avg = document.querySelector("#percentile-avg");
 const percentile_label = document.querySelector("#percentile-label");
 const percentile_input = document.querySelector("#percentil");
 
-document.addEventListener("DOMContentLoaded", () => {
-  input_elements.forEach((i) => (i.value = null));
-  percentile_input.checked = false;
-});
-
 percentile_avg.addEventListener("change", () => {
   if (percentile_avg.checked) {
-    percentile_label.textContent = "Media";
-    percentile_input.type = "hidden";
-  } else {
     percentile_label.textContent = "Percentil";
     percentile_input.type = "number";
+  } else {
+    percentile_label.textContent = "Media";
+    percentile_input.type = "hidden";
   }
 });
 
@@ -60,9 +56,9 @@ function loadFile(buttonElement) {
 
 // Show second file input label and activate
 function show_second() {
-  const hidden_label = document.querySelector("label[for=hidden]");
+  const hidden_label = document.querySelector("label[for=file_upload_input_2]");
   hidden_label.classList.remove("hidden");
-  const hidden_input = document.querySelector("#hidden");
+  const hidden_input = document.querySelector("#file_upload_input_2");
   hidden_input.type = "file";
 }
 
