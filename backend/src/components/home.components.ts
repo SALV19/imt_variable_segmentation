@@ -209,30 +209,18 @@ export async function get_uncommon(
 export function cumsum(iri: number[], singular_points: number): number[] {
   const length = iri.length;
   const avg = iri.reduce((acum, curr) => curr + acum) / length;
-  const zk: number[] = aux_cumsum(iri, length, avg, singular_points);
+  const zk: number[] = aux_cumsum(iri, length, avg);
 
   return zk;
 }
 
 // Algorithm implementation
 // O(n)
-function aux_cumsum(
-  iri: number[],
-  length: number,
-  avg: number,
-  singular_points: number
-): number[] {
+function aux_cumsum(iri: number[], length: number, avg: number): number[] {
   let acum = 0;
   const zk = [];
   for (let i = 0; i < length; i++) {
-    if (i - 1 < 0) {
-      acum += iri[i];
-      continue;
-    } else if (Math.abs(iri[i] - iri[i - 1]) >= singular_points) {
-      acum += iri[i - 1];
-    } else {
-      acum += iri[i];
-    }
+    acum += iri[i];
     zk.push(acum - i * avg);
   }
   return zk;

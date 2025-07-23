@@ -37,6 +37,17 @@ export async function upload_file(req: Request, res: Response) {
     singular_points
   );
 
+  const normal_measurements_iri: number[] = measurements.iri.map((val, idx) => {
+    if (Math.abs(filter_measurements[idx] - val) > singular_points)
+      return filter_measurements[idx];
+    return val;
+  });
+
+  const non_abnormal_values: Aux.IRI = {
+    ...measurements,
+    iri: normal_measurements_iri,
+  };
+
   // Get slopes function
   const segmentation: number[] = Aux.cumsum(
     filter_measurements,
@@ -44,7 +55,11 @@ export async function upload_file(req: Request, res: Response) {
   );
 
   // Segmentate data
-  let slopes: Aux.Slope[] = Aux.slopeZ(measurements, segmentation, percentile);
+  let slopes: Aux.Slope[] = Aux.slopeZ(
+    non_abnormal_values,
+    segmentation,
+    percentile
+  );
 
   // Join close segments and count total amount of segments in dataset
   slopes = slopes.map((curr, idx, arr) => {
