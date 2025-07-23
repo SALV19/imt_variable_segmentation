@@ -7,7 +7,7 @@ export interface IRI {
   measurements: number[];
   distance: number;
   iri: number[];
-  error: object;
+  error: string;
   average: number;
   max: number;
   min: number;
@@ -67,14 +67,13 @@ export async function process_data(
 
     const new_iri = {
       ...(await iri[0]),
-      iri: iri_1.iri.map((iri_value, idx) =>
-        parseFloat(((iri_2[idx] + iri_value) / 2).toFixed(2))
-      ),
+      iri: iri_1.iri.map((iri_value, idx) => {
+        return parseFloat(((iri_2.iri[idx] + iri_value) / 2).toFixed(2));
+      }),
       max: Math.max(iri_1.max, iri_2.max),
       min: Math.min(iri_1.min, iri_2.min),
     };
 
-    // return new_iri
     final_iri = new_iri;
   } else {
     final_iri = await iri[0];
@@ -99,7 +98,7 @@ async function create_iri(file: string): Promise<IRI> {
     max: 0,
     min: 99999,
     total: 0,
-    error: {},
+    error: "",
   };
 
   const type = ["id", "measurements", "end", "iri"];

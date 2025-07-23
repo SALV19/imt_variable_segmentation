@@ -25,6 +25,11 @@ export async function upload_file(req: Request, res: Response) {
   // Process csv files into json objects
   const measurements: Aux.IRI = await Aux.process_data(files);
 
+  if (measurements.error) {
+    res.status(400).send(measurements.error);
+    return;
+  }
+
   const mov_avg = Math.round(req.body.moving_avg / req.body.distance);
 
   // Filter / Smooth data
