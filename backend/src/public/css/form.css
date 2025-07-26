@@ -126,3 +126,8 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.selected {
+  background-color: var(--checkbox-color);
+  color: white;
+}

@@ -64,10 +64,13 @@ export async function process_data(
   if (files.length > 1) {
     const iri_1 = await iri[0];
     const iri_2 = await iri[1];
+    let first;
+    if (iri_1.measurements.length < iri_2.measurements.length) first = iri_1;
+    else first = iri_2;
 
     const new_iri = {
-      ...(await iri[0]),
-      iri: iri_1.iri.map((iri_value, idx) => {
+      ...(await first),
+      iri: first.iri.map((iri_value, idx) => {
         return parseFloat(((iri_2.iri[idx] + iri_value) / 2).toFixed(2));
       }),
       max: Math.max(iri_1.max, iri_2.max),
@@ -205,7 +208,7 @@ export async function get_uncommon(
 }
 
 // O(n)
-export function cumsum(iri: number[], singular_points: number): number[] {
+export function cumsum(iri: number[]): number[] {
   const length = iri.length;
   const avg = iri.reduce((acum, curr) => curr + acum) / length;
   const zk: number[] = aux_cumsum(iri, length, avg);

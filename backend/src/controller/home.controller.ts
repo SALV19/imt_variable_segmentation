@@ -54,10 +54,7 @@ export async function upload_file(req: Request, res: Response) {
   };
 
   // Get slopes function
-  const segmentation: number[] = Aux.cumsum(
-    filter_measurements,
-    singular_points
-  );
+  const segmentation: number[] = Aux.cumsum(filter_measurements);
 
   // Segmentate data
   let slopes: Aux.Slope[] = Aux.slopeZ(
