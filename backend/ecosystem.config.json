@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "script": "src/index.ts",
+      "interpreter": "tsx",
+      "watch": ["src"],
+      "env": {
+        "PORT": 3000,
+        "SESSION_SECRET": "long_secret_code_that_should_remain_secret"
+      }
+    }
+  ]
+}
