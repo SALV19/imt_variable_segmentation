@@ -1,13 +1,19 @@
-function info(components_id) {
-  const components = document.querySelector(`#${components_id}`);
-  const my_element = document.querySelector("#info");
-  components.classList.remove("selected");
-  my_element.classList.add("selected");
-}
+$("#info").on("click", function () {
+  $("#info").addClass("selected");
+  $("#components").removeClass("selected");
 
-function config(info_id) {
-  const info = document.querySelector(`#${info_id}`);
-  const my_element = document.querySelector("#components");
-  info.classList.remove("selected");
-  my_element.classList.add("selected");
-}
+  $("#information_module").show();
+  $("#configuration_module").hide();
+});
+
+$("#components").on("click", function () {
+  $("#info").removeClass("selected");
+  $("#components").addClass("selected");
+
+  $("#information_module").hide();
+  $("#configuration_module").show();
+});
+
+$("input[name=selected_configuration]").change((event) => {
+  console.log("iri selected", event.target.id);
+});
