@@ -64,16 +64,18 @@ export async function upload_file(req: Request, res: Response) {
   );
 
   // Join close segments and count total amount of segments in dataset
-  slopes = slopes.map((curr, idx, arr) => {
-    if (idx > 0) {
-      if (Math.abs(curr.iri - arr[idx - 1].iri) <= join_segments) {
-        arr[idx] = arr[idx - 1];
-        return { ...curr, iri: arr[idx - 1].iri };
-      }
+  for (let i = 0; i < slopes.length; i++) {
+    if (i > 0 && Math.abs(slopes[i].iri - slopes[i - 1].iri) <= join_segments) {
+      slopes[i - 1].end = slopes[i].end;
+      slopes[i - 1].iri = Number(
+        ((slopes[i].iri + slopes[i - 1].iri) / 2).toFixed(2)
+      );
+      slopes.splice(i, 1);
+
+      i--;
     }
     measurements.total++;
-    return { ...curr, iri: curr.iri };
-  });
+  }
 
   const abnormalities = await abnormal_points;
 

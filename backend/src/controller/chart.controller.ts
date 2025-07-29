@@ -11,6 +11,7 @@ export function create_chart(req: Request, res: Response) {
     res.send("No session");
     return;
   }
+
   // console.log("Session details", req.session.generated_data);
 
   const script_path = path.join(__dirname, "../python/generate_excel.py");
@@ -46,13 +47,4 @@ export function create_chart(req: Request, res: Response) {
       .setHeader("Content-Type", "application/octet-stream")
       .send(buffer);
   });
-
-  // res
-  //   .status(200)
-  //   .setHeader(
-  //     "Content-Disposition",
-  //     'attachment; filename="iri_segmentado.xlsx"'
-  //   )
-  //   .setHeader("Content-Type", "application/octet-stream")
-  //   .send(result);
 }
