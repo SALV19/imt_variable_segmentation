@@ -3,6 +3,9 @@ from openpyxl import Workbook
 from openpyxl.chart import (
   LineChart, Reference, ScatterChart
 )
+from openpyxl.chart.text import RichText
+from openpyxl.drawing.text import  RichTextProperties,Paragraph,ParagraphProperties, CharacterProperties
+
 import json
 import sys
 
@@ -25,7 +28,7 @@ slope_values: map = map(lambda item :
 wb = Workbook()
 virtual_workbook = BytesIO()
 
-ws2 = wb.create_sheet('Datos | Segmentacion y puntos singulares')
+ws2 = wb.create_sheet('Datos')
 
 ws = wb.active
 
@@ -46,15 +49,21 @@ ws["H2"] = "Fin Segmento"
 ws["I2"] = "IRI"
 ws["K2"] = "Puntos Singulares"
 
-ws2["A1"] = "Puntos Zk"
-ws2["B1"] = "Puntos Singulares"
+ws2["A1"] = "Medicion"
+ws2["B1"] = "Puntos Zk"
+ws2["C1"] = "Puntos Singulares"
 
 length = len(measurements["measurements"]) + 2
 
 # Medidas generales
 for idx, measurement in enumerate(measurements["measurements"]):
   row_val = idx+3
-  ws.cell(row=row_val, column=1, value=measurement)
+  new_measurement = str(measurement)[:-3] + '+' + str(measurement)[-3:]
+  if (measurement % 500 == 0 or  \
+      idx == 0 or \
+      idx == (len(measurements["measurements"]) - 1)):
+    ws2.cell(row=row_val, column=1, value=new_measurement)
+  ws.cell(row=row_val, column=1, value=new_measurement)
   ws.cell(row=row_val, column=2, value=(measurement + measurements["distance"]))
   ws.cell(row=row_val, column=3, value=measurements["iri"][idx])
   ws.cell(row=row_val, column=4, value=filter_measurements[idx])
@@ -75,7 +84,7 @@ idx = 2
 for i in slope_values:
   idx += 1
   for j in range(i[0], i[1], distance):
-    ws2.cell(row=idx, column=1, value=i[2])
+    ws2.cell(row=idx, column=2, value=i[2])
     idx += 1
 
 # Puntos singulares
@@ -88,10 +97,10 @@ for i in range(len(measurements["measurements"])):
   if (measurements["measurements"][i] == singularities[idx]["x"]):
     ws.cell(row=idx+3, column=11, value=singularities[idx]["x"])
     ws.cell(row=idx+3, column=12, value=singularities[idx]["y"])
-    ws2.cell(row=i+1, column=2, value=singularities[idx]["y"])
+    ws2.cell(row=i+1, column=3, value=singularities[idx]["y"])
     idx += 1
   else:
-    ws2.cell(row=i+1, column=2, value=None)
+    ws2.cell(row=i+1, column=3, value=None)
 
 c1 = LineChart()
 c1.title = "IRI segmentado"
@@ -99,13 +108,13 @@ c1.style = 2
 c1.y_axis.title = "IRI"
 c1.x_axis.title = "Metros"
 
-measurement_values = Reference(ws, min_col=1, max_col=1, min_row=2, max_row=length)
+measurement_values = Reference(ws2, min_col=1, max_col=1, min_row=2, max_row=length)
 iri = Reference(ws, min_col=3, max_col=3, min_row=2, max_row=length)
 filter_data = Reference(ws, min_col=4, max_col=4, min_row=2, max_row=length)
 segmentation_data = Reference(ws, min_col=5, max_col=5, min_row=2, max_row=length)
-slopes_data = Reference(ws2, min_col=1, max_col=1, min_row=1, max_row=length)
+slopes_data = Reference(ws2, min_col=2, max_col=2, min_row=1, max_row=length)
 
-x_singular_points = Reference(ws2, min_col=2, min_row=1, max_row=length)
+x_singular_points = Reference(ws2, min_col=3, min_row=1, max_row=length)
 
 c1.add_data(iri, titles_from_data=True)
 c1.add_data(filter_data, titles_from_data=True)
@@ -120,10 +129,15 @@ s = c1.series[2]
 s.graphicalProperties.line.solidFill = "00000"
 
 s = c1.series[3]
-s.marker.symbol = "triangle"
+s.marker.symbol = "circle"
 s.marker.graphicalProperties.solidFill = "FF0000"
 s.marker.graphicalProperties.line.solidFill = "FF0000"
 s.graphicalProperties.line.noFill = True
+
+c1.x_axis.txPr = RichText(bodyPr=RichTextProperties(anchor="ctr",anchorCtr="1",rot="-2700000",
+           spcFirstLastPara="1",vertOverflow="ellipsis",wrap="square"),
+        p=[Paragraph(pPr=ParagraphProperties(defRPr=CharacterProperties()), endParaRPr=CharacterProperties())])
+
 
 ws.add_chart(c1, "P2")
 
