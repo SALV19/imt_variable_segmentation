@@ -22,21 +22,50 @@ export function create_chart(req: Request, res: Response) {
     JSON.stringify(req.session.generated_data),
   ]);
 
-  let result: Buffer[] = [];
-  // let result: string = "";
-  python_process.stdout.on("data", (data_chunk) => {
-    result.push(data_chunk);
-    // result += data_chunk;
+  // testing(res, python_process);
+  production(res, python_process);
+}
+
+function testing(res: Response, python_process: any) {
+  let result: string = "";
+  python_process.stdout.on("data", (data_chunk: any) => {
+    result += data_chunk;
   });
 
-  python_process.stderr.on("data", (data) => {
+  python_process.stderr.on("data", (data: any) => {
     console.error("Python error:", data.toString());
   });
 
-  python_process.on("close", (code) => {
+  python_process.on("close", (code: number) => {
     console.log("Python finished with code", code);
-    // console.log("Full result:", result);
+    console.log("Full result:", result);
+    // const buffer = Buffer.concat(result);
+    if (code != 0) {
+      res.status(500).end();
+      return;
+    }
+
+    res.status(200).end();
+  });
+}
+
+function production(res: Response, python_process: any) {
+  let result: Buffer[] = [];
+  python_process.stdout.on("data", (data_chunk: any) => {
+    result.push(data_chunk);
+  });
+
+  python_process.stderr.on("data", (data: any) => {
+    console.error("Python error:", data.toString());
+  });
+
+  python_process.on("close", (code: number) => {
+    console.log("Python finished with code", code);
     const buffer = Buffer.concat(result);
+    if (code != 0) {
+      res.status(500).end();
+      return;
+    }
 
     res
       .status(200)

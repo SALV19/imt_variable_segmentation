@@ -25,7 +25,7 @@ slope_values: map = map(lambda item :
 wb = Workbook()
 virtual_workbook = BytesIO()
 
-ws2 = wb.create_sheet('Pendiente Zk')
+ws2 = wb.create_sheet('Datos | Segmentacion y puntos singulares')
 
 ws = wb.active
 
@@ -46,7 +46,8 @@ ws["H2"] = "Fin Segmento"
 ws["I2"] = "IRI"
 ws["K2"] = "Puntos Singulares"
 
-ws2["A1"] = "Segmentacion"
+ws2["A1"] = "Puntos Zk"
+ws2["B1"] = "Puntos Singulares"
 
 length = len(measurements["measurements"]) + 2
 
@@ -78,13 +79,19 @@ for i in slope_values:
     idx += 1
 
 # Puntos singulares
-idx = 3
-for i in singularities:
-  ws.cell(row=idx, column=11, value=i["y"])
-  ws.cell(row=idx, column=12, value=i["x"])
-  idx += 1
-
+idx = 0
 singularities_length = len(singularities)
+for i in range(len(measurements["measurements"])):
+  if (idx >= singularities_length):
+    break
+  
+  if (measurements["measurements"][i] == singularities[idx]["x"]):
+    ws.cell(row=idx+3, column=11, value=singularities[idx]["x"])
+    ws.cell(row=idx+3, column=12, value=singularities[idx]["y"])
+    ws2.cell(row=i+1, column=2, value=singularities[idx]["y"])
+    idx += 1
+  else:
+    ws2.cell(row=i+1, column=2, value=None)
 
 c1 = LineChart()
 c1.title = "IRI segmentado"
@@ -96,25 +103,32 @@ measurement_values = Reference(ws, min_col=1, max_col=1, min_row=2, max_row=leng
 iri = Reference(ws, min_col=3, max_col=3, min_row=2, max_row=length)
 filter_data = Reference(ws, min_col=4, max_col=4, min_row=2, max_row=length)
 segmentation_data = Reference(ws, min_col=5, max_col=5, min_row=2, max_row=length)
-slopes_data = Reference(ws2, min_col=1, max_col=1, min_row=2, max_row=length)
+slopes_data = Reference(ws2, min_col=1, max_col=1, min_row=1, max_row=length)
 
-x_singular_points = Reference(ws, min_col=11, max_col=11, min_row=3, max_row=singularities_length)
-y_singular_points = Reference(ws, min_col=12, max_col=12, min_row=3, max_row=singularities_length)
+x_singular_points = Reference(ws2, min_col=2, min_row=1, max_row=length)
 
 c1.add_data(iri, titles_from_data=True)
 c1.add_data(filter_data, titles_from_data=True)
 c1.add_data(slopes_data, titles_from_data=True)
+c1.add_data(x_singular_points, titles_from_data=True)
 c1.set_categories(measurement_values)
 c1.width = 25
 c1.height = 12
 
 s = c1.series[2]
+
 s.graphicalProperties.line.solidFill = "00000"
+
+s = c1.series[3]
+s.marker.symbol = "triangle"
+s.marker.graphicalProperties.solidFill = "FF0000"
+s.marker.graphicalProperties.line.solidFill = "FF0000"
+s.graphicalProperties.line.noFill = True
 
 ws.add_chart(c1, "P2")
 
-c2 = ScatterChart()
-c2.title = "IRI segmentado"
+c2 = LineChart()
+c2.title = "IRI pendientes"
 c2.style = 2
 c2.y_axis.title = "IRI segmentado"
 c2.x_axis.title = "Metros"
