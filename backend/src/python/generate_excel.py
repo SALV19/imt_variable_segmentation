@@ -1,11 +1,10 @@
 from io import BytesIO
 from openpyxl import Workbook
 from openpyxl.chart import (
-  LineChart, Reference, ScatterChart
+  LineChart, Reference
 )
 from openpyxl.chart.text import RichText
 from openpyxl.drawing.text import  RichTextProperties,Paragraph,ParagraphProperties, CharacterProperties
-
 import json
 import sys
 
@@ -60,9 +59,10 @@ for idx, measurement in enumerate(measurements["measurements"]):
   row_val = idx+3
   new_measurement = str(measurement)[:-3] + '+' + str(measurement)[-3:]
   if (measurement % 500 == 0 or  \
+      measurement % 1000 == 0 or \
       idx == 0 or \
       idx == (len(measurements["measurements"]) - 1)):
-    ws2.cell(row=row_val, column=1, value=new_measurement)
+    ws2.cell(row=row_val, column=1, value=str(new_measurement))
   ws.cell(row=row_val, column=1, value=new_measurement)
   ws.cell(row=row_val, column=2, value=(measurement + measurements["distance"]))
   ws.cell(row=row_val, column=3, value=measurements["iri"][idx])
@@ -137,7 +137,6 @@ s.graphicalProperties.line.noFill = True
 c1.x_axis.txPr = RichText(bodyPr=RichTextProperties(anchor="ctr",anchorCtr="1",rot="-2700000",
            spcFirstLastPara="1",vertOverflow="ellipsis",wrap="square"),
         p=[Paragraph(pPr=ParagraphProperties(defRPr=CharacterProperties()), endParaRPr=CharacterProperties())])
-
 
 ws.add_chart(c1, "P2")
 
