@@ -22,7 +22,7 @@ function create_data(json_response) {
 
   const chartArea = document.querySelector("#chartArea");
 
-  form.classList.add("hide");
+  $("#form_selection").hide();
   chartArea.classList.remove("hidden");
   chartArea.classList.add("flex");
 

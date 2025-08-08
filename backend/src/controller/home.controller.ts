@@ -9,9 +9,10 @@ export function get_home(req: Request, res: Response) {
 // POST
 export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
-  const join_segments = req.body.join_segments;
-  const singular_points = req.body.singular_points;
-  const percentile = req.body.percentil ?? null;
+  req.body.iri = JSON.parse(req.body.iri);
+  const join_segments = req.body.iri.join_segments;
+  const singular_points = req.body.iri.singular_points;
+  const percentile = req.body.iri.percentil ?? null;
 
   const files = req.files as Express.Multer.File[];
   if (files.length === 0) {
@@ -30,7 +31,7 @@ export async function upload_file(req: Request, res: Response) {
     return;
   }
 
-  const mov_avg = Math.round(req.body.moving_avg / req.body.distance);
+  const mov_avg = Math.round(req.body.iri.moving_avg / req.body.iri.distance);
 
   // Filter / Smooth data
   let filter_measurements: number[] = await Aux.filter(measurements, mov_avg);

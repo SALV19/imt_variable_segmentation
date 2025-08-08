@@ -1,20 +1,15 @@
-const form = document.querySelector("#form");
 const file_input_labels = document.querySelectorAll(".label_input");
 const input_elements = document.querySelectorAll(
   "#file_upload_input, #file_upload_input_2"
 );
 
-const percentile_avg = document.querySelector("#percentile-avg");
-const percentile_label = document.querySelector("#percentile-label");
-const percentile_input = document.querySelector("#percentil");
-
-percentile_avg.addEventListener("change", () => {
-  if (percentile_avg.checked) {
-    percentile_label.textContent = "Percentil";
-    percentile_input.type = "number";
+$("#percentile-avg").change(() => {
+  if ($("#percentile-avg").is(":checked")) {
+    $("#percentile-label").text("Percentil");
+    $("#percentile").attr("type", "number");
   } else {
-    percentile_label.textContent = "Media";
-    percentile_input.type = "hidden";
+    $("#percentile-label").text("Media");
+    $("#percentile").attr("type", "hidden");
   }
 });
 
@@ -79,7 +74,7 @@ input_elements.forEach((element) => {
 });
 
 // Send files
-form.addEventListener("submit", (e) => {
+$("#iri_form").on("submit", (e) => {
   e.preventDefault();
 
   const data = new FormData();
@@ -108,12 +103,12 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  const input_elements = document.querySelectorAll(
-    "input[type=number], input[type=float]"
-  );
-  input_elements.forEach((i) => {
-    data.append(i.id, i.value);
+  iri_values = {};
+  $(".iri_input").each((_idx, element) => {
+    iri_values[element.id] = element.value;
   });
+
+  data.append("iri", JSON.stringify(iri_values));
 
   fetch("/upload_file", {
     method: "POST",
