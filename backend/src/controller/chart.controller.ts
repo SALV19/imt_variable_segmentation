@@ -4,6 +4,7 @@ import path from "path";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
+import fs from "fs";
 
 export function create_chart(req: Request, res: Response) {
   if (!req.session.generated_data) {
