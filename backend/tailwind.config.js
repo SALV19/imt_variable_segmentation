@@ -4,24 +4,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        gob: '#611232',
-        golden: '#a57f2c',
+        gob: "#611232",
+        golden: "#a57f2c",
+        "imt-dark": "#06205C",
+        "imt-nat": "#016099",
+        "imt-light": "#1EA2E9",
       },
       width: {
-        '18': '4.5rem',
+        18: "4.5rem",
       },
       height: {
-        '18': '4,5rem'
+        18: "4,5rem",
       },
       size: {
-        '18': '4.5rem'
+        18: "4.5rem",
       },
       fontFamily: {
-        gob: 'GMX-Regular',
-        montserrat: 'Montserrat',
+        gob: "GMX-Regular",
+        montserrat: "Montserrat",
       },
     },
   },
   plugins: [],
-}
-
+};

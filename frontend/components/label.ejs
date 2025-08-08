@@ -1,19 +1,16 @@
 <!-- prettier-ignore -->
 <label for=<%= input_form %> class="label_input <%= type == 'hidden' ? 'hidden' : ''%>">
-	<div class="insert_file flex flex-col">
-		<div class="mb-5">
-			<%- include ('../icon/csv.ejs')%>
-			<%- include ('../icon/xlsx.ejs')%>
-		</div>
-		<button
-			type="button"
-			class="text-white bg-blue-700 p-2 px-6 rounded-full font-semibold hover:bg-blue-800 mt-5 text-xl"
-			onclick="loadFile(this)">
-			Click para <br>cargar archivo
-		</button>
-		<p class='text-md text-[#777] w-1/3 text-center mt-2'>O arrastra un archivo</p>
-	</div>
-	<div class="load_file hide">
-		
-	</div>
+  <div class="insert_file flex flex-col">
+    <div class="mb-5">
+      <%- include ('../icon/csv.ejs')%>
+      <%- include ('../icon/xlsx.ejs')%>
+    </div>
+    <button type="button" class="text-white bg-imt-nat p-2 px-6 rounded-md font-semibold hover:bg-blue-800 mt-5 text-xl" onclick="loadFile(this)">
+      Click para <br>cargar archivo
+    </button>
+    <p class='text-md text-[#777] w-1/3 text-center mt-2'>O arrastra un archivo</p>
+  </div>
+  <div class="load_file hide">
+
+  </div>
 </label>
