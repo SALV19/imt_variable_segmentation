@@ -10,8 +10,8 @@
       <%- include("../components/configuration.ejs") %>
     </div>
   </aside>
-  <%- include("./iri/form", {id: "iri_form", show: true, input_class_id: "iri_input"}) %>
-  <%- include("./iri/form", {id: "friction_form", show: false, input_class_id: "friction_input"}) %>
+  <%- include("./iri/form", {id: "iri_form", input_class_id: "iri_input", name: "IRI", show: true}) %>
+  <%- include("./iri/form", {id: "friction_form", input_class_id: "friction_input", name: "Fricción", show: false}) %>
 </div>
 
 <script src="/js/upload_files.js"></script>

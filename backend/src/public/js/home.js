@@ -15,5 +15,17 @@ $("#components").on("click", function () {
 });
 
 $("input[name=selected_configuration]").change((event) => {
-  console.log("iri selected", event.target.id);
+  const id = event.target.id;
+  changeForm(id);
 });
+
+function changeForm(id) {
+  $("#form_title").text(id.toUpperCase());
+  $("form[action='/upload_file']").each((idx, element) => {
+    $(element).hide();
+    if (element.id == id + "_form") {
+      $(element).removeClass("hidden");
+      $(element).show();
+    }
+  });
+}

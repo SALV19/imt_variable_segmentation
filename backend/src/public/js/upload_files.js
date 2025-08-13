@@ -104,11 +104,16 @@ $("#iri_form").on("submit", (e) => {
   }
 
   iri_values = {};
+  friction_values = {};
   $(".iri_input").each((_idx, element) => {
     iri_values[element.id] = element.value;
   });
+  $(".friction").each((_idx, element) => {
+    friction_values[element.id] = element.value;
+  });
 
   data.append("iri", JSON.stringify(iri_values));
+  data.append("friction", JSON.stringify(friction_values));
 
   fetch("/upload_file", {
     method: "POST",

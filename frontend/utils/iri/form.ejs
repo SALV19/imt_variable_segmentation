@@ -1,4 +1,4 @@
-<form action="/upload_file" method="POST" enctype="multipart/form-data" id="<%= id %>" class="h-screen p-4 w-screen flex gap-10 max-md:flex-col max-md:items-center <%= show ? '' : 'hidden' %>">
+<form action="/upload_file" method="POST" enctype="multipart/form-data" id="<%= id %>" class="<%= show ? '' : 'hidden' %> h-screen p-4 w-screen flex gap-10 max-md:flex-col max-md:items-center">
   <div class="w-2/3 flex max-xl:flex-col gap-20 xl:justify-evenly max-xl:items-center">
     <%- include ('../components/label.ejs', {input_form: 'file_upload_input', type: 'file'})%>
     <input type="file" id="file_upload_input" name="file" accept=".csv, .xlsx, .xls" onchange="show_second()" />
@@ -7,25 +7,12 @@
   </div>
 
   <div class="md:w-1/3 md:border-l-2 border-solid border-imt-dark flex flex-col items-center align-bottom -my-4 py-4">
+    <h1><%= name %></h1>
     <div class="grid grid-cols-2 gap-2 ml-5">
-      <label>Diferencia para seleccionar puntos singulares</label>
-      <input required type="float" id="singular_points" name="singular_points" class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto <%= input_class_id %>" placeholder="2.5" />
-      <label>Diferencia para unir segmentos adyacentes</label>
-      <input required type="float" id="join_segments" name="join_segments" class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto <%= input_class_id %>" placeholder="0.25" />
-      <label>Longitud de la media móvil</label>
-      <input required type="number" id="moving_avg" name="moving_avg" class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto <%= input_class_id %>" placeholder="1000" />
-      <label>Metros en que fue medido el parámetro</label>
-      <input required type="number" id="distance" name="distance" class="mb-5 border-2 border-gray-400 border-solid w-2/3 h-7 mx-auto <%= input_class_id %>" placeholder="20" />
+      <%- include("../../components/molecules/iri_form_molecule") %>
     </div>
     <div class="flex gap-2 justify-between my-2 w-full pl-4 pr-8">
-      <div class="mb-5">
-        <label class="switch">
-          <input type="checkbox" id="percentile-avg" />
-          <span class="slider round"></span>
-        </label>
-        <label id="percentile-label">Media</label>
-      </div>
-      <input required type="hidden" id="percentile" name="percentile" class="border-2 border-gray-400 border-solid w-1/3 h-7 <%= input_class_id %>" />
+      <%- include("../../components/atoms/switch_media_percentile") %>
     </div>
 
     <%- include('../../components/atoms/button', {text: 'Enviar'}) %>
