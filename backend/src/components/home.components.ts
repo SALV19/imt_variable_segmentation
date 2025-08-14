@@ -1,32 +1,6 @@
 import { convert_to_csv } from "../utils/xlsx_to_csv.ts";
 import { __dirname } from "../utils/import_path.ts";
-
-// TypeStructure for IRI
-export interface IRI {
-  id: string;
-  measurements: number[];
-  distance: number;
-  iri: number[];
-  error: string;
-  average: number;
-  max: number;
-  min: number;
-  total: number;
-  [key: string]: any;
-}
-
-// Type struct for Slopes
-export interface Slope {
-  start: number;
-  end: number;
-  iri: number;
-}
-
-// In progress
-// Type struct for process's results
-export interface Result {
-  media: number;
-}
+import { IRI, Slope } from "./types.ts";
 
 // Auxiliar function, transforms excel files to csv
 export function verify_xlsx(files: Express.Multer.File[]) {
