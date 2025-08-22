@@ -1,7 +1,4 @@
 const file_input_labels = document.querySelectorAll(".label_input");
-const input_elements = document.querySelectorAll(
-  "#file_upload_input, #file_upload_input_2"
-);
 
 $("#percentile-avg").change(() => {
   if ($("#percentile-avg").is(":checked")) {
@@ -50,14 +47,15 @@ function loadFile(buttonElement) {
 }
 
 // Show second file input label and activate
-function show_second() {
-  const hidden_label = document.querySelector("label[for=file_upload_input_2]");
-  hidden_label.classList.remove("hidden");
-  const hidden_input = document.querySelector("#file_upload_input_2");
-  hidden_input.type = "file";
+function show_second(element) {
+  const id = element.id.split("_")[3] + "_" + element.id.split("_")[4];
+  const $hidden_label = $(`[for=file_upload_input_2_${id}]`);
+  $hidden_label.show();
+  const $hidden_input = $(`[id=file_upload_input_2_${id}]`);
+  $hidden_input.attr("type", "file");
 }
 
-input_elements.forEach((element) => {
+$("[id^=file_upload_input]").each((idx, element) => {
   const labelElement = document.querySelector(`label[for=${element.id}]`);
   const content = labelElement.querySelector(".insert_file");
 

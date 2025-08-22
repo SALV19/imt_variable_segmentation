@@ -12,6 +12,7 @@ export function get_home(req: Request, res: Response) {
 export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
   req.body.iri = JSON.parse(req.body.iri);
+  console.log(req.body);
 
   const data_objects = Object.keys(req.body).map((key) => req.body[key]);
 
