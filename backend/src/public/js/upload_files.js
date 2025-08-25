@@ -72,16 +72,16 @@ $("[id^=file_upload_input]").each((idx, element) => {
 });
 
 // Send files
-$("#iri_form").on("submit", (e) => {
+$("#iri_form, #friction_form").on("submit", (e) => {
   e.preventDefault();
 
   const data = new FormData();
-  const file = document.querySelectorAll("input[type=file]");
+  const $file = $("input[type=file]");
   let emptyFile = true;
 
-  file.forEach((f) => {
+  $file.each((_idx, f) => {
     if (f.files.length) {
-      data.append("file", f.files[0]);
+      data.append(`${f.name}`, f.files[0]);
       emptyFile = false;
     }
   });
@@ -106,7 +106,7 @@ $("#iri_form").on("submit", (e) => {
   $(".iri_input").each((_idx, element) => {
     iri_values[element.id] = element.value;
   });
-  $(".friction").each((_idx, element) => {
+  $(".friction_input").each((_idx, element) => {
     friction_values[element.id] = element.value;
   });
 

@@ -3,15 +3,13 @@ import * as Aux from "./home.components.ts";
 
 export async function create_data(
   data: GeneralData,
-  files_data: Express.Multer.File[]
+  files: Express.Multer.File[]
 ) {
   const join_segments = data.join_segments;
   const singular_points = data.singular_points;
   const percentile = data.percentile ?? null;
 
-  const files = files_data as Express.Multer.File[];
-  if (files.length === 0) {
-    // res.status(400).send({ error: "No data provided" });
+  if (!files) {
     return { generated_data: null, error: "No files provided" };
   }
   // Convert files to .csv

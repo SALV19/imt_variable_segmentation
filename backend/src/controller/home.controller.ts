@@ -11,15 +11,34 @@ export function get_home(req: Request, res: Response) {
 // POST
 export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
-  req.body.iri = JSON.parse(req.body.iri);
-  console.log(req.body);
-
-  const data_objects = Object.keys(req.body).map((key) => req.body[key]);
-
-  const { generated_data, error } = await create_data(
-    req.body.iri,
-    req.files as Express.Multer.File[]
+  const dataMap: Record<string, any> = Object.keys(req.body).reduce(
+    (acum, key) => {
+      return { ...acum, [key]: JSON.parse(req.body[key]) };
+    },
+    {}
   );
+
+  const fileMap: Record<string, Express.Multer.File[]> = {};
+  if (req.files) {
+    Object.keys(req.files).forEach((file: string) => {
+      const key = file.split("_")[1];
+      // @ts-ignore
+      fileMap[key] = req.files[file] as Express.Multer.File[];
+    });
+  }
+
+  const generated_data = await Promise.all(
+    Object.keys(dataMap).map(async (key: string) => {
+      return await create_data(dataMap[key], fileMap[key]);
+    })
+  );
+
+  console.log(generated_data);
+
+  // const { generated_data, error } = await create_data(
+  //   dataMap.iri,
+  //   fileMap.iri as Express.Multer.File[]
+  // );
 
   req.session.generated_data = generated_data;
   req.session.save();
