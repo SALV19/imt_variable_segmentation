@@ -1,5 +1,4 @@
-function create_data(json_response) {
-  console.log(json_response);
+function create_data(json_response, id_selector) {
   const measurements = json_response.measurements;
   const filter = json_response.filter_measurements;
   const segmentation = json_response.segmentation;
@@ -28,7 +27,10 @@ function create_data(json_response) {
   chartArea.classList.add("flex");
 
   // Create chart
-  const ctx = document.getElementById("myChart");
+  const canvas = document.createElement("canvas");
+  canvas.id = id_selector + "_canvas";
+  $("#chart_container").append(canvas);
+  const ctx = document.getElementById(id_selector + "_canvas");
   ctx.parentElement.classList.remove("hide");
 
   let labels = measurements.measurements;
@@ -66,7 +68,7 @@ function create_data(json_response) {
         position: "left",
         title: {
           display: true,
-          text: "IRI",
+          text: id_selector.toUpperCase(),
           font: {
             size: 20,
             weight: "bold",
@@ -149,7 +151,7 @@ function create_data(json_response) {
           yAxisID: "y",
         },
         {
-          label: "Iri",
+          label: id_selector.toUpperCase(),
           data: iri,
           borderColor: "blue",
           yAxisID: "y",

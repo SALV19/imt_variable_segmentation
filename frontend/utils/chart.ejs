@@ -2,13 +2,10 @@
 
 <main class="hidden" id="chartArea">
   <button class="h-full block" onclick="location.reload()"><img src='/icon/back-arrow.svg' class="w-10 p-2"></button>
-  <div class="hide w-3/4 m-10 mb-10">
-    <canvas id="myChart"></canvas>
+  <div class="hide w-3/4 m-10 mb-10 flex flex-col gap-10" id="chart_container">
   </div>
 
-  <section
-    class="w-1/4 border-l-2 h-screen border-gray-400 pl-2 flex flex-col items-center pt-10"
-  >
+  <section class="w-1/4 border-l-2 h-screen border-gray-400 pl-2 flex flex-col items-center pt-10">
     <h2 class="text-xl text-gob font-semibold text-center">Resultados</h2>
     <table class="table-fixed mx-auto">
       <tbody>
@@ -36,10 +33,9 @@
     </table>
 
     <form action="/create_chart">
-        <button 
-          class="mt-7 px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded-sm font-semibold">
-          Descargar Excel
-        </button>
+      <button class="mt-7 px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded-sm font-semibold">
+        Descargar Excel
+      </button>
       </input>
     </form>
   </section>
