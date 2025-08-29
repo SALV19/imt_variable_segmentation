@@ -176,14 +176,39 @@ function create_data(json_response, id_selector) {
   });
 
   // Table data
-  const media = document.querySelector("#media");
+  const table = `
+    <tbody>
+      <tr><td><h1 class="font-bold mt-2">${id_selector.toUpperCase()}</h1></td></tr>
+      <tr>
+        <td class="w-32">Media</td>
+        <td id="media_${id_selector}"></td>
+      </tr>
+      <tr>
+        <td class="w-32">Máximo</td>
+        <td id="max_${id_selector}"></td>
+      </tr>
+      <tr>
+        <td class="w-32">Mínimo</td>
+        <td id="min_${id_selector}"></td>
+      </tr>
+      <tr>
+        <td class="w-32">Total de segmentos</td>
+        <td id="total_${id_selector}"></td>
+      </tr>
+      <tr>
+        <td class="w-32">Método</td>
+        <td id="method_${id_selector}"></td>
+      </tr>
+      </tbody>`;
+  $("#table").append(table);
+  const media = document.querySelector(`#media_${id_selector}`);
   media.innerHTML = measurements.average.toFixed(2);
-  const max = document.querySelector("#max");
+  const max = document.querySelector(`#max_${id_selector}`);
   max.innerHTML = measurements.max.toFixed(2);
-  const min = document.querySelector("#min");
+  const min = document.querySelector(`#min_${id_selector}`);
   min.innerHTML = measurements.min.toFixed(2);
-  const total = document.querySelector("#total");
+  const total = document.querySelector(`#total_${id_selector}`);
   total.innerHTML = measurements.total.toFixed(2);
-  const method = document.querySelector("#method");
+  const method = document.querySelector(`#method_${id_selector}`);
   method.innerHTML = json_response.method;
 }
