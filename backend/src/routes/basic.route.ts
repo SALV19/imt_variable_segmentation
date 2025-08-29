@@ -17,7 +17,7 @@ const upload = multer({
 });
 
 import * as home from "../controller/home.controller.ts";
-import * as chart from "../controller/chart.controller.ts";
+import * as chart from "../controller/create_chart.controller.ts";
 
 const routes = Router();
 
@@ -27,6 +27,6 @@ routes.post(
   upload.fields([{ name: "file_iri_form" }, { name: "file_friccion_form" }]),
   home.upload_file
 );
-routes.get("/create_chart", chart.create_chart);
+routes.get("/create_chart", chart.chart_handler);
 
 export default routes;
