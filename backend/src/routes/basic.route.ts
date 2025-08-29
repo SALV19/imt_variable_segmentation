@@ -24,7 +24,7 @@ const routes = Router();
 routes.get("/", home.get_home);
 routes.post(
   "/upload_file",
-  upload.fields([{ name: "file_iri_form" }, { name: "file_friction_form" }]),
+  upload.fields([{ name: "file_iri_form" }, { name: "file_friccion_form" }]),
   home.upload_file
 );
 routes.get("/create_chart", chart.create_chart);

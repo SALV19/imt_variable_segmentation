@@ -72,7 +72,7 @@ $("[id^=file_upload_input]").each((idx, element) => {
 });
 
 // Send files
-$("#iri_form, #friction_form").on("submit", (e) => {
+$("#iri_form, #friccion_form").on("submit", (e) => {
   e.preventDefault();
 
   const data = new FormData();
@@ -102,16 +102,16 @@ $("#iri_form, #friction_form").on("submit", (e) => {
   }
 
   iri_values = {};
-  friction_values = {};
+  friccion_values = {};
   $(".iri_input").each((_idx, element) => {
     iri_values[element.id] = element.value;
   });
-  $(".friction_input").each((_idx, element) => {
-    friction_values[element.id] = element.value;
+  $(".friccion_input").each((_idx, element) => {
+    friccion_values[element.id] = element.value;
   });
 
   data.append("iri", JSON.stringify(iri_values));
-  data.append("friction", JSON.stringify(friction_values));
+  data.append("friccion", JSON.stringify(friccion_values));
 
   fetch("/upload_file", {
     method: "POST",
