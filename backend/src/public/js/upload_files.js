@@ -118,7 +118,7 @@ $("#iri_form, #friction_form").on("submit", (e) => {
     body: data,
   })
     .then((res) => res.json())
-    .then((json_response) => create_data(json_response))
+    .then((json_response) => handleJSON(json_response))
     .catch((error) => {
       alert(error);
       console.log(error);

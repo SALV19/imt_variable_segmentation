@@ -1,4 +1,5 @@
 function create_data(json_response) {
+  console.log(json_response);
   const measurements = json_response.measurements;
   const filter = json_response.filter_measurements;
   const segmentation = json_response.segmentation;

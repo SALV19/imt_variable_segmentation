@@ -29,16 +29,9 @@ export async function upload_file(req: Request, res: Response) {
 
   const generated_data = await Promise.all(
     Object.keys(dataMap).map(async (key: string) => {
-      return await create_data(dataMap[key], fileMap[key]);
+      return { [key]: await create_data(dataMap[key], fileMap[key]) };
     })
   );
-
-  console.log(generated_data);
-
-  // const { generated_data, error } = await create_data(
-  //   dataMap.iri,
-  //   fileMap.iri as Express.Multer.File[]
-  // );
 
   req.session.generated_data = generated_data;
   req.session.save();
