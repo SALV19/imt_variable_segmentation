@@ -101,17 +101,21 @@ $("#iri_form, #friccion_form").on("submit", (e) => {
     return;
   }
 
-  iri_values = {};
-  friccion_values = {};
-  $(".iri_input").each((_idx, element) => {
-    iri_values[element.id] = element.value;
-  });
-  $(".friccion_input").each((_idx, element) => {
-    friccion_values[element.id] = element.value;
-  });
+  // Load form information of selected configuration
+  let input_values = {};
+  $("input[name=selected_configuration]")
+    .filter((_idx, element) => element.checked == true)
+    .each((_idx, element) => {
+      const id = element.id;
 
-  data.append("iri", JSON.stringify(iri_values));
-  data.append("friccion", JSON.stringify(friccion_values));
+      input_values[`${id}_values`] = {};
+
+      $(`.${id}_input`).each((_idx, element) => {
+        input_values[`${id}_values`][element.id] = element.value;
+      });
+
+      data.append(id, JSON.stringify(input_values[`${id}_values`]));
+    });
 
   fetch("/upload_file", {
     method: "POST",

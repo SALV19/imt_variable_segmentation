@@ -1,0 +1,6 @@
+<div class="w-2/3 flex max-xl:flex-col gap-20 xl:justify-evenly max-xl:items-center">
+  <%- include ('../label', {input_form: 'file_upload_input_' + id, type: 'file'})%>
+  <input type="file" id="file_upload_input_<%= id %>" name="file_<%= id %>" accept=".csv, .xlsx, .xls" onchange="show_second(this)" />
+  <%- include ('../label', {input_form: 'file_upload_input_2_' + id, type: 'hidden'})%>
+  <input type="hidden" id="file_upload_input_2_<%= id %>" name="file_<%= id %>" accept=".csv, .xlsx, .xls" />
+</div>
