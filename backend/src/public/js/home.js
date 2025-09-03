@@ -14,8 +14,9 @@ $("#components").on("click", function () {
   $("#configuration_module").show();
 });
 
-$("input[name=selected_configuration]").change((event) => {
-  const id = event.target.id;
+$("p[id^=label]").on("click", (event) => {
+  console.log("Click");
+  const id = event.target.id.split("_")[1];
   changeForm(id);
 });
 
