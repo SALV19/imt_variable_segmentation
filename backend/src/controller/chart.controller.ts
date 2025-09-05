@@ -8,22 +8,21 @@ import fs from "fs";
 import { ChildProcess } from "node:child_process";
 
 export function create_chart(res: Response, data: Object[]) {
-  console.log("Data: ", data);
-
   const script_path = path.join(__dirname, "../python/generate_excel.py");
-  const python_path = path.join(__dirname, "../python/myvenv/bin/python");
+  const python_path = path.join(__dirname, "../python/venv/Scripts/python");
 
-  const python_process = spawn(python_path, [
-    script_path,
-    JSON.stringify(Object.values(data)),
-  ]);
+  const python_process = spawn(python_path, [script_path]);
 
-  // testing(res, python_process);
-  production(res, python_process);
+  // testing(res, python_process, data);
+  production(res, python_process, data);
 }
 
-function testing(res: Response, python_process: ChildProcess) {
+function testing(res: Response, python_process: ChildProcess, data: Object[]) {
   let result: string = "";
+
+  python_process.stdin?.write(JSON.stringify(Object.values(data)));
+  python_process.stdin?.end();
+
   python_process.stdout?.on("data", (data_chunk: any) => {
     result += data_chunk;
   });
@@ -45,7 +44,14 @@ function testing(res: Response, python_process: ChildProcess) {
   });
 }
 
-function production(res: Response, python_process: ChildProcess) {
+function production(
+  res: Response,
+  python_process: ChildProcess,
+  data: Object[]
+) {
+  python_process.stdin?.write(JSON.stringify(Object.values(data)));
+  python_process.stdin?.end();
+
   let result: Buffer[] = [];
   python_process.stdout?.on("data", (data_chunk: any) => {
     result.push(data_chunk);

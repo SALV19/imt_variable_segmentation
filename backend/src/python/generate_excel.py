@@ -5,11 +5,8 @@ import sys
 
 from components.worksheet_generator import generate_sheet
 
-
-if not sys.argv[1]:
-    raise ValueError("Arguments not included")
-
-generated_data = json.loads(sys.argv[1])
+data = input()
+generated_data = json.loads(data)
 
 wb = Workbook()
 virtual_workbook = BytesIO()

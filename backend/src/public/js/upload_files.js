@@ -11,24 +11,29 @@ $("#percentile-avg").change(() => {
 // Button functionality to upload file
 function loadFile(buttonElement) {
   const $input = $("#files_input");
-
   $input.click();
 }
+
+$("#files_input").on("change", (element) => {
+  $("#loaded_files").show()
+  $("#file_names").empty()
+  Array.from(element.target.files).forEach(file => 
+    $("#file_names").append(`<li>${file.name}</li>`)
+  )
+})
 
 // Send files
 $("#iri_form, #friccion_form").on("submit", (e) => {
   e.preventDefault();
 
   const data = new FormData();
-  const $file = $("input[type=file]");
+  const $file = $("#files_input");
   let emptyFile = true;
 
-  $file.each((_idx, f) => {
-    if (f.files.length) {
-      data.append(`${f.name}`, f.files[0]);
-      emptyFile = false;
-    }
-  });
+  if ($file[0].files.length > 0) emptyFile = false;
+  Array.from($file[0].files).forEach(file => {
+    data.append("files", file)
+  })
 
   // Error no file provided
   if (emptyFile) {

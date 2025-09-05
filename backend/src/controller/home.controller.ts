@@ -11,6 +11,8 @@ export function get_home(req: Request, res: Response) {
 // POST
 export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
+  // console.log(req.files);
+
   const dataMap: Record<string, any> = Object.keys(req.body).reduce(
     (acum, key) => {
       return { ...acum, [key]: JSON.parse(req.body[key]) };
@@ -20,10 +22,22 @@ export async function upload_file(req: Request, res: Response) {
 
   const fileMap: Record<string, Express.Multer.File[]> = {};
   if (req.files) {
-    Object.keys(req.files).forEach((file: string) => {
-      const key = file.split("_")[1];
-      // @ts-ignore
-      fileMap[key] = req.files[file] as Express.Multer.File[];
+    // @ts-ignore
+    Array.from(req.files).forEach((file: Express.Multer.File) => {
+      const title = file.originalname.toLowerCase();
+      if (title.includes("iri")) {
+        try {
+          fileMap["iri"].push(file);
+        } catch {
+          fileMap["iri"] = [file];
+        }
+      } else if (title.includes("friccion")) {
+        try {
+          fileMap["friccion"].push(file);
+        } catch {
+          fileMap["friccion"] = [file];
+        }
+      }
     });
   }
 
@@ -33,7 +47,9 @@ export async function upload_file(req: Request, res: Response) {
     })
   );
 
+  // @ts-ignore
   req.session.generated_data = generated_data;
+  // @ts-ignore
   req.session.save();
 
   // Response

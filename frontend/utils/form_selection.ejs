@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/css/form.css" />
 <div class="flex" id="form_selection">
-  <aside class="border-r-2 border-gray-400 font-montserrat w-2/6 max-md:hidden">
+  <aside class="border-r-2 border-gray-400 font-montserrat w-1/5 max-md:hidden">
     <div class="grid grid-cols-2 border-b-2 border-gray-400">
       <%- include("../components/change_button", {message: "¿Qué es?", id: "info", className: "selected"}) %>
       <%- include("../components/change_button", {message: "Configuración", id: "components", className: null}) %>
@@ -10,8 +10,13 @@
       <%- include("../components/configuration.ejs") %>
     </div>
   </aside>
-  <%- include("./iri/form", {id: "iri_form", input_class_id: "iri_input", name: "IRI", show: true}) %>
-  <%- include("./iri/form", {id: "friccion_form", input_class_id: "friccion_input", name: "Fricción", show: false}) %>
+  <div class="w-4/5 flex">
+    <div class="w-full flex justify-center">
+      <%- include ("../components/molecules/file_upload") %>
+    </div>
+    <%- include("./iri/form", {id: "iri_form", input_class_id: "iri_input", name: "IRI", show: true}) %>
+    <%- include("./iri/form", {id: "friccion_form", input_class_id: "friccion_input", name: "Fricción", show: false}) %>
+  </div>
 </div>
 
 <script src="/js/upload_files.js"></script>
