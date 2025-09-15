@@ -9,6 +9,7 @@ from openpyxl.drawing.text import (
     CharacterProperties,
 )
 from openpyxl.styles import Font
+from openpyxl.chart.layout import Layout, ManualLayout
 
 
 def generate_sheet(wb: Workbook, title: str, generated_data):
@@ -59,6 +60,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         ws.cell(row=row_val, column=6, value=value[1])
         ws.cell(row=row_val, column=7, value=value[2])
         cell = ws.cell(row=row_val, column=8, value=value[2])
+
         cell.font = Font(color="FFFFFF")
 
     # Puntos singulares
@@ -77,6 +79,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     c1.title = f"{title.upper()} segmentado"
     c1.style = 2
     c1.y_axis.title = title.upper()
+    c1.x_axis.tickLblPos = "nextTo"
     c1.x_axis.title = "Metros"
     c1.x_axis.scaling.min = measurements["measurements"][0]
     c1.x_axis.scaling.max = measurements["measurements"][-1]
@@ -94,10 +97,10 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
 
     def get_singular_points():
         x_singular_points = Reference(
-            ws, min_col=9, min_row=1, max_row=singularities_length
+            ws, min_col=9, min_row=3, max_row=singularities_length + 2
         )
         y_singular_points = Reference(
-            ws, min_col=10, min_row=1, max_row=singularities_length
+            ws, min_col=10, min_row=3, max_row=singularities_length + 2
         )
 
         singular_points = Series(
@@ -111,6 +114,8 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         singular_points.graphicalProperties.line.noFill = True
         return singular_points
 
+    c1.series.append(iri_series)
+
     if singularities_length:
         singular_points = get_singular_points()
 
@@ -122,31 +127,38 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         segmentation_series = Series(
             values=y_segmentation_series,
             xvalues=x_segmentation_series,
-            title="Segmentos",
+            title=f"Segmento: {i+1}",
         )
         segmentation_series.graphicalProperties.line.solidFill = "000000"
         c1.series.append(segmentation_series)
 
-    c1.series.append(iri_series)
-
     c1.width = 30
     c1.height = 15
 
-    c1.x_axis.txPr = RichText(
-        bodyPr=RichTextProperties(
-            anchor="ctr",
-            anchorCtr="1",
-            rot="-2700000",
-            spcFirstLastPara="1",
-            vertOverflow="ellipsis",
-            wrap="square",
-        ),
-        p=[
-            Paragraph(
-                pPr=ParagraphProperties(defRPr=CharacterProperties()),
-                endParaRPr=CharacterProperties(),
-            )
-        ],
+    c1.layout = Layout(
+        manualLayout=ManualLayout(
+            x=-0.02,
+            y=0.002,
+            h=0.9,
+            w=0.78,
+        )
     )
+
+    # c1.x_axis.txPr = RichText(
+    #     bodyPr=RichTextProperties(
+    #         anchor="ctr",
+    #         anchorCtr="1",
+    #         rot="-2700000",
+    #         spcFirstLastPara="1",
+    #         vertOverflow="ellipsis",
+    #         wrap="square",
+    #     ),
+    #     p=[
+    #         Paragraph(
+    #             pPr=ParagraphProperties(defRPr=CharacterProperties()),
+    #             endParaRPr=CharacterProperties(),
+    #         )
+    #     ],
+    # )
 
     ws.add_chart(c1, "L2")

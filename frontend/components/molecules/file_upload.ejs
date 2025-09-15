@@ -1,16 +1,16 @@
 <label for="files_input" class="w-full flex flex-col items-center">
-  <input type="file" id="files_input" name="files" accept=".csv, .xlsx, .xls" multiple />
+  <input type="file" id="file_input" name="files" accept=".csv, .xlsx, .xls" />
   <button type="button" class="text-white bg-imt-nat p-2 px-6 rounded-md font-semibold hover:bg-blue-800 mt-5 text-xl" onclick="loadFile(this)">
     Click para <br>cargar archivos
   </button>
   <div id="loaded_files" class="text-left hidden mb-10 mt-5">
-    <p>Archivos: </p>
+    <p>Archivo seleccionado: </p>
     <ul id="file_names" class="list-disc">
     </ul>
   </div>
   <p class="text-gray-500 text-sm text-center w-1/2 mt-2">
-    Nombra los archivos para que incluyan la categoría para la que son.
+    Sube un archivo de excel con una pestaña por cada parámetro que quieras analizar
     <br>
   </p>
-  <span class="text-center text-gray-500 text-sm mt-2">Ej: iri_reforma.xlsx</span>
+  <span class="text-center text-gray-500 text-sm mt-2">Ej: iri, friccion, etc.</span>
 </label>
