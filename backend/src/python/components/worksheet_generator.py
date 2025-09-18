@@ -13,7 +13,7 @@ from openpyxl.chart.layout import Layout, ManualLayout
 
 
 def generate_sheet(wb: Workbook, title: str, generated_data):
-    measurements = generated_data["measurements"]
+    measurements = generated_data["file_data"]
     filter_measurements = generated_data["filter_measurements"]
     segmentation = generated_data["segmentation"]
     slopes = generated_data["slopes"]
@@ -49,7 +49,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         end_measurement_cell = ws.cell(row=row_val, column=2, value=end_measurement)
         measurement_cell.number_format = '0"+"000'
         end_measurement_cell.number_format = '0"+"000'
-        ws.cell(row=row_val, column=3, value=measurements["iri"][idx])
+        ws.cell(row=row_val, column=3, value=measurements["values"][idx])
 
     slope_values = list(slope_values)
 
