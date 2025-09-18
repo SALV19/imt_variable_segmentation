@@ -12,7 +12,7 @@ import * as chart from "../controller/create_chart.controller.ts";
 const routes = Router();
 
 routes.get("/", home.get_home);
-routes.post("/upload_file", upload.array("files", 12), home.upload_file);
+routes.post("/upload_file", upload.single("file"), home.upload_file);
 routes.get("/create_chart", chart.chart_handler);
 
 export default routes;

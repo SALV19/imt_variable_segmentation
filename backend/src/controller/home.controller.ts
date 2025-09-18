@@ -1,7 +1,9 @@
 import { create_data } from "../components/create_data.ts";
+import { read_file_info } from "../components/read_file_info.ts";
 import * as Aux from "../components/home.components.ts";
 import { IRI, Slope, Result } from "../components/types.ts";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
+import type { Data_Map } from "../components/read_file_info.ts";
 
 // GET
 export function get_home(req: Request, res: Response) {
@@ -11,8 +13,8 @@ export function get_home(req: Request, res: Response) {
 // POST
 export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
-  // console.log(req.files);
 
+  // Get form information / values to do the analysis
   const dataMap: Record<string, any> = Object.keys(req.body).reduce(
     (acum, key) => {
       return { ...acum, [key]: JSON.parse(req.body[key]) };
@@ -20,30 +22,30 @@ export async function upload_file(req: Request, res: Response) {
     {}
   );
 
-  const fileMap: Record<string, Express.Multer.File[]> = {};
-  if (req.files) {
-    // @ts-ignore
-    Array.from(req.files).forEach((file: Express.Multer.File) => {
-      const title = file.originalname.toLowerCase();
-      if (title.includes("iri")) {
-        try {
-          fileMap["iri"].push(file);
-        } catch {
-          fileMap["iri"] = [file];
-        }
-      } else if (title.includes("friccion")) {
-        try {
-          fileMap["friccion"].push(file);
-        } catch {
-          fileMap["friccion"] = [file];
-        }
-      }
-    });
+  // Receive file information
+  if (req.file == undefined) {
+    res.send("Error");
+    return;
   }
 
+  // Transformation layer
+  const file_data: Record<string, Data_Map> = read_file_info(req.file);
+
+  // Processing layer
   const generated_data = await Promise.all(
     Object.keys(dataMap).map(async (key: string) => {
-      return { [key]: await create_data(dataMap[key], fileMap[key]) };
+      if (file_data[key] == undefined) {
+        console.error(`Error, file page: ${key} not found`);
+        res.status(400).json({
+          error: `Uno de los parámetros seleccionados no se encuentra como una 
+            pestaña en el archivo de excel, recomendamos que verifique que 
+            esté bien escrito, o que desceleccione los parámetros que no se 
+            van a utilizar.`,
+          parameter: key.charAt(0).toUpperCase() + key.slice(1),
+        });
+        return;
+      }
+      return { [key]: await create_data(dataMap[key], file_data[key]) };
     })
   );
 

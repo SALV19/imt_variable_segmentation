@@ -1,5 +1,5 @@
 function create_data(json_response, id_selector) {
-  const measurements = json_response.measurements;
+  const measurements = json_response.file_data;
   const filter = json_response.filter_measurements;
   const segmentation = json_response.segmentation;
   const slopes = json_response.slopes;
@@ -34,7 +34,7 @@ function create_data(json_response, id_selector) {
   ctx.parentElement.classList.remove("hide");
 
   let labels = measurements.measurements;
-  let iri = measurements.iri;
+  let values = measurements.values;
 
   options = {
     responsive: true,
@@ -152,7 +152,7 @@ function create_data(json_response, id_selector) {
         },
         {
           label: id_selector.toUpperCase(),
-          data: iri,
+          data: values,
           borderColor: "blue",
           yAxisID: "y",
         },

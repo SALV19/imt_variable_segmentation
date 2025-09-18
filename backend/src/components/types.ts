@@ -1,3 +1,5 @@
+export const file_types = ["iri", "friccion"];
+
 export interface GeneralData {
   join_segments: number;
   singular_points: number;

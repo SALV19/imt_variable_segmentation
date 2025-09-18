@@ -1,6 +1,7 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import { path, __dirname } from "./utils/import_path.ts";
+// @ts-ignore
 import session from "express-session";
 import "express-session";
 import "body-parser";
@@ -9,6 +10,7 @@ import "body-parser";
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 // Set up session
+// @ts-ignore
 declare module "express-session" {
   interface SessionData {
     [key: string]: any;

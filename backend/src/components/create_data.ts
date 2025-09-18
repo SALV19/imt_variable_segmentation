@@ -1,47 +1,35 @@
 import { GeneralData, IRI, Slope } from "./types.ts";
 import * as Aux from "./home.components.ts";
+import type { Data_Map } from "./read_file_info.ts";
 
-export async function create_data(
-  data: GeneralData,
-  files: Express.Multer.File[]
-) {
+export async function create_data(data: GeneralData, file_data: Data_Map) {
   const join_segments = data.join_segments;
   const singular_points = data.singular_points;
   const percentile = data.percentile ?? null;
 
-  if (!files) {
-    return { generated_data: null, error: "No files provided" };
-  }
-  // Convert files to .csv
-  Aux.verify_xlsx(files);
-
-  // Transformation layer
-  // Process csv files into json objects
-  const measurements: IRI = await Aux.process_data(files);
-
-  if (measurements.error) {
-    // res.status(400).send(measurements.error);
-    return { generated_data: null, error: measurements.error };
+  if (file_data.error) {
+    // res.status(400).send(file_data.error);
+    return { generated_data: null, error: file_data.error };
   }
 
   const mov_avg = Math.round(data.moving_average / data.distance);
 
   // Filter / Smooth data
-  let filter_measurements: number[] = await Aux.filter(measurements, mov_avg);
+  let filter_measurements: number[] = await Aux.filter(file_data, mov_avg);
 
   // Get abnormal points
   const abnormal_points: Promise<{ x: number; y: number }[]> = Aux.get_uncommon(
-    measurements,
+    file_data,
     filter_measurements,
     singular_points
   );
 
-  const normal_measurements_iri: number[] = measurements.iri.map((val, idx) =>
+  const normal_measurements_iri: number[] = file_data.values.map((val, idx) =>
     get_singular_points(val, idx, filter_measurements, singular_points)
   );
 
-  const non_abnormal_values: IRI = {
-    ...measurements,
+  const non_abnormal_values: Data_Map = {
+    ...file_data,
     iri: normal_measurements_iri,
   };
 
@@ -56,12 +44,12 @@ export async function create_data(
   );
 
   // Join close segments and count total amount of segments in dataset
-  close_segments(slopes, join_segments, measurements);
+  close_segments(slopes, join_segments, file_data);
 
   const abnormalities = await abnormal_points;
 
   const generated_data = {
-    measurements,
+    file_data,
     filter_measurements,
     segmentation,
     slopes,
@@ -76,7 +64,7 @@ export async function create_data(
 function close_segments(
   slopes: Slope[],
   join_segments: number,
-  measurements: IRI
+  measurements: Data_Map
 ) {
   for (let i = 0; i < slopes.length; i++) {
     if (i > 0 && Math.abs(slopes[i].iri - slopes[i - 1].iri) <= join_segments) {
