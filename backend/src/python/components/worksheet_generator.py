@@ -86,7 +86,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     c1.x_axis.scaling.orientation = "minMax"
     c1.x_axis.number_format = '0"+"000'
 
-    c1.x_axis.majorUnit = round(len(measurements["measurements"]) / 5)
+    c1.x_axis.majorUnit = round(len(measurements["measurements"]) / 1.5)
 
     measurement_values = Reference(ws, min_col=1, min_row=3, max_row=length)
 
@@ -135,6 +135,8 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     c1.width = 30
     c1.height = 15
 
+    c1.x_axis.delete = False
+
     c1.layout = Layout(
         manualLayout=ManualLayout(
             x=-0.02,
@@ -144,21 +146,21 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         )
     )
 
-    # c1.x_axis.txPr = RichText(
-    #     bodyPr=RichTextProperties(
-    #         anchor="ctr",
-    #         anchorCtr="1",
-    #         rot="-2700000",
-    #         spcFirstLastPara="1",
-    #         vertOverflow="ellipsis",
-    #         wrap="square",
-    #     ),
-    #     p=[
-    #         Paragraph(
-    #             pPr=ParagraphProperties(defRPr=CharacterProperties()),
-    #             endParaRPr=CharacterProperties(),
-    #         )
-    #     ],
-    # )
+    c1.x_axis.txPr = RichText(
+        bodyPr=RichTextProperties(
+            anchor="ctr",
+            anchorCtr="1",
+            rot="-2700000",
+            spcFirstLastPara="1",
+            vertOverflow="ellipsis",
+            wrap="square",
+        ),
+        p=[
+            Paragraph(
+                pPr=ParagraphProperties(defRPr=CharacterProperties()),
+                endParaRPr=CharacterProperties(),
+            )
+        ],
+    )
 
     ws.add_chart(c1, "L2")
