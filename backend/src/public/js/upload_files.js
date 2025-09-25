@@ -23,7 +23,7 @@ $("#file_input").on("change", (element) => {
 })
 
 // Send files
-$("#iri_form, #friccion_form").on("submit", (e) => {
+$("[id$=_form]").on("submit", (e) => {
   e.preventDefault();
 
   const data = new FormData();
