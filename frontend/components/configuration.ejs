@@ -1,12 +1,8 @@
 <div id="configuration_module" class="hidden">
   <div class="flex flex-col configuration_container">
-    <div class="flex gap-2">
-      <input type="checkbox" id="iri" name="selected_configuration" value="iri" checked="checked">
-      <p id="label_iri" class="cursor-pointer">IRI</p>
-    </div>
-    <div class="flex gap-2">
-      <input type="checkbox" id="friccion" name="selected_configuration" value="friccion">
-      <p id="label_friccion" class="cursor-pointer">Fricción</p>
-    </div>
+    <%- include ("./atoms/configuration_option.ejs", {id: "iri", checked: "checked"}) %>
+    <%- include ("./atoms/configuration_option.ejs", {id: "friccion", checked: ""}) %>
+    <%- include ("./atoms/configuration_option.ejs", {id: "deflexion", checked: ""}) %>
+
   </div>
 </div>

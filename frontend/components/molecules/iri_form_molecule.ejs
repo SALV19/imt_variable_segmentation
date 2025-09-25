@@ -1,4 +1,4 @@
-<%- include("../atoms/two_column_input", {label: 'Diferencia para seleccionar puntos singulares', type: "float", id: 'singular_points', placeholder: '2.5'}) %>
-<%- include("../atoms/two_column_input", {label: 'Diferencia para unir segmentos adyacentes', type: "float", id: 'join_segments', placeholder: '0.25'}) %>
+<%- include("../atoms/two_column_input", {label: 'Diferencia para seleccionar puntos singulares', type: "float", id: 'singular_points', placeholder: id == 'iri' ? '2.5' : '0.25'}) %>
+<%- include("../atoms/two_column_input", {label: 'Diferencia para unir segmentos adyacentes', type: "float", id: 'join_segments', placeholder: id == 'iri' ? '0.25' : '0.025'}) %>
 <%- include("../atoms/two_column_input", {label: 'Longitud de la media móvil', type: "number", id: 'moving_average', placeholder: '1000'}) %>
 <%- include("../atoms/two_column_input", {label: 'Metros en que fue medido el parámetro', type: "number", id: 'distance', placeholder: '20'}) %>

@@ -1,7 +1,8 @@
 from openpyxl.chart import ScatterChart, Reference, Series
 from openpyxl.chart.text import RichText
 from openpyxl import Workbook
-from openpyxl.chart.series import SeriesLabel
+from openpyxl.chart.series import DataLabelList
+from openpyxl.chart.legend import LegendEntry
 from openpyxl.drawing.text import (
     RichTextProperties,
     Paragraph,
@@ -124,12 +125,13 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     for i in range(len(slope_values)):
         x_segmentation_series = Reference(ws, min_col=5, max_col=6, min_row=i + 3)
         y_segmentation_series = Reference(ws, min_col=7, max_col=8, min_row=i + 3)
-        segmentation_series = Series(
+        segmentation_series: Series = Series(
             values=y_segmentation_series,
             xvalues=x_segmentation_series,
-            title=f"Segmento: {i+1}",
+            title=(lambda i: "Segmentos" if i == 0 else "Other")(i),
         )
         segmentation_series.graphicalProperties.line.solidFill = "000000"
+
         c1.series.append(segmentation_series)
 
     c1.width = 30
@@ -162,5 +164,8 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
             )
         ],
     )
+
+    # c1.dataLabels = DataLabelList()
+    # c1.dataLabels.showSerName = False
 
     ws.add_chart(c1, "L2")
