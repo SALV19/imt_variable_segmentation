@@ -169,3 +169,35 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     # c1.dataLabels.showSerName = False
 
     ws.add_chart(c1, "L2")
+
+
+"""
+Excel Macro to delete all extra labels
+
+Sub QuitarLabels()
+'
+' QuitarLabels Macro
+'
+
+'
+Dim wb As Workbook
+Dim ws As Worksheet
+Dim chart As ChartObject
+Dim legend As LegendEntry
+
+Set wb = ActiveWorkbook
+
+For Each ws In wb.Sheets
+    If ws.ChartObjects.Count > 0 Then
+        Set chartObj = ws.ChartObjects(1)
+        If chartObj.chart.HasLegend Then
+            legendCount = chartObj.chart.legend.LegendEntries.Count
+            While legendCount >= 4
+                chartObj.chart.legend.LegendEntries(4).Delete
+            Wend
+        End If
+    End If
+Next ws
+
+End Sub
+"""

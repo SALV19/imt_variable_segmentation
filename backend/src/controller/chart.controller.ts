@@ -71,10 +71,7 @@ function production(
 
     res
       .status(200)
-      .setHeader(
-        "Content-Disposition",
-        'attachment; filename="iri_segmentado.xlsx"'
-      )
+      .setHeader("Content-Disposition", 'attachment; filename="segmentos.xlsm"')
       .setHeader("Content-Type", "application/octet-stream")
       .send(buffer);
   });
