@@ -70,7 +70,7 @@ function close_segments(
     if (i > 0 && Math.abs(slopes[i].iri - slopes[i - 1].iri) <= join_segments) {
       slopes[i - 1].end = slopes[i].end;
       slopes[i - 1].iri = Number(
-        ((slopes[i].iri + slopes[i - 1].iri) / 2).toFixed(2)
+        ((slopes[i].iri + slopes[i - 1].iri) / 2).toFixed(4)
       );
       slopes.splice(i, 1);
 

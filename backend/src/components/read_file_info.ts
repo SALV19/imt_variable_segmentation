@@ -63,7 +63,7 @@ export function read_file_info(
         }
 
         const measurements: number = curr[keys[1]];
-        const values: number = parseFloat(curr[keys[3]].toFixed(2));
+        const values: number = parseFloat(curr[keys[3]].toFixed(4));
 
         acum.average += values;
 
@@ -87,7 +87,7 @@ export function read_file_info(
     json_object.distance =
       json_object.measurements[2] - json_object.measurements[1];
     json_object.average = parseFloat(
-      (json_object.average / json_object.values.length).toFixed(2)
+      (json_object.average / json_object.values.length).toFixed(4)
     );
     json_object.total = json_data.values.length;
     json_object.error = null;

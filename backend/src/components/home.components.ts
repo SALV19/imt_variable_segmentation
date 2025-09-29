@@ -73,11 +73,12 @@ function aux_cumsum(iri: number[], length: number, avg: number): number[] {
     acum += iri[i];
     zk.push(acum - i * avg);
   }
+
   return zk;
 }
 
 function formatNumber(value: number): number {
-  return parseFloat(value.toFixed(2));
+  return parseFloat(value.toFixed(4));
 }
 
 export function slopeZ(
@@ -123,7 +124,9 @@ export function slopeZ(
     else acum += aux_99_percentile(percentile_99, file_data.values[i]);
 
     if (
-      (slope_zk.at(-1) == 0 || i == length - 1) &&
+      // @ts-ignore
+      ((slope_zk.at(-1) >= -0.0005 && slope_zk.at(-1) <= 0.0005) ||
+        i == length - 1) &&
       last_slope &&
       !(i - count < length * 0.05)
     ) {
@@ -164,7 +167,7 @@ export function slopeZ(
 
 function aux_segmentation(segmentation: number[], iri: number[], i: number) {
   return parseFloat(
-    ((segmentation[i] - segmentation[i - 1]) / (iri[i] - iri[i - 1])).toFixed(2)
+    ((segmentation[i] - segmentation[i - 1]) / (iri[i] - iri[i - 1])).toFixed(4)
   );
 }
 
