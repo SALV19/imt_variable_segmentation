@@ -16,12 +16,13 @@ $("#components").on("click", function () {
 
 $("p[id^=label]").on("click", (event) => {
   console.log("Click");
-  const id = event.target.id.split("_")[1];
+  const id = event.target.id.replace("label_", "");
+  console.log(id);
+
   changeForm(id);
 });
 
 function changeForm(id) {
-  $("#form_title").text(id.toUpperCase());
   $("form[action='/upload_file']").each((idx, element) => {
     $(element).hide();
     if (element.id == id + "_form") {
