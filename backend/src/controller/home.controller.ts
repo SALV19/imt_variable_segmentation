@@ -14,10 +14,16 @@ export function get_home(req: Request, res: Response) {
 export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
 
+  const pair_titles: Record<string, string> = {
+    agretamiento_por_fatiga: "AgrFatiga",
+    agrietamiento_longitudinal: "GrLong",
+    agrietamiento_transversal: "GrTrans",
+  };
+
   // Get form information / values to do the analysis
   const dataMap: Record<string, any> = Object.keys(req.body).reduce(
     (acum, key) => {
-      return { ...acum, [key]: JSON.parse(req.body[key]) };
+      return { ...acum, [pair_titles[key] ?? key]: JSON.parse(req.body[key]) };
     },
     {}
   );

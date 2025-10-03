@@ -26,16 +26,15 @@ export function read_file_info(
 
   // Traverse each sheet and create an object by name
   workbook.SheetNames.forEach((name) => {
-    name = name.toLowerCase();
-    name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
     const worksheet = workbook.Sheets[name];
 
     const json_data: Object[] = XLSX.utils.sheet_to_json(worksheet);
 
     const keys = Object.keys(json_data[0]);
 
-    if (!(name in file_types)) {
+    name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    if (!(name.toLowerCase() in file_types)) {
       const json_object: Data_Map = {
         id: "",
         measurements: [],

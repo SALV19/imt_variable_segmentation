@@ -14,3 +14,16 @@ function handleJSON(json_response) {
     );
   });
 }
+
+function handleCheckboxChange(event) {
+  if (event.checked && event.id.includes("_")) {
+    specialInstruccions();
+  }
+}
+
+function specialInstruccions() {
+  $("#special-instructions").text(`Para los elementos de\n
+    'Agrietamiento por fatiga', 'Agrietamiento longitudinal' o 'Agrietamiento transversal'\n
+    Favor de utilizar los nombres 'AgrFatiga', 'GrLong' y 'GrTrans' al inicio 
+    para el correcto funcionamiento de la aplicación`);
+}

@@ -1,4 +1,4 @@
 <div class="flex gap-2">
-  <input type="checkbox" id="<%= id %>" name="selected_configuration" value="<%= id %>" <%= checked %>>
+  <input type="checkbox" id="<%= id %>" name="selected_configuration" value="<%= id %>" <%= checked %> onChange="handleCheckboxChange(this)">
   <p id="label_<%= id %>" class="cursor-pointer"><%= (id[0].toUpperCase() + id.slice(1)).replaceAll("_", " ") %></p>
 </div>

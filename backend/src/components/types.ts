@@ -1,4 +1,4 @@
-export const file_types = ["iri", "friccion"];
+export const file_types = ["iri", "friccion", "agrfatiga", "grlong", "grtrans"];
 
 export interface GeneralData {
   join_segments: number;

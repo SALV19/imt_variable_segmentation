@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   $("#form_title").text("IRI");
   $("#percentile-avg").trigger("change");
-  $("input[id=iri]").prop("checked", true);
-  $("#file_input").val("")
+  $("#file_input").val("");
+
+  $("input[type=checkbox]").each((id, element) => {
+    if (element.id.includes("_") && element.checked) {
+      console.log("Selected special option");
+      specialInstruccions();
+    }
+  });
 });
