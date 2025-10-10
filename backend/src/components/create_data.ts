@@ -40,7 +40,8 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   let slopes: Slope[] = Aux.slopeZ(
     non_abnormal_values,
     segmentation,
-    percentile
+    percentile,
+    singular_points
   );
 
   // Join close segments and count total amount of segments in dataset

@@ -81,10 +81,18 @@ function formatNumber(value: number): number {
   return parseFloat(value.toFixed(4));
 }
 
+function segmentationBoolFunc(slope_val: number, join: number) {
+  if (join < 1) {
+    return slope_val == 0;
+  }
+  return slope_val >= -0.0005 && slope_val <= 0.0005;
+}
+
 export function slopeZ(
   file_data: Data_Map,
   segmentation: number[],
-  percentile: number | null
+  percentile: number | null,
+  joinVal: number
 ): Slope[] {
   let slpZ: Slope[] = [];
   const slope_zk: number[] = [];
@@ -125,8 +133,7 @@ export function slopeZ(
 
     if (
       // @ts-ignore
-      ((slope_zk.at(-1) >= -0.0005 && slope_zk.at(-1) <= 0.0005) ||
-        i == length - 1) &&
+      (segmentationBoolFunc(slope_zk.at(-1), joinVal) || i == length - 1) &&
       last_slope &&
       !(i - count < length * 0.05)
     ) {
