@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("input[type=checkbox]").each((id, element) => {
     if (element.id.includes("_") && element.checked) {
-      console.log("Selected special option");
       specialInstruccions();
     }
   });

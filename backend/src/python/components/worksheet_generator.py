@@ -87,7 +87,10 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     c1.x_axis.scaling.orientation = "minMax"
     c1.x_axis.number_format = '0"+"000'
 
-    c1.x_axis.majorUnit = round(len(measurements["measurements"]) / 1.5)
+    # c1.x_axis.majorUnit = round(len(measurements["measurements"]) / 2)
+    c1.x_axis.majorUnit = round(
+        (measurements["measurements"][-1] - measurements["measurements"][0]) / 10
+    )
 
     measurement_values = Reference(ws, min_col=1, min_row=3, max_row=length)
 
@@ -95,6 +98,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
 
     iri_series = Series(values=iri, xvalues=measurement_values, title=title.upper())
     iri_series.graphicalProperties.line.solidFill = "4444FF"
+    iri_series.smooth = False
 
     def get_singular_points():
         x_singular_points = Reference(
