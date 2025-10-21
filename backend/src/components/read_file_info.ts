@@ -61,6 +61,10 @@ export function read_file_info(
           acum.min = Infinity;
         }
 
+        if (!curr[keys[3]]) {
+          curr[keys[3]] = 0;
+        }
+
         const measurements: number = curr[keys[1]];
         const values: number = parseFloat(curr[keys[3]].toFixed(4));
 

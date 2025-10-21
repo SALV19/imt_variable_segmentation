@@ -85,7 +85,7 @@ function segmentationBoolFunc(slope_val: number, join: number) {
   if (join < 1) {
     return slope_val == 0;
   }
-  return slope_val >= -0.0005 && slope_val <= 0.0005;
+  return slope_val >= -0.005 && slope_val <= 0.005;
 }
 
 export function slopeZ(

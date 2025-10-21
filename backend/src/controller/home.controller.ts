@@ -18,6 +18,7 @@ export async function upload_file(req: Request, res: Response) {
     agretamiento_por_fatiga: "AgrFatiga",
     agrietamiento_longitudinal: "GrLong",
     agrietamiento_transversal: "GrTrans",
+    profundidad_rugosidad: "PR",
   };
 
   // Get form information / values to do the analysis

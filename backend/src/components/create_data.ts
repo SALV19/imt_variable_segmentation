@@ -43,6 +43,7 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
     percentile,
     singular_points
   );
+  console.log(slopes);
 
   // Join close segments and count total amount of segments in dataset
   close_segments(slopes, join_segments, file_data);

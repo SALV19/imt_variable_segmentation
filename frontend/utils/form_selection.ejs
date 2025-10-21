@@ -7,7 +7,7 @@
     </div>
     <div class="px-4 py-4">
       <%- include("../components/information.ejs") %>
-      <%- include("../components/configuration.ejs") %>
+      <%- include("../components/molecules/configuration.ejs") %>
     </div>
   </aside>
   <div class="w-4/5 flex">
@@ -20,6 +20,7 @@
     <%- include("./iri/form", {id: "agretamiento_por_fatiga", input_class_id: "agretamiento_por_fatiga_input", name: "Agretamiento por fatiga", show: false}) %>
     <%- include("./iri/form", {id: "agrietamiento_longitudinal", input_class_id: "agrietamiento_longitudinal_input", name: "Agrietamiento longitudinal", show: false}) %>
     <%- include("./iri/form", {id: "agrietamiento_transversal", input_class_id: "agrietamiento_transversal_input", name: "Agrietamiento transversal", show: false}) %>
+    <%- include("./iri/form", {id: "profundidad_rugosidad", input_class_id: "profundidad_rugosidad_input", name: "Profundidad de Rugosidad", show: false}) %>
   </div>
 </div>
 
