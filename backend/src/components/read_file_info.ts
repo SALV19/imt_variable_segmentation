@@ -61,8 +61,8 @@ export function read_file_info(
           acum.min = Infinity;
         }
 
-        if (!curr[keys[3]]) {
-          curr[keys[3]] = 0;
+        if (curr[keys[3]] == undefined) {
+          curr[keys[3]] = acum.values.at(-1);
         }
 
         const measurements: number = curr[keys[1]];
