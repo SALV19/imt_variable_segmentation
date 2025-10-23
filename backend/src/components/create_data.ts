@@ -1,6 +1,7 @@
 import { GeneralData, IRI, Slope } from "./types.ts";
 import * as Aux from "./home.components.ts";
 import type { Data_Map } from "./read_file_info.ts";
+import { detect_outliers_z_score } from "./getUncommonPoints.ts";
 
 export async function create_data(data: GeneralData, file_data: Data_Map) {
   const join_segments = data.join_segments;
@@ -18,11 +19,16 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   let filter_measurements: number[] = await Aux.filter(file_data, mov_avg);
 
   // Get abnormal points
-  const abnormal_points: Promise<{ x: number; y: number }[]> = Aux.get_uncommon(
-    file_data,
-    filter_measurements,
-    singular_points
-  );
+  const abnormal_points: { x: number; y: number }[] =
+    detect_outliers_z_score(file_data);
+
+  // const abnormal_points: Promise<{ x: number; y: number }[]> = Aux.get_uncommon(
+  //   file_data,
+  //   filter_measurements,
+  //   singular_points
+  // );
+
+  // console.log((await abnormal_points).length);
 
   const normal_measurements_iri: number[] = file_data.values.map((val, idx) =>
     get_singular_points(val, idx, filter_measurements, singular_points)
