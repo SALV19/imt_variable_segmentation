@@ -34,3 +34,18 @@ export interface Slope {
 export interface Result {
   media: number;
 }
+
+export interface Data_Map {
+  id: string;
+  measurements: number[];
+  values: number[];
+  distance: number;
+  average: number;
+  max: number;
+  min: number;
+  total: number;
+
+  error: string | null;
+
+  [key: string]: number | number[] | string | null;
+}

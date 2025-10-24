@@ -1,20 +1,5 @@
 import XLSX from "xlsx";
-import { file_types } from "./types.ts";
-
-export interface Data_Map {
-  id: string;
-  measurements: number[];
-  values: number[];
-  distance: number;
-  average: number;
-  max: number;
-  min: number;
-  total: number;
-
-  error: string | null;
-
-  [key: string]: number | number[] | string | null;
-}
+import { file_types, Data_Map } from "./types.ts";
 
 // Read different sheets of excel into different objects
 export function read_file_info(
@@ -27,10 +12,8 @@ export function read_file_info(
   // Traverse each sheet and create an object by name
   workbook.SheetNames.forEach((name) => {
     const worksheet = workbook.Sheets[name];
-
     const json_data: Object[] = XLSX.utils.sheet_to_json(worksheet);
-
-    const keys = Object.keys(json_data[0]);
+    const keys: string[] = Object.keys(json_data[0]);
 
     name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -52,37 +35,7 @@ export function read_file_info(
     // Reducer, create separate json object of file into a singular data
     // dictionary
     const json_object: Data_Map = json_data.reduce<Data_Map>(
-      (acum: Data_Map, curr: any, idx) => {
-        if (idx == 0) {
-          const id = curr[keys[0]];
-          acum.id = id;
-          acum.average = 0;
-          acum.max = 0;
-          acum.min = Infinity;
-        }
-
-        if (curr[keys[3]] == undefined) {
-          curr[keys[3]] = acum.values.at(-1);
-        }
-
-        const measurements: number = curr[keys[1]];
-        const values: number = parseFloat(curr[keys[3]].toFixed(4));
-
-        acum.average += values;
-
-        acum.max = Math.max(acum.max, values);
-        acum.min = Math.min(acum.min, values);
-
-        try {
-          acum.measurements.push(measurements);
-          acum.values.push(values);
-        } catch {
-          acum.measurements = [measurements];
-          acum.values = [values];
-        }
-
-        return acum;
-      },
+      (acum: Data_Map, curr: any, idx) => json_2_datamap(acum, curr, idx, keys),
       {} as Data_Map
     );
 
@@ -99,4 +52,41 @@ export function read_file_info(
   });
 
   return data;
+}
+
+function json_2_datamap(
+  acum: Data_Map,
+  curr: any,
+  idx: number,
+  keys: string[]
+): Data_Map {
+  if (idx == 0) {
+    const id = curr[keys[0]];
+    acum.id = id;
+    acum.average = 0;
+    acum.max = 0;
+    acum.min = Infinity;
+  }
+
+  if (curr[keys[3]] == undefined) {
+    curr[keys[3]] = acum.values.at(-1);
+  }
+
+  const measurements: number = curr[keys[1]];
+  const values: number = parseFloat(curr[keys[3]].toFixed(4));
+
+  acum.average += values;
+
+  acum.max = Math.max(acum.max, values);
+  acum.min = Math.min(acum.min, values);
+
+  try {
+    acum.measurements.push(measurements);
+    acum.values.push(values);
+  } catch {
+    acum.measurements = [measurements];
+    acum.values = [values];
+  }
+
+  return acum;
 }

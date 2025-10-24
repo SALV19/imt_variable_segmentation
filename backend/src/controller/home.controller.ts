@@ -1,6 +1,6 @@
 import { create_data } from "../components/create_data.ts";
 import { read_file_info } from "../components/read_file_info.ts";
-import * as Aux from "../components/home.components.ts";
+import * as Aux from "../components/segmentation/slope_segmentation.ts";
 import { IRI, Slope, Result } from "../components/types.ts";
 import type { Request, Response } from "express";
 import type { Data_Map } from "../components/read_file_info.ts";

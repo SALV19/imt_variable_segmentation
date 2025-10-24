@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/css/form.css" />
+<div class="flex" id="form_selection">
+  <aside class="border-r-2 border-gray-400 font-montserrat w-1/5 max-md:hidden">
+    <div class="grid grid-cols-2 border-b-2 border-gray-400">
+      <%- include("../components/atoms/change_button", {message: "¿Qué es?", id: "info", className: "selected"}) %>
+      <%- include("../components/atoms/change_button", {message: "Configuración", id: "components", className: null}) %>
+    </div>
+    <div class="px-4 py-4">
+      <%- include("../molecules/information.ejs") %>
+      <%- include("../components/molecules/configuration.ejs") %>
+    </div>
+  </aside>
+  <div class="w-4/5 flex">
+    <div class="w-full flex justify-center">
+      <%- include ("../molecules/file_upload") %>
+    </div>
+    <%- include("../organism/form", {id: "iri", input_class_id: "iri_input", name: "IRI", show: true}) %>
+    <%- include("../organism/form", {id: "friccion", input_class_id: "friccion_input", name: "Fricción", show: false}) %>
+    <%- include("../organism/form", {id: "deflexiones", input_class_id: "deflexiones_input", name: "Deflexiones", show: false}) %>
+    <%- include("../organism/form", {id: "agretamiento_por_fatiga", input_class_id: "agretamiento_por_fatiga_input", name: "Agretamiento por fatiga", show: false}) %>
+    <%- include("../organism/form", {id: "agrietamiento_longitudinal", input_class_id: "agrietamiento_longitudinal_input", name: "Agrietamiento longitudinal", show: false}) %>
+    <%- include("../organism/form", {id: "agrietamiento_transversal", input_class_id: "agrietamiento_transversal_input", name: "Agrietamiento transversal", show: false}) %>
+    <%- include("../organism/form", {id: "profundidad_rugosidad", input_class_id: "profundidad_rugosidad_input", name: "Profundidad de Rugosidad", show: false}) %>
+  </div>
+</div>
+
+<script src="/js/upload_files.js"></script>

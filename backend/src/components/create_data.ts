@@ -1,10 +1,12 @@
 import { GeneralData, IRI, Slope } from "./types.ts";
-import * as Aux from "./home.components.ts";
-import type { Data_Map } from "./read_file_info.ts";
+import { slopeZ } from "./segmentation/slope_segmentation.ts";
+import type { Data_Map } from "./types.ts";
 import {
   detect_outliers_z_score,
   filter_outliers,
 } from "./getUncommonPoints.ts";
+import { filter } from "./segmentation/filter_data.ts";
+import { cumsum } from "./segmentation/cumsum.ts";
 
 export async function create_data(data: GeneralData, file_data: Data_Map) {
   const join_segments = data.join_segments;
@@ -19,19 +21,13 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   const mov_avg = Math.round(data.moving_average / data.distance);
 
   // Filter / Smooth data
-  let filter_measurements: number[] = await Aux.filter(file_data, mov_avg);
+  let filter_measurements: number[] = await filter(file_data, mov_avg);
 
   // Get abnormal points
   const abnormal_points: { x: number; y: number }[] = detect_outliers_z_score(
     file_data,
     singular_points
   );
-
-  // const abnormal_points: Promise<{ x: number; y: number }[]> = Aux.get_uncommon(
-  //   file_data,
-  //   filter_measurements,
-  //   singular_points
-  // );
 
   const normal_measurements_iri: number[] = filter_outliers(
     file_data,
@@ -45,10 +41,10 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   };
 
   // Get slopes function
-  const segmentation: number[] = Aux.cumsum(filter_measurements);
+  const segmentation: number[] = cumsum(filter_measurements);
 
   // Segmentate data
-  let slopes: Slope[] = Aux.slopeZ(
+  let slopes: Slope[] = slopeZ(
     non_abnormal_values,
     segmentation,
     percentile,

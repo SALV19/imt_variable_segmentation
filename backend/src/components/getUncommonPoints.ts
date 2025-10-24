@@ -1,4 +1,4 @@
-import { Data_Map } from "./read_file_info.ts";
+import { Data_Map } from "./types.ts";
 
 // Utiliza función Z-score para conseguir puntos singulares
 // z-score = sqrt(sum((i-î)^2) / std)
@@ -67,15 +67,4 @@ export function filter_outliers(
     return val;
   });
   return filtered_data;
-}
-
-export function get_singular_points(
-  val: number,
-  idx: number,
-  filter_measurements: number[],
-  singular_points: number
-) {
-  if (Math.abs(filter_measurements[idx] - val) > singular_points)
-    return filter_measurements[idx];
-  return val;
 }

@@ -1,9 +1,9 @@
-import { process_data } from "../components/home.components.ts";
+import { process_data } from "../components/segmentation/slope_segmentation.ts";
 import { path, __dirname } from "../utils/import_path.ts";
 import * as fs from "fs";
 import * as response from "./test_responses.ts";
 
-import { cumsum } from "../components/home.components.ts";
+import { cumsum } from "../components/segmentation/slope_segmentation.ts";
 
 // console.log(cumsum(response.response_1_file))
 // test("IRI object 1 file", async () => {
