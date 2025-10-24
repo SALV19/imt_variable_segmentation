@@ -92,7 +92,7 @@ export function slopeZ(
   file_data: Data_Map,
   segmentation: number[],
   percentile: number | null,
-  joinVal: number
+  difference: number
 ): Slope[] {
   let slpZ: Slope[] = [];
   const slope_zk: number[] = [];
@@ -133,7 +133,7 @@ export function slopeZ(
 
     if (
       // @ts-ignore
-      (segmentationBoolFunc(slope_zk.at(-1), joinVal) || i == length - 1) &&
+      (segmentationBoolFunc(slope_zk.at(-1), difference) || i == length - 1) &&
       last_slope &&
       !(i - count < length * 0.05)
     ) {

@@ -1,7 +1,10 @@
 import { GeneralData, IRI, Slope } from "./types.ts";
 import * as Aux from "./home.components.ts";
 import type { Data_Map } from "./read_file_info.ts";
-import { detect_outliers_z_score } from "./getUncommonPoints.ts";
+import {
+  detect_outliers_z_score,
+  filter_outliers,
+} from "./getUncommonPoints.ts";
 
 export async function create_data(data: GeneralData, file_data: Data_Map) {
   const join_segments = data.join_segments;
@@ -19,8 +22,10 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   let filter_measurements: number[] = await Aux.filter(file_data, mov_avg);
 
   // Get abnormal points
-  const abnormal_points: { x: number; y: number }[] =
-    detect_outliers_z_score(file_data);
+  const abnormal_points: { x: number; y: number }[] = detect_outliers_z_score(
+    file_data,
+    singular_points
+  );
 
   // const abnormal_points: Promise<{ x: number; y: number }[]> = Aux.get_uncommon(
   //   file_data,
@@ -28,10 +33,10 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   //   singular_points
   // );
 
-  // console.log((await abnormal_points).length);
-
-  const normal_measurements_iri: number[] = file_data.values.map((val, idx) =>
-    get_singular_points(val, idx, filter_measurements, singular_points)
+  const normal_measurements_iri: number[] = filter_outliers(
+    file_data,
+    abnormal_points,
+    filter_measurements
   );
 
   const non_abnormal_values: Data_Map = {
@@ -47,7 +52,7 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
     non_abnormal_values,
     segmentation,
     percentile,
-    singular_points
+    file_data.max - file_data.min
   );
 
   // Join close segments and count total amount of segments in dataset
@@ -85,15 +90,4 @@ function close_segments(
     }
     measurements.total++;
   }
-}
-
-function get_singular_points(
-  val: number,
-  idx: number,
-  filter_measurements: number[],
-  singular_points: number
-) {
-  if (Math.abs(filter_measurements[idx] - val) > singular_points)
-    return filter_measurements[idx];
-  return val;
 }

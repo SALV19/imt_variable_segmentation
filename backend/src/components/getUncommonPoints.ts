@@ -46,3 +46,36 @@ export function detect_outliers_z_score(
 
   return outliers;
 }
+
+export function filter_outliers(
+  file_data: Data_Map,
+  outliers: { x: number; y: number }[],
+  filtered_measurements: number[]
+) {
+  const out_idx = 0;
+  const max_length = outliers.length;
+  if (outliers.length <= 0) return file_data.values;
+
+  const filtered_data = file_data.values.map((val, idx) => {
+    if (out_idx >= max_length) return val;
+    if (
+      val == outliers[out_idx].y &&
+      file_data.measurements[idx] == outliers[out_idx].y
+    ) {
+      return filtered_measurements[idx];
+    }
+    return val;
+  });
+  return filtered_data;
+}
+
+export function get_singular_points(
+  val: number,
+  idx: number,
+  filter_measurements: number[],
+  singular_points: number
+) {
+  if (Math.abs(filter_measurements[idx] - val) > singular_points)
+    return filter_measurements[idx];
+  return val;
+}
