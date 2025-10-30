@@ -31,9 +31,9 @@ $("[id$=_form]").on("submit", (e) => {
 
   // Load form information of selected configuration
   let input_values = {};
-  $("input[name=selected_configuration]")
-    .filter((_idx, element) => element.checked == true)
-    .each((_idx, element) => {
+  $("#selected")
+    .children("p")
+    .each((idx, element) => {
       const id = element.id;
 
       input_values[`${id}_values`] = {};
@@ -44,6 +44,10 @@ $("[id$=_form]").on("submit", (e) => {
 
       data.append(id, JSON.stringify(input_values[`${id}_values`]));
     });
+  // $("input[name=selected_configuration]")
+  //   .filter((_idx, element) => element.checked == true)
+  //   .each((_idx, element) => {
+  //   });
 
   if (Object.keys(input_values).length <= 0) {
     send_error_message(

@@ -1,0 +1,40 @@
+
+<% let components = [
+  {iri: "IRI"},
+  {friccion: "Fricción"},
+  {deflexiones: "Deflexiones"},
+  {agretamiento_por_fatiga: "Agrietamiento por fatiga"},
+  {agrietamiento_longitudinal: "Agrietamiento longitudonal"},
+  {agrietamiento_transversal: "Agrietamiento transversal"},
+  {profundidad_rodera: "Profundidad de rodera"}
+  ] %>
+
+<div class="flex justify-around h-[25rem]">
+  <div class="flex items-center flex-col">
+    <h1 class="text-xl font-semibold pb-2 text-center">No seleccionados</h1>
+    <div id="unselected" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)" class="border-black border-2 w-72 h-80">
+      <% for (let i = 0; i < components.length; i++) {%>
+        <%- include("../atoms/draggable_item.ejs", {id: Object.keys(components[i])[0], label_name: Object.values(components[i])[0]}) %>
+      <% } %>
+    </div>
+    
+    <button 
+      class="bg-imt-nat hover:bg-blue-800 rounded-sm text-white text-center p-2 mt-2 font-semibold "
+      onclick="selectAll()">
+      Seleccionar todo
+    </button>
+  </div>
+
+  <div class="flex items-center flex-col">
+    <h1 class="text-xl font-semibold pb-2 text-center">Seleccionados</h1>
+    <div id="selected" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)" class="border-black border-2 w-72 h-80"></div>
+    
+    <button 
+      class="bg-imt-nat hover:bg-blue-800 rounded-sm text-white text-center p-2 mt-2 font-semibold "
+      onclick="deselectAll()">
+      Deseleccionar todo
+    </button>
+  </div>
+</div>
+
+<script src="/js/drag_and_drop.js"></script>
