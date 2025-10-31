@@ -27,3 +27,7 @@ function deselectAll() {
       $("#unselected").append(element);
     });
 }
+
+function draggableClick(element) {
+  changeForm(element.id);
+}
