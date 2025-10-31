@@ -2,9 +2,11 @@ import { GeneralData, IRI, Slope } from "./types.ts";
 import { slopeZ } from "./segmentation/slope_segmentation.ts";
 import type { Data_Map } from "./types.ts";
 import {
+  detect_outliers_IQR,
   detect_outliers_z_score,
   filter_outliers,
-} from "./getUncommonPoints.ts";
+  mad_base_outliers,
+} from "./get_uncommon_points.ts";
 import { filter } from "./segmentation/filter_data.ts";
 import { cumsum } from "./segmentation/cumsum.ts";
 
@@ -24,10 +26,14 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   let filter_measurements: number[] = await filter(file_data, mov_avg);
 
   // Get abnormal points
-  const abnormal_points: { x: number; y: number }[] = detect_outliers_z_score(
-    file_data,
-    singular_points
-  );
+  const abnormal_points: { x: number; y: number }[] =
+    mad_base_outliers(file_data);
+  // detect_outliers_IQR(file_data);
+
+  // const abnormal_points: { x: number; y: number }[] = detect_outliers_z_score(
+  //   file_data,
+  //   singular_points
+  // );
 
   const normal_measurements_iri: number[] = filter_outliers(
     file_data,

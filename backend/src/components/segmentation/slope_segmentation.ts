@@ -100,7 +100,7 @@ function aux_segmentation(segmentation: number[], iri: number[], i: number) {
   );
 }
 
-function aux_percentile(p: number, length: number) {
+export function aux_percentile(p: number, length: number) {
   const index = Math.round((p / 100) * length);
   return index;
 }
