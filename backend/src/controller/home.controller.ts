@@ -1,4 +1,5 @@
 import { create_data } from "../components/create_data.ts";
+import { homogenousSegmentation } from "../components/homgenousSegmentation/homogenousSegmentation.ts";
 import { read_file_info } from "../components/read_file_info.ts";
 import { Data_Map } from "../components/types.ts";
 import type { Request, Response } from "express";
@@ -52,7 +53,9 @@ export async function upload_file(req: Request, res: Response) {
       }
       return { [key]: await create_data(dataMap[key], file_data[key]) };
     })
-  );
+  ).then((data) => data.filter((x) => !!x));
+
+  homogenousSegmentation(generated_data);
 
   // @ts-ignore
   req.session.generated_data = generated_data;
