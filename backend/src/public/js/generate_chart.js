@@ -10,11 +10,11 @@ function create_data(json_response, id_selector) {
       return [
         {
           x: val.start,
-          y: val.iri,
+          y: val.value,
         },
         {
           x: val.end,
-          y: val.iri,
+          y: val.value,
         },
       ];
     })
@@ -76,7 +76,7 @@ function create_data(json_response, id_selector) {
           },
           color: "darkblue",
         },
-        beginAtZero: true,
+        beginAtZero: false,
         scaleLabel: {
           display: true,
           labelString: "Values",

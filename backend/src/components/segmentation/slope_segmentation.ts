@@ -1,7 +1,6 @@
 import { formatNumber } from "../../utils/format_number.ts";
 import { __dirname } from "../../utils/import_path.ts";
-import { Data_Map } from "../types.ts";
-import { Slope } from "../types.ts";
+import { Data_Map, Slope } from "../../types/types.ts";
 
 function segmentationBoolFunc(slope_val: number, join: number) {
   if (join < 1) {
@@ -34,7 +33,7 @@ export function slopeZ(
   const curr_slope: Slope = {
     start: 0,
     end: 0,
-    iri: 0,
+    value: 0,
   };
 
   curr_slope.start = file_data.measurements[0];
@@ -64,11 +63,11 @@ export function slopeZ(
           percentile,
           percentile_values.length
         );
-        const percentile_iri = percentile_values.sort()[percentile_idx];
-        curr_slope.iri = percentile_iri;
+        const percentile_value = percentile_values.sort()[percentile_idx];
+        curr_slope.value = percentile_value;
       } else {
         const avg = formatNumber(acum / (i - count));
-        curr_slope.iri = avg;
+        curr_slope.value = avg;
       }
 
       curr_slope.end = file_data.measurements[i];

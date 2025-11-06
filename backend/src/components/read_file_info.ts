@@ -1,5 +1,5 @@
 import XLSX from "xlsx";
-import { file_types, Data_Map } from "./types.ts";
+import { file_types, Data_Map } from "../types/types.ts";
 
 // Read different sheets of excel into different objects
 export function read_file_info(
@@ -15,7 +15,10 @@ export function read_file_info(
     const json_data: Object[] = XLSX.utils.sheet_to_json(worksheet);
     const keys: string[] = Object.keys(json_data[0]);
 
-    name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    name = name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
     if (!(name.toLowerCase() in file_types)) {
       const json_object: Data_Map = {

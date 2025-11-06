@@ -26,7 +26,7 @@ export interface IRI {
 export interface Slope {
   start: number;
   end: number;
-  iri: number;
+  value: number;
 }
 
 // In progress

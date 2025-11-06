@@ -1,6 +1,4 @@
-import { GeneralData, IRI, Slope } from "./types.ts";
 import { slopeZ } from "./segmentation/slope_segmentation.ts";
-import type { Data_Map } from "./types.ts";
 import {
   detect_outliers_IQR,
   detect_outliers_z_score,
@@ -9,6 +7,7 @@ import {
 } from "./get_uncommon_points.ts";
 import { filter } from "./segmentation/filter_data.ts";
 import { cumsum } from "./segmentation/cumsum.ts";
+import { Data_Map, GeneralData, Slope } from "../types/types.ts";
 
 export async function create_data(data: GeneralData, file_data: Data_Map) {
   const join_segments = data.join_segments;
@@ -81,10 +80,13 @@ function close_segments(
   measurements: Data_Map
 ) {
   for (let i = 0; i < slopes.length; i++) {
-    if (i > 0 && Math.abs(slopes[i].iri - slopes[i - 1].iri) <= join_segments) {
+    if (
+      i > 0 &&
+      Math.abs(slopes[i].value - slopes[i - 1].value) <= join_segments
+    ) {
       slopes[i - 1].end = slopes[i].end;
-      slopes[i - 1].iri = Number(
-        ((slopes[i].iri + slopes[i - 1].iri) / 2).toFixed(4)
+      slopes[i - 1].value = Number(
+        ((slopes[i].value + slopes[i - 1].value) / 2).toFixed(4)
       );
       slopes.splice(i, 1);
 

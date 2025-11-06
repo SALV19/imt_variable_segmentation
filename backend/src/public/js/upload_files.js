@@ -62,7 +62,7 @@ $("[id$=_form]").on("submit", (e) => {
       body: data,
     })
       .then((res) => res.json())
-      .then((json_response) => handleJSON(json_response))
+      .then(({ generated_data, hSegmentation }) => handleJSON(generated_data))
       .catch((error) => {
         alert(error);
         console.log(error);

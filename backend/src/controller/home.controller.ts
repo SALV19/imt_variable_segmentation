@@ -1,7 +1,7 @@
 import { create_data } from "../components/create_data.ts";
 import { homogenousSegmentation } from "../components/homgenousSegmentation/homogenousSegmentation.ts";
 import { read_file_info } from "../components/read_file_info.ts";
-import { Data_Map } from "../components/types.ts";
+import { Data_Map } from "../types/types.ts";
 import type { Request, Response } from "express";
 
 // GET
@@ -14,10 +14,10 @@ export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
 
   const pair_titles: Record<string, string> = {
-    agretamiento_por_fatiga: "AgrFatiga",
-    agrietamiento_longitudinal: "GrLong",
-    agrietamiento_transversal: "GrTrans",
-    profundidad_rodera: "PR",
+    agretamiento_por_fatiga: "agrfatiga",
+    agrietamiento_longitudinal: "grlong",
+    agrietamiento_transversal: "grtrans",
+    profundidad_rodera: "pr",
   };
 
   // Get form information / values to do the analysis
@@ -55,13 +55,14 @@ export async function upload_file(req: Request, res: Response) {
     })
   ).then((data) => data.filter((x) => !!x));
 
-  homogenousSegmentation(generated_data);
+  const hSegmentation = homogenousSegmentation(generated_data);
 
   // @ts-ignore
   req.session.generated_data = generated_data;
+  req.session.hSegmentation = hSegmentation;
   // @ts-ignore
   req.session.save();
 
   // Response
-  res.status(200).json(generated_data);
+  res.status(200).json({ generated_data, hSegmentation });
 }
