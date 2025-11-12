@@ -55,14 +55,7 @@ export async function upload_file(req: Request, res: Response) {
     })
   ).then((data) => data.filter((x) => !!x));
 
-  const hSegmentation = homogenousSegmentation(generated_data).map(
-    (segment) => {
-      return {
-        ...segment,
-        parameters: Object.fromEntries(segment.parameters),
-      };
-    }
-  );
+  const hSegmentation = homogenousSegmentation(generated_data);
 
   // @ts-ignore
   req.session.generated_data = generated_data;

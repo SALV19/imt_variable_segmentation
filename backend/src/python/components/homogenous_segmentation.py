@@ -1,5 +1,4 @@
 from openpyxl import Workbook
-import json
 
 
 def homogenous_segmentation(wb: Workbook, h_segmentation):
@@ -16,7 +15,7 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
         ws.cell(row=row_val, column=3, value=value["end"])
 
         counter = base_col
-        for key, val in value["parameters"].items():
+        for key, val in value["values"].items():
             # write header once (when idx == 0)
             if idx == 0:
                 ws.cell(row=2, column=counter, value=key)
