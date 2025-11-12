@@ -8,14 +8,21 @@
 }
 
 @font-face {
-  font-family: 'GMX-Regular';
+  font-family: "GMX-Regular";
   src: url(../fonts/GMX-Regular.ttf);
 }
 @font-face {
-  font-family: 'GMX-Bold';
+  font-family: "GMX-Bold";
   src: url(../fonts/GMX-Black.ttf);
 }
 
 .font-gob-bold {
-  font-family: 'GMX-Bold';
+  font-family: "GMX-Bold";
+}
+
+.selected-draggable-item {
+  background-color: #899497;
+}
+.selected-draggable-item:hover {
+  background-color: #6f7a7e !important;
 }
