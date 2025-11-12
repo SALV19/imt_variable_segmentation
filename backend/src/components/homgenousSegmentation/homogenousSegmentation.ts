@@ -39,13 +39,15 @@ export function homogenousSegmentation(generated_data: any): {
       parameters.set(key, idx);
       end = divider;
       hSegments.push({
-        parameters,
+        parameters: new Map(parameters),
         start,
         end,
       });
       start = end;
     }
   });
+
+  // console.log(hSegments);
 
   return hSegments;
 }

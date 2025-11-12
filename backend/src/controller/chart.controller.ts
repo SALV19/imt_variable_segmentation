@@ -7,14 +7,18 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from "fs";
 import { ChildProcess } from "node:child_process";
 
-export function create_chart(res: Response, data: Object[]) {
+export function create_chart(
+  res: Response,
+  generated_data: Object[],
+  hSegmentation: Object[]
+) {
   const script_path = path.join(__dirname, "../python/generate_excel.py");
   const python_path = path.join(__dirname, "../python/venv/Scripts/python");
 
   const python_process = spawn(python_path, [script_path]);
 
-  // testing(res, python_process, data);
-  production(res, python_process, data);
+  // testing(res, python_process, generated_data);
+  production(res, python_process, generated_data, hSegmentation);
 }
 
 function testing(res: Response, python_process: ChildProcess, data: Object[]) {
@@ -47,9 +51,11 @@ function testing(res: Response, python_process: ChildProcess, data: Object[]) {
 function production(
   res: Response,
   python_process: ChildProcess,
-  data: Object[]
+  data: Object[],
+  hSegmentation: Object[]
 ) {
-  python_process.stdin?.write(JSON.stringify(Object.values(data)));
+  python_process.stdin?.write(JSON.stringify(Object.values(data)) + "\n");
+  python_process.stdin?.write(JSON.stringify(Object.values(hSegmentation)));
   python_process.stdin?.end();
 
   let result: Buffer[] = [];

@@ -26,7 +26,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         lambda item: list(map(lambda value: item[value], item)), slopes
     )
 
-    ws = wb.create_sheet(title)
+    ws = wb.create_sheet(title.capitalize())
 
     ws["A1"] = "ID"
     ws["B1"] = measurements["id"]
