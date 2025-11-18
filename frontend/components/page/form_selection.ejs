@@ -1,12 +1,14 @@
 <link rel="stylesheet" href="/css/form.css" />
 <div class="flex" id="form_selection">
   <aside class="border-r-2 border-gray-400 font-montserrat w-3/5 max-md:hidden">
-    <div class="grid grid-cols-2 border-b-2 border-gray-400">
-      <%- include("../components/atoms/change_button", {message: "¿Qué es?", id: "info", className: "selected"}) %>
-      <%- include("../components/atoms/change_button", {message: "Configuración", id: "components", className: null}) %>
+    <div class="grid grid-cols-3 border-b-2 border-gray-400">
+      <%- include("../components/atoms/change_button", {message: "¿Qué es?", id: "component_info", className: "selected"}) %>
+      <%- include("../components/atoms/change_button", {message: "¿Como se usa?", id: "component_como_usar", className: null}) %>
+      <%- include("../components/atoms/change_button", {message: "Configuración", id: "component_components", className: null}) %>
     </div>
     <div class="px-4 py-4">
       <%- include("../molecules/information.ejs") %>
+      <%- include("../molecules/como_usar.ejs") %>
       <%- include("../molecules/configuration.ejs") %>
     </div>
   </aside>
