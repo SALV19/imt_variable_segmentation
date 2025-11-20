@@ -37,6 +37,25 @@ export async function upload_file(req: Request, res: Response) {
   // Transformation layer
   const file_data: Record<string, Data_Map> = read_file_info(req.file);
 
+  const pagesNotFound = Object.keys(dataMap)
+    .map((key: string) => {
+      if (file_data[key] == undefined) {
+        return key;
+      }
+    })
+    .filter((notExists) => notExists);
+
+  if (pagesNotFound.length > 0) {
+    res.status(400).json({
+      error: `Uno de los parámetros seleccionados no se encuentra como una
+            pestaña en el archivo de excel, recomendamos que verifique que
+            esté bien escrito, o que desceleccione los parámetros que no se
+            van a utilizar.`,
+      parameters: pagesNotFound,
+    });
+    return;
+  }
+
   // Processing layer
   const generated_data = await Promise.all(
     Object.keys(dataMap).map(async (key: string) => {

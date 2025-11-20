@@ -4,10 +4,10 @@
   id="modal"
   onclick="closeModal()"
   >
-  <section class="w-1/3 h-1/3 bg-white rounded-md" onclick="event.stopPropagation();">
+  <section class="w-1/3 min-h-[33.33%] bg-white rounded-md" onclick="event.stopPropagation();">
     <h1 class="font-bold text-xl bg-red-600 rounded-t-md p-2 text-white">Error</h1>
-    <p class="mt-2 px-2 text-justify" id="error_text"></p>
-    <p class="font-semibold w-full text-center" id="param"></p>
+    <p class="my-2 px-2 text-justify" id="error_text"></p>
+    <ul class="font-semibold w-full text-center" id="param"></ul>
 
     <div class="w-full flex items-end p-3 justify-end xl:mt-10 mt-0">
       <button
@@ -23,5 +23,6 @@
 <script>
   function closeModal() {
     $("#modal").hide();
+    $("#param").empty()
   }
 </script>
