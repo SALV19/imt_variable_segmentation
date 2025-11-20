@@ -52,13 +52,18 @@ export function homogenousSegmentation(generated_data: any): {
       });
       start = end;
     }
+
+    const paramsChanged =
+      parameters.get(key) != idx || values.get(key) != value;
+
     if (!parameters.has(key)) {
       parameters.set(key, idx);
       values.set(key, value);
       start = divider;
-    } else if (divider - start > 100) {
-      addPoint();
-    } else if (idx == orderedSlopesData.length - 1) {
+    } else if (
+      (divider - start > 100 && paramsChanged) ||
+      idx == orderedSlopesData.length - 1
+    ) {
       addPoint();
     }
   });

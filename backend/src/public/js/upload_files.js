@@ -62,10 +62,15 @@ $("[id$=_form]").on("submit", (e) => {
       body: data,
     })
       .then((res) => res.json())
-      .then(({ generated_data, hSegmentation }) => handleJSON(generated_data))
+      .then(({ generated_data, hSegmentation }) => {
+        handleJSON(generated_data);
+      })
       .catch((error) => {
-        alert(error);
-        console.log(error);
+        console.log("Houston, tenemos un problema");
+        $("#modal").show();
+        $("#error_text").text(
+          "Error al subir archivos. Los parámetros seleccionados no concuerdan con las hojas en excel"
+        );
       });
 });
 
