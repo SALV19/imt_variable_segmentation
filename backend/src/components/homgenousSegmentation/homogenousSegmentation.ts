@@ -1,6 +1,9 @@
 import { SegmentationData, Slope } from "../../types/types.ts";
 
-export function homogenousSegmentation(generated_data: any): {
+export function homogenousSegmentation(
+  generated_data: any,
+  minimum_segment: number
+): {
   parameters: Record<string, number>;
   values: Record<string, number>;
   start: number;
@@ -61,7 +64,7 @@ export function homogenousSegmentation(generated_data: any): {
       values.set(key, value);
       start = divider;
     } else if (
-      (divider - start > 100 && paramsChanged) ||
+      (divider - start > minimum_segment && paramsChanged) ||
       idx == orderedSlopesData.length - 1
     ) {
       addPoint();

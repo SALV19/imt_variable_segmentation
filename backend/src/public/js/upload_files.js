@@ -31,6 +31,7 @@ $("[id$=_form]").on("submit", (e) => {
 
   // Load form information of selected configuration
   let input_values = {};
+  let parameters_input_values = {};
   $("#selected")
     .children("p")
     .each((idx, element) => {
@@ -42,12 +43,15 @@ $("[id$=_form]").on("submit", (e) => {
         input_values[`${id}_values`][element.id] = element.value;
       });
 
-      data.append(id, JSON.stringify(input_values[`${id}_values`]));
+      // data.append(id, JSON.stringify(input_values[`${id}_values`]));
+      parameters_input_values = {
+        ...parameters_input_values,
+        [id]: input_values[`${id}_values`],
+      };
     });
-  // $("input[name=selected_configuration]")
-  //   .filter((_idx, element) => element.checked == true)
-  //   .each((_idx, element) => {
-  //   });
+
+  data.append("parameters", JSON.stringify(parameters_input_values));
+  data.append("h_segment_min", $("#s_homogenous_input_param")[0].value);
 
   if (Object.keys(input_values).length <= 0) {
     send_error_message(

@@ -12,6 +12,7 @@ export function get_home(req: Request, res: Response) {
 // POST
 export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
+  req.body.parameters = JSON.parse(req.body.parameters);
 
   const pair_titles: Record<string, string> = {
     agretamiento_por_fatiga: "agrfatiga",
@@ -21,9 +22,12 @@ export async function upload_file(req: Request, res: Response) {
   };
 
   // Get form information / values to do the analysis
-  const dataMap: Record<string, any> = Object.keys(req.body).reduce(
+  const dataMap: Record<string, any> = Object.keys(req.body.parameters).reduce(
     (acum, key) => {
-      return { ...acum, [pair_titles[key] ?? key]: JSON.parse(req.body[key]) };
+      return {
+        ...acum,
+        [pair_titles[key] ?? key]: req.body.parameters[key],
+      };
     },
     {}
   );
@@ -74,7 +78,10 @@ export async function upload_file(req: Request, res: Response) {
     })
   ).then((data) => data.filter((x) => !!x));
 
-  const hSegmentation = homogenousSegmentation(generated_data);
+  const hSegmentation = homogenousSegmentation(
+    generated_data,
+    req.body.h_segment_min
+  );
 
   // @ts-ignore
   req.session.generated_data = generated_data;
