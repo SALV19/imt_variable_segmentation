@@ -1,19 +1,3 @@
-$("#info").on("click", function () {
-  $("#info").addClass("selected");
-  $("#components").removeClass("selected");
-
-  $("#info_module").show();
-  $("#components_module").hide();
-});
-
-$("#components").on("click", function () {
-  $("#info").removeClass("selected");
-  $("#components").addClass("selected");
-
-  $("#info_module").hide();
-  $("#components_module").show();
-});
-
 $("button[id^=component_]").on("click", function (event) {
   $("button[id^=component_]").each((idx, e) => {
     const id = e.id.split("component_")[1];

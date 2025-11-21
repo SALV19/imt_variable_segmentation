@@ -1,11 +1,9 @@
 <form action="/upload_file" method="POST" enctype="multipart/form-data" id="<%= id+"_form" %>" class="<%= show ? '' : 'hidden' %> h-screen w-full flex gap-10 max-md:flex-col max-md:items-center">
-  <div class="flex flex-col items-center align-bottom -my-4 py-4">
+  <div class="flex flex-col items-center align-bottom -my-4 py-4 w-full">
     <h1 class="mb-4"><%= name %></h1>
+
     <div class="grid grid-cols-2 gap-2 ml-5">
-      <%- include("../../components/molecules/iri_form_molecule") %>
-    </div>
-    <div class="flex gap-2 justify-between my-2 w-full pl-4 pr-8">
-      <%- include("../../components/atoms/switch_media_percentile") %>
+      <%- include ("../atoms/two_column_input.ejs", {label: 'Segmentación mínima', type: "float", id: 's_homogenous_input_param', placeholder: 100}) %>
     </div>
 
     <%- include('../../components/atoms/button', {name: "send", text: 'Enviar'}) %>
