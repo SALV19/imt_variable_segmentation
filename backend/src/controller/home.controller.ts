@@ -3,6 +3,7 @@ import { homogenousSegmentation } from "../components/homgenousSegmentation/homo
 import { read_file_info } from "../components/read_file_info.ts";
 import { Data_Map } from "../types/types.ts";
 import type { Request, Response } from "express";
+import fs from "fs";
 
 // GET
 export function get_home(req: Request, res: Response) {

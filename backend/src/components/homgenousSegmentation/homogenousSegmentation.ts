@@ -63,10 +63,9 @@ export function homogenousSegmentation(
       parameters.set(key, idx);
       values.set(key, value);
       start = divider;
-    } else if (
-      (divider - start > minimum_segment && paramsChanged) ||
-      idx == orderedSlopesData.length - 1
-    ) {
+    } else if (divider - start > minimum_segment && paramsChanged) {
+      addPoint();
+    } else if (idx == orderedSlopesData.length - 1) {
       addPoint();
     }
   });

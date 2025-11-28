@@ -29,11 +29,6 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
     mad_base_outliers(file_data);
   // detect_outliers_IQR(file_data);
 
-  // const abnormal_points: { x: number; y: number }[] = detect_outliers_z_score(
-  //   file_data,
-  //   singular_points
-  // );
-
   const normal_measurements_iri: number[] = filter_outliers(
     file_data,
     abnormal_points,
