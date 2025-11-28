@@ -13,7 +13,12 @@ export function read_file_info(
   workbook.SheetNames.forEach((name) => {
     const worksheet = workbook.Sheets[name];
     const json_data: Object[] = XLSX.utils.sheet_to_json(worksheet);
-    const keys: string[] = Object.keys(json_data[0]);
+    let keys: string[];
+    try {
+      keys = Object.keys(json_data[0]);
+    } catch {
+      return;
+    }
 
     name = name
       .normalize("NFD")

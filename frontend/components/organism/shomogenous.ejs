@@ -3,7 +3,7 @@
     <h1 class="mb-4"><%= name %></h1>
 
     <div class="grid grid-cols-2 gap-2 ml-5">
-      <%- include ("../atoms/two_column_input.ejs", {label: 'Segmentación mínima', type: "float", id: 's_homogenous_input_param', placeholder: 100}) %>
+      <%- include ("../atoms/two_column_input.ejs", {label: 'Segmentación mínima', type: "float", id: 's_homogenous_input_param', placeholder: 1000}) %>
     </div>
 
     <%- include('../../components/atoms/button', {name: "send", text: 'Enviar'}) %>
