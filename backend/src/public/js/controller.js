@@ -1,16 +1,23 @@
-function handleJSON(json_response) {
-  if (json_response.error) {
+function handleJSON(dynamic_data, static_data) {
+  if (dynamic_data.error) {
     console.log("Show Modal");
     $("#modal").show();
-    $("#error_text").text(json_response.error);
-    $("#param").text(json_response.param);
+    $("#error_text").text(dynamic_data.error);
+    $("#param").text(dynamic_data.param);
     return;
   }
 
-  Object.keys(json_response).forEach((_idx, key) => {
+  Object.keys(dynamic_data).forEach((_idx, key) => {
     create_data(
-      Object.values(json_response[key])[0].generated_data,
-      Object.keys(json_response[key])[0]
+      Object.values(dynamic_data[key])[0].generated_data,
+      Object.keys(dynamic_data[key])[0]
+    );
+  });
+
+  Object.keys(static_data).forEach((_idx, key) => {
+    create_simple_segmentation(
+      Object.values(static_data[key])[0],
+      Object.keys(static_data[key])[0]
     );
   });
 }

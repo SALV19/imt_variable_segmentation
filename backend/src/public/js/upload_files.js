@@ -86,8 +86,8 @@ $("[id$=_form]").on("submit", (e) => {
 
         throw res.json();
       })
-      .then(({ generated_data, hSegmentation }) => {
-        handleJSON(generated_data);
+      .then(({ generated_data, static_data, hSegmentation }) => {
+        handleJSON(generated_data, static_data);
       })
       .catch(async (error) => {
         console.log("Houston, tenemos un problema");

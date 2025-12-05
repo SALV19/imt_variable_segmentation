@@ -5,6 +5,7 @@ import { Data_Map } from "../types/types.ts";
 import type { Request, Response } from "express";
 import fs from "fs";
 import create_static_data from "../components/segmentation/create_static_data.ts";
+import generate_data_map from "../components/segmentation/generate_data_map.ts";
 
 // GET
 export function get_home(req: Request, res: Response) {
@@ -53,39 +54,27 @@ export async function upload_file(req: Request, res: Response) {
 
   // Processing layer
   const generated_data = await Promise.all(
-    Object.keys(dynamicDataMap).map(async (key: string) => {
-      if (file_data[key] == undefined) {
-        console.error(`Error, file page: ${key} not found`);
-        res.status(400).json({
-          error: `Uno de los parámetros seleccionados no se encuentra como una 
-            pestaña en el archivo de excel, recomendamos que verifique que 
-            esté bien escrito, o que desceleccione los parámetros que no se 
-            van a utilizar.`,
-          parameter: key.charAt(0).toUpperCase() + key.slice(1),
-        });
-        return;
-      }
-      return { [key]: await create_data(dynamicDataMap[key], file_data[key]) };
-    })
+    Object.keys(dynamicDataMap).map(async (key) =>
+      generate_data_map(
+        key,
+        res,
+        file_data[key],
+        dynamicDataMap[key],
+        create_data
+      )
+    )
   ).then((data) => data.filter((x) => !!x));
 
   const static_data = await Promise.all(
-    Object.keys(staticDataMap).map(async (key: string) => {
-      if (file_data[key] == undefined) {
-        console.error(`Error, file page: ${key} not found`);
-        res.status(400).json({
-          error: `Uno de los parámetros seleccionados no se encuentra como una 
-            pestaña en el archivo de excel, recomendamos que verifique que 
-            esté bien escrito, o que desceleccione los parámetros que no se 
-            van a utilizar.`,
-          parameter: key.charAt(0).toUpperCase() + key.slice(1),
-        });
-        return;
-      }
-      return {
-        [key]: await create_static_data(staticDataMap[key], file_data[key]),
-      };
-    })
+    Object.keys(staticDataMap).map(async (key) =>
+      generate_data_map(
+        key,
+        res,
+        file_data[key],
+        staticDataMap[key],
+        create_static_data
+      )
+    )
   ).then((data) => data.filter((x) => !!x));
 
   const hSegmentation = homogenousSegmentation(
