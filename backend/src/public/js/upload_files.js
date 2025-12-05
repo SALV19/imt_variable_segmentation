@@ -70,7 +70,7 @@ $("form[action='/upload_file']").on("submit", (e) => {
     Object.keys(static_input_values).length <= 0
   ) {
     send_error_message(
-      "Error: Selecciona al menos una opción en la sección de configuración"
+      "Error: Selecciona al menos una opción en la sección de variables"
     );
     errors = 1;
   }
