@@ -1,4 +1,4 @@
-<form action="/upload_file" method="POST" enctype="multipart/form-data" class="h-screen w-full flex gap-10 max-md:flex-col max-md:items-center">
+<form action="/upload_file" method="POST" enctype="multipart/form-data" class="h-screen flex gap-10 max-md:flex-col max-md:items-center">
   <div class="flex flex-col items-center align-bottom -my-4 py-4">
     <%- include("../molecules/parameter_form_content.ejs", {id: "iri", input_class_id: "iri_input", name: "IRI", show: true}) %>
     <%- include("../molecules/parameter_form_content.ejs", {id: "friccion", input_class_id: "friccion_input", name: "Fricción", show: false}) %>
@@ -9,7 +9,7 @@
     <%- include("../molecules/parameter_form_content.ejs", {id: "profundidad_rodera", input_class_id: "profundidad_rodera_input", name: "Profundidad de Rugosidad", show: false}) %>
   
     <%- include("../atoms/shomogenous", {id: "s_homogenea", input_class_id: "segmentacion_homogenea_input", name: "Segmentacion Homogenea", show: false}) %>
-
+    <%- include("../molecules/change_form") %>
     <%- include('../../components/atoms/button', {name: "send", text: 'Enviar'}) %>
     <p id="error_message" class="text-red-600 hidden text-sm mt-2 pl-2">
     </p>
