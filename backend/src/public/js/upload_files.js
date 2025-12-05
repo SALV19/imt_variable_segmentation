@@ -9,7 +9,8 @@ $("#percentile-avg").change(() => {
 });
 
 // Send files
-$("[id$=_form]").on("submit", (e) => {
+$("form[action='/upload_file']").on("submit", (e) => {
+  console.log("Hola");
   e.preventDefault();
 
   let errors = 0;
