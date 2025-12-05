@@ -2,6 +2,7 @@ import { SegmentationData, Slope } from "../../types/types.ts";
 
 export function homogenousSegmentation(
   generated_data: any,
+  static_data: any,
   minimum_segment: number
 ): {
   parameters: Record<string, number>;

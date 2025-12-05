@@ -4,6 +4,7 @@ import { read_file_info } from "../components/read_file_info.ts";
 import { Data_Map } from "../types/types.ts";
 import type { Request, Response } from "express";
 import fs from "fs";
+import create_static_data from "../components/segmentation/create_static_data.ts";
 
 // GET
 export function get_home(req: Request, res: Response) {
@@ -68,19 +69,41 @@ export async function upload_file(req: Request, res: Response) {
     })
   ).then((data) => data.filter((x) => !!x));
 
+  const static_data = await Promise.all(
+    Object.keys(staticDataMap).map(async (key: string) => {
+      if (file_data[key] == undefined) {
+        console.error(`Error, file page: ${key} not found`);
+        res.status(400).json({
+          error: `Uno de los parámetros seleccionados no se encuentra como una 
+            pestaña en el archivo de excel, recomendamos que verifique que 
+            esté bien escrito, o que desceleccione los parámetros que no se 
+            van a utilizar.`,
+          parameter: key.charAt(0).toUpperCase() + key.slice(1),
+        });
+        return;
+      }
+      return {
+        [key]: await create_static_data(staticDataMap[key], file_data[key]),
+      };
+    })
+  ).then((data) => data.filter((x) => !!x));
+
   const hSegmentation = homogenousSegmentation(
     generated_data,
+    static_data,
     req.body.h_segment_min
   );
 
   // @ts-ignore
   req.session.generated_data = generated_data;
+  req.session.static_data = generated_data;
   req.session.hSegmentation = hSegmentation;
+
   // @ts-ignore
   req.session.save();
 
   // Response
-  res.status(200).json({ generated_data, hSegmentation });
+  res.status(200).json({ generated_data, static_data, hSegmentation });
 }
 
 function parseFileName(parameters: Object[]) {
@@ -89,7 +112,7 @@ function parseFileName(parameters: Object[]) {
     agrietamiento_longitudinal: "grlong",
     agrietamiento_transversal: "grtrans",
     profundidad_rodera: "pr",
-    static_transito: "transito",
+    static_transito: "tdpa",
   };
 
   return Object.keys(parameters).reduce(

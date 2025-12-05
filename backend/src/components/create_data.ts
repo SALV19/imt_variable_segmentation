@@ -11,7 +11,6 @@ import { Data_Map, GeneralData, Slope } from "../types/types.ts";
 
 export async function create_data(data: GeneralData, file_data: Data_Map) {
   const join_segments = data.join_segments;
-  const singular_points = data.singular_points;
   const percentile = data.percentile ?? null;
 
   if (file_data.error) {
