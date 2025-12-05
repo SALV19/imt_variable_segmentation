@@ -26,7 +26,7 @@ export function homogenousSegmentation(
 
   const slopes = dynamicSlopes.concat(staticSlopes);
 
-  console.dir(slopes, { depth: null });
+  // console.dir(slopes, { depth: null });
 
   const slopesData: {
     idx: number;
@@ -35,7 +35,7 @@ export function homogenousSegmentation(
     value: number;
   }[] = getSlopesData(slopes);
 
-  console.dir(slopes, { depth: null });
+  // console.dir(slopes, { depth: null });
 
   const orderedSlopesData: {
     idx: number;
@@ -93,7 +93,7 @@ export function homogenousSegmentation(
     }
   });
 
-  console.dir(orderedSlopesData, { depth: null });
+  // console.dir(orderedSlopesData, { depth: null });
 
   const hSegments = hSegmentsData.map((segment) => {
     return {

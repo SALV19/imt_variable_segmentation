@@ -15,12 +15,14 @@ from openpyxl.chart.layout import Layout, ManualLayout
 
 def generate_sheet(wb: Workbook, title: str, generated_data):
     measurements = generated_data["file_data"]
-    filter_measurements = generated_data["filter_measurements"]
-    segmentation = generated_data["segmentation"]
+    # filter_measurements = generated_data["filter_measurements"]
+    # segmentation = generated_data["segmentation"]
     slopes = generated_data["slopes"]
-    singularities = generated_data["abnormalities"]
+    singularities = []
+    if "abnormalities" in generated_data:
+        singularities = generated_data["abnormalities"]
 
-    distance = measurements["distance"]
+    # distance = measurements["distance"]
 
     slope_values: map = map(
         lambda item: list(map(lambda value: item[value], item)), slopes

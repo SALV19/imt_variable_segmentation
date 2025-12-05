@@ -85,7 +85,7 @@ export async function upload_file(req: Request, res: Response) {
 
   // @ts-ignore
   req.session.generated_data = generated_data;
-  req.session.static_data = generated_data;
+  req.session.static_data = static_data;
   req.session.hSegmentation = hSegmentation;
 
   // @ts-ignore

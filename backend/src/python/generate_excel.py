@@ -23,10 +23,10 @@ for gd in generated_data:
     values = list(gd.values())[0]["generated_data"]
     generate_sheet(wb, key, values)
 
-# for sd in static_data:
-#     key = list(gd.keys())[0]
-#     values = list(gd.values())[0]["generated_data"]
-#     generate_sheet(wb, key, values)
+for sd in static_data:
+    key = list(sd.keys())[0]
+    values = list(sd.values())[0]
+    generate_sheet(wb, key, values)
 
 homogenous_segmentation(wb, h_segmentation)
 
