@@ -10,6 +10,7 @@ import { ChildProcess } from "node:child_process";
 export function create_chart(
   res: Response,
   generated_data: Object[],
+  static_segmentation: Object[],
   hSegmentation: Object[]
 ) {
   const script_path = path.join(__dirname, "../python/generate_excel.py");
@@ -18,7 +19,13 @@ export function create_chart(
   const python_process = spawn(python_path, [script_path]);
 
   // testing(res, python_process, generated_data);
-  production(res, python_process, generated_data, hSegmentation);
+  production(
+    res,
+    python_process,
+    generated_data,
+    static_segmentation,
+    hSegmentation
+  );
 }
 
 function testing(res: Response, python_process: ChildProcess, data: Object[]) {
@@ -51,10 +58,16 @@ function testing(res: Response, python_process: ChildProcess, data: Object[]) {
 function production(
   res: Response,
   python_process: ChildProcess,
-  data: Object[],
+  dynamic_segmentation: Object[],
+  static_segmentation: Object[],
   hSegmentation: Object[]
 ) {
-  python_process.stdin?.write(JSON.stringify(Object.values(data)) + "\n");
+  python_process.stdin?.write(
+    JSON.stringify(Object.values(dynamic_segmentation)) + "\n"
+  );
+  python_process.stdin?.write(
+    JSON.stringify(Object.values(static_segmentation)) + "\n"
+  );
   python_process.stdin?.write(JSON.stringify(Object.values(hSegmentation)));
   python_process.stdin?.end();
 

@@ -6,8 +6,11 @@ import sys
 from components.homogenous_segmentation import homogenous_segmentation
 from components.worksheet_generator import generate_sheet
 
-data = input()
-generated_data = json.loads(data)
+dynamic_segmentation = input()
+generated_data = json.loads(dynamic_segmentation)
+
+satic_segmentation = input()
+static_data = json.loads(satic_segmentation)
 
 hsegment = input()
 h_segmentation = json.loads(hsegment)
@@ -15,10 +18,15 @@ h_segmentation = json.loads(hsegment)
 wb = load_workbook("./src/python/template.xlsm", keep_vba=True)
 virtual_workbook = BytesIO()
 
-for i in range(len(generated_data)):
-    key = list(generated_data[i].keys())[0]
-    values = list(generated_data[i].values())[0]["generated_data"]
+for gd in generated_data:
+    key = list(gd.keys())[0]
+    values = list(gd.values())[0]["generated_data"]
     generate_sheet(wb, key, values)
+
+# for sd in static_data:
+#     key = list(gd.keys())[0]
+#     values = list(gd.values())[0]["generated_data"]
+#     generate_sheet(wb, key, values)
 
 homogenous_segmentation(wb, h_segmentation)
 
