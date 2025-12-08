@@ -1,19 +1,28 @@
 <label for="files_input" class="w-full flex flex-col items-center">
   <input type="file" id="file_input" name="files" accept=".csv, .xlsx, .xls" />
-  <button type="button" class="text-white bg-imt-nat p-2 px-6 rounded-sm font-semibold hover:bg-blue-800 mt-5 text-xl" onclick="loadFile(this)">
-    Click para <br>cargar archivos
+  <button
+    type="button"
+    class="text-white bg-imt-nat p-2 px-6 rounded-sm font-semibold hover:bg-blue-800 mt-5 text-xl"
+    onclick="loadFile(this)"
+  >
+    Clic para <br />cargar archivos
   </button>
   <div id="loaded_files" class="text-left hidden mb-10 mt-5">
-    <p>Archivo seleccionado: </p>
-    <ul id="file_names" class="list-disc">
-    </ul>
+    <p>Archivo seleccionado:</p>
+    <ul id="file_names" class="list-disc"></ul>
   </div>
   <p class="text-gray-500 text-sm text-center w-1/2 mt-2">
-    Sube un archivo de excel con una pestaña por cada parámetro que quieras analizar
-    <br>
+    Sube un archivo de excel con una pestaña por cada parámetro que quieras
+    analizar
+    <br />
   </p>
-  <span class="text-center text-gray-500 text-sm mt-2">Ej: iri, friccion, etc.</span>
-  <span class="text-center text-gray-500 text-sm mt-4 w-1/2" id="special-instructions"></span>
+  <span class="text-center text-gray-500 text-sm mt-2"
+    >Ej: iri, friccion, etc.</span
+  >
+  <span
+    class="text-center text-gray-500 text-sm mt-4 w-1/2"
+    id="special-instructions"
+  ></span>
 </label>
 
 <script src="/js/file_selection.js"></script>
