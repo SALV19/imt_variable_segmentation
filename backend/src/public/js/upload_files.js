@@ -91,7 +91,7 @@ $("form[action='/upload_file']").on("submit", (e) => {
         handleJSON(generated_data, static_data);
       })
       .catch(async (error) => {
-        console.log("Houston, tenemos un problema");
+        console.log("Houston, tenemos un problema", error);
         error.then((errorMessage) => {
           $("#modal").show();
           $("#error_text").text(errorMessage.error);

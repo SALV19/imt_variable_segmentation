@@ -7,14 +7,14 @@ const upload = multer({
 });
 
 import * as home from "../controller/home.controller.ts";
-import * as chart from "../controller/create_chart.controller.ts";
 import download_example from "../controller/downlaod_example.controller.ts";
+import { create_chart } from "../controller/chart.controller.ts";
 
 const routes = Router();
 
 routes.get("/", home.get_home);
 routes.get("/download_example", download_example);
 routes.post("/upload_file", upload.single("file"), home.upload_file);
-routes.get("/create_chart", chart.chart_handler);
+routes.get("/create_chart", create_chart);
 
 export default routes;

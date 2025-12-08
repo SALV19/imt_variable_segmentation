@@ -1,5 +1,4 @@
 function create_simple_segmentation(json_response, id_selector) {
-  console.log(json_response);
   const measurements = json_response.file_data;
   const slopes = json_response.slopes;
 
@@ -160,6 +159,4 @@ function create_simple_segmentation(json_response, id_selector) {
   min.innerHTML = measurements.min.toFixed(2);
   const total = document.querySelector(`#total_${id_selector}`);
   total.innerHTML = measurements.total.toFixed(2);
-  const method = document.querySelector(`#method_${id_selector}`);
-  method.innerHTML = json_response.method;
 }
