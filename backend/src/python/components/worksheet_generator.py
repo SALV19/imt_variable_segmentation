@@ -12,6 +12,17 @@ from openpyxl.drawing.text import (
 from openpyxl.styles import Font
 from openpyxl.chart.layout import Layout, ManualLayout
 
+measure = {
+    "IRI": "(m/km)",
+    "CF": "",
+    "Deflexión máxima": "(mm)",
+    "Agriet. fatiga": "(%)",
+    "Agriet. long": "(%)",
+    "Agriet. transv": "(%)",
+    "PR": "(mm)",
+    "TDPA": "",
+}
+
 
 def generate_sheet(wb: Workbook, title: str, generated_data):
     measurements = generated_data["file_data"]
@@ -28,18 +39,18 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         lambda item: list(map(lambda value: item[value], item)), slopes
     )
 
-    ws = wb.create_sheet(title.capitalize())
+    ws = wb.create_sheet(title)
 
     ws["A1"] = "ID"
     ws["B1"] = measurements["id"]
 
     ws["A2"] = "Inicio"
     ws["B2"] = "Fin"
-    ws["C2"] = title.upper()
+    ws["C2"] = title
 
     ws["E2"] = "Inicio Segmento"
     ws["F2"] = "Fin Segmento"
-    ws["G2"] = title.upper()
+    ws["G2"] = title
     ws["I2"] = "Puntos Singulares"
 
     length = len(measurements["measurements"]) + 2
@@ -52,7 +63,8 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         end_measurement_cell = ws.cell(row=row_val, column=2, value=end_measurement)
         measurement_cell.number_format = '0"+"000'
         end_measurement_cell.number_format = '0"+"000'
-        ws.cell(row=row_val, column=3, value=measurements["values"][idx])
+        value_cell = ws.cell(row=row_val, column=3, value=measurements["values"][idx])
+        value_cell.number_format = "#,##0.00"
 
     slope_values = list(slope_values)
 
@@ -79,11 +91,10 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
             idx += 1
 
     c1 = ScatterChart()
-    c1.title = f"{title.upper()} segmentado"
+    c1.title = f"Segmentación dinámica para {title}"
     c1.style = 2
-    c1.y_axis.title = title.upper()
+    c1.y_axis.title = title + " " + measure[title]
     c1.x_axis.tickLblPos = "nextTo"
-    c1.x_axis.title = "Metros"
     c1.x_axis.scaling.min = measurements["measurements"][0]
     c1.x_axis.scaling.max = measurements["measurements"][-1]
     c1.x_axis.scaling.orientation = "minMax"
@@ -98,7 +109,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
 
     iri = Reference(ws, min_col=3, min_row=3, max_row=length)
 
-    iri_series = Series(values=iri, xvalues=measurement_values, title=title.upper())
+    iri_series = Series(values=iri, xvalues=measurement_values, title=title)
     iri_series.graphicalProperties.line.solidFill = "4444FF"
     iri_series.smooth = False
 

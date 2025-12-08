@@ -18,15 +18,26 @@ h_segmentation = json.loads(hsegment)
 wb = load_workbook("./src/python/template.xlsm", keep_vba=True)
 virtual_workbook = BytesIO()
 
+titles = {
+    "iri": "IRI",  # (m/km)
+    "friccion": "CF",
+    "deflexiones": "Deflexión máxima",  # (mm)
+    "agrfatiga": "Agriet. fatiga",  # (%)
+    "grlong": "Agriet. long",  # (%)
+    "grtrans": "Agriet. transv",  # (%)
+    "pr": "PR",  # (mm)
+    "tdpa": "TDPA",
+}
+
 for gd in generated_data:
     key = list(gd.keys())[0]
     values = list(gd.values())[0]["generated_data"]
-    generate_sheet(wb, key, values)
+    generate_sheet(wb, titles[key], values)
 
 for sd in static_data:
     key = list(sd.keys())[0]
     values = list(sd.values())[0]
-    generate_sheet(wb, key, values)
+    generate_sheet(wb, titles[key], values)
 
 homogenous_segmentation(wb, h_segmentation)
 
