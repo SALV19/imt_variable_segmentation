@@ -10,7 +10,6 @@ $("#percentile-avg").change(() => {
 
 // Send files
 $("form[action='/upload_file']").on("submit", (e) => {
-  console.log("Hola");
   e.preventDefault();
 
   let errors = 0;
@@ -51,7 +50,8 @@ $("form[action='/upload_file']").on("submit", (e) => {
       input_values[`${id}_values`] = {};
 
       $(`.${id}_input`).each((_idx, element) => {
-        input_values[`${id}_values`][element.id] = element.value;
+        if (element.type != "hidden")
+          input_values[`${id}_values`][element.id] = element.value;
       });
 
       // data.append(id, JSON.stringify(input_values[`${id}_values`]));

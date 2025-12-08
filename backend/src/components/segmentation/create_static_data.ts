@@ -8,6 +8,8 @@ function create_static_data(data: GeneralData, file_data: Data_Map) {
 
   const slopes: Slope[] = get_slopes(data, file_data);
 
+  file_data.total = slopes.length;
+
   const generated_data = {
     file_data,
     slopes,

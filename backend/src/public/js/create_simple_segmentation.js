@@ -150,10 +150,6 @@ function create_simple_segmentation(json_response, id_selector) {
         <td class="w-32">Total de segmentos</td>
         <td id="total_${id_selector}"></td>
       </tr>
-      <tr>
-        <td class="w-32">Método</td>
-        <td id="method_${id_selector}"></td>
-      </tr>
       </tbody>`;
   $("#table").append(table);
   const media = document.querySelector(`#media_${id_selector}`);
