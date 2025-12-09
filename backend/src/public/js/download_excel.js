@@ -15,7 +15,7 @@ $("#download_excel").on("submit", (e) => {
         res.headers
           .get("Content-Disposition")
           ?.split("filename=")[1]
-          ?.replace(/"/g, "") || "download.xlsx";
+          ?.replace(/"/g, "") || "Segmentación.xlsm";
 
       return res.blob().then((blob) => ({ blob, filename }));
     })

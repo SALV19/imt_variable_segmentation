@@ -1,8 +1,8 @@
+from openpyxl import Workbook
 from openpyxl.chart import ScatterChart, Reference, Series
 from openpyxl.chart.text import RichText
-from openpyxl import Workbook
-from openpyxl.chart.series import DataLabelList
-from openpyxl.chart.legend import LegendEntry
+from openpyxl.chart.axis import ChartLines
+from openpyxl.chart.layout import Layout, ManualLayout
 from openpyxl.drawing.text import (
     RichTextProperties,
     Paragraph,
@@ -10,7 +10,6 @@ from openpyxl.drawing.text import (
     CharacterProperties,
 )
 from openpyxl.styles import Font
-from openpyxl.chart.layout import Layout, ManualLayout
 
 measure = {
     "IRI": "(m/km)",
@@ -22,6 +21,8 @@ measure = {
     "PR": "(mm)",
     "TDPA": "",
 }
+
+static = ["TDPA"]
 
 
 def generate_sheet(wb: Workbook, title: str, generated_data):
@@ -91,7 +92,10 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
             idx += 1
 
     c1 = ScatterChart()
-    c1.title = f"Segmentación dinámica para {title}"
+    if title in static:
+        c1.title = f"Segmentación para {title}"
+    else:
+        c1.title = f"Segmentación dinámica para {title}"
     c1.style = 2
     c1.y_axis.title = title + " " + measure[title]
     c1.x_axis.tickLblPos = "nextTo"
@@ -182,39 +186,47 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         ],
     )
 
-    # c1.dataLabels = DataLabelList()
-    # c1.dataLabels.showSerName = False
+    # Chart Styling
+
+    # ---- Adjust line thickness and color ----
+    c1.series[0].graphicalProperties.line.width = 15000
+
+    c1.legend.position = "b"
+    c1.legend.layout = Layout(
+        manualLayout=ManualLayout(
+            x=0.4,
+            y=0.95,
+        )
+    )
 
     ws.add_chart(c1, "L2")
 
 
-"""
-Excel Macro to delete all extra labels
+# Excel Macro to delete all extra labels
 
-Sub QuitarLabels()
-'
-' QuitarLabels Macro
-'
+# Sub QuitarLabels()
+# '
+# ' QuitarLabels Macro
+# '
 
-'
-Dim wb As Workbook
-Dim ws As Worksheet
-Dim chart As ChartObject
-Dim legend As LegendEntry
+# '
+# Dim wb As Workbook
+# Dim ws As Worksheet
+# Dim chart As ChartObject
+# Dim legend As LegendEntry
 
-Set wb = ActiveWorkbook
+# Set wb = ActiveWorkbook
 
-For Each ws In wb.Sheets
-    If ws.ChartObjects.Count > 0 Then
-        Set chartObj = ws.ChartObjects(1)
-        If chartObj.chart.HasLegend Then
-            legendCount = chartObj.chart.legend.LegendEntries.Count
-            While legendCount >= 4
-                chartObj.chart.legend.LegendEntries(4).Delete
-            Wend
-        End If
-    End If
-Next ws
+# For Each ws In wb.Sheets
+#     If ws.ChartObjects.Count > 0 Then
+#         Set chartObj = ws.ChartObjects(1)
+#         If chartObj.chart.HasLegend Then
+#             legendCount = chartObj.chart.legend.LegendEntries.Count
+#             While legendCount >= 4
+#                 chartObj.chart.legend.LegendEntries(4).Delete
+#             Wend
+#         End If
+#     End If
+# Next ws
 
-End Sub
-"""
+# End Sub

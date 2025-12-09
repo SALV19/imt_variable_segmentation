@@ -54,15 +54,15 @@ export async function upload_file(req: Request, res: Response) {
 
   // Processing layer
   const generated_data = await Promise.all(
-    Object.keys(dynamicDataMap).map(async (key) =>
-      generate_data_map(
+    Object.keys(dynamicDataMap).map(async (key) => {
+      return generate_data_map(
         key,
         res,
         file_data[key],
         dynamicDataMap[key],
         create_data
-      )
-    )
+      );
+    })
   ).then((data) => data.filter((x) => !!x));
 
   const static_data = await Promise.all(
