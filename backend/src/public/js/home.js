@@ -21,7 +21,8 @@ $("p[id^=label]").on("click", (event) => {
 });
 
 function changeForm(id) {
-  $("form[action='/upload_file']").each((idx, element) => {
+  console.log(id);
+  $("div[id$=_form]").each((idx, element) => {
     $(element).hide();
     if (element.id == id + "_form") {
       $(element).removeClass("hidden");

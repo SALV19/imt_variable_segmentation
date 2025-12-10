@@ -1,8 +1,8 @@
+from openpyxl import Workbook
 from openpyxl.chart import ScatterChart, Reference, Series
 from openpyxl.chart.text import RichText
-from openpyxl import Workbook
-from openpyxl.chart.series import DataLabelList
-from openpyxl.chart.legend import LegendEntry
+from openpyxl.chart.axis import ChartLines
+from openpyxl.chart.layout import Layout, ManualLayout
 from openpyxl.drawing.text import (
     RichTextProperties,
     Paragraph,
@@ -10,34 +10,48 @@ from openpyxl.drawing.text import (
     CharacterProperties,
 )
 from openpyxl.styles import Font
-from openpyxl.chart.layout import Layout, ManualLayout
+
+measure = {
+    "IRI": "(m/km)",
+    "CF": "",
+    "Deflexión máxima": "(mm)",
+    "Agriet. fatiga": "(%)",
+    "Agriet. long": "(%)",
+    "Agriet. transv": "(%)",
+    "PR": "(mm)",
+    "TDPA": "",
+}
+
+static = ["TDPA"]
 
 
 def generate_sheet(wb: Workbook, title: str, generated_data):
     measurements = generated_data["file_data"]
-    filter_measurements = generated_data["filter_measurements"]
-    segmentation = generated_data["segmentation"]
+    # filter_measurements = generated_data["filter_measurements"]
+    # segmentation = generated_data["segmentation"]
     slopes = generated_data["slopes"]
-    singularities = generated_data["abnormalities"]
+    singularities = []
+    if "abnormalities" in generated_data:
+        singularities = generated_data["abnormalities"]
 
-    distance = measurements["distance"]
+    # distance = measurements["distance"]
 
     slope_values: map = map(
         lambda item: list(map(lambda value: item[value], item)), slopes
     )
 
-    ws = wb.create_sheet(title.capitalize())
+    ws = wb.create_sheet(title)
 
     ws["A1"] = "ID"
     ws["B1"] = measurements["id"]
 
     ws["A2"] = "Inicio"
     ws["B2"] = "Fin"
-    ws["C2"] = title.upper()
+    ws["C2"] = title
 
     ws["E2"] = "Inicio Segmento"
     ws["F2"] = "Fin Segmento"
-    ws["G2"] = title.upper()
+    ws["G2"] = title
     ws["I2"] = "Puntos Singulares"
 
     length = len(measurements["measurements"]) + 2
@@ -50,7 +64,8 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         end_measurement_cell = ws.cell(row=row_val, column=2, value=end_measurement)
         measurement_cell.number_format = '0"+"000'
         end_measurement_cell.number_format = '0"+"000'
-        ws.cell(row=row_val, column=3, value=measurements["values"][idx])
+        value_cell = ws.cell(row=row_val, column=3, value=measurements["values"][idx])
+        value_cell.number_format = "#,##0.00"
 
     slope_values = list(slope_values)
 
@@ -77,11 +92,13 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
             idx += 1
 
     c1 = ScatterChart()
-    c1.title = f"{title.upper()} segmentado"
+    if title in static:
+        c1.title = f"Segmentación para {title}"
+    else:
+        c1.title = f"Segmentación dinámica para {title}"
     c1.style = 2
-    c1.y_axis.title = title.upper()
+    c1.y_axis.title = title + " " + measure[title]
     c1.x_axis.tickLblPos = "nextTo"
-    c1.x_axis.title = "Metros"
     c1.x_axis.scaling.min = measurements["measurements"][0]
     c1.x_axis.scaling.max = measurements["measurements"][-1]
     c1.x_axis.scaling.orientation = "minMax"
@@ -96,7 +113,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
 
     iri = Reference(ws, min_col=3, min_row=3, max_row=length)
 
-    iri_series = Series(values=iri, xvalues=measurement_values, title=title.upper())
+    iri_series = Series(values=iri, xvalues=measurement_values, title=title)
     iri_series.graphicalProperties.line.solidFill = "4444FF"
     iri_series.smooth = False
 
@@ -169,39 +186,47 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
         ],
     )
 
-    # c1.dataLabels = DataLabelList()
-    # c1.dataLabels.showSerName = False
+    # Chart Styling
+
+    # ---- Adjust line thickness and color ----
+    c1.series[0].graphicalProperties.line.width = 15000
+
+    c1.legend.position = "b"
+    c1.legend.layout = Layout(
+        manualLayout=ManualLayout(
+            x=0.4,
+            y=0.95,
+        )
+    )
 
     ws.add_chart(c1, "L2")
 
 
-"""
-Excel Macro to delete all extra labels
+# Excel Macro to delete all extra labels
 
-Sub QuitarLabels()
-'
-' QuitarLabels Macro
-'
+# Sub QuitarLabels()
+# '
+# ' QuitarLabels Macro
+# '
 
-'
-Dim wb As Workbook
-Dim ws As Worksheet
-Dim chart As ChartObject
-Dim legend As LegendEntry
+# '
+# Dim wb As Workbook
+# Dim ws As Worksheet
+# Dim chart As ChartObject
+# Dim legend As LegendEntry
 
-Set wb = ActiveWorkbook
+# Set wb = ActiveWorkbook
 
-For Each ws In wb.Sheets
-    If ws.ChartObjects.Count > 0 Then
-        Set chartObj = ws.ChartObjects(1)
-        If chartObj.chart.HasLegend Then
-            legendCount = chartObj.chart.legend.LegendEntries.Count
-            While legendCount >= 4
-                chartObj.chart.legend.LegendEntries(4).Delete
-            Wend
-        End If
-    End If
-Next ws
+# For Each ws In wb.Sheets
+#     If ws.ChartObjects.Count > 0 Then
+#         Set chartObj = ws.ChartObjects(1)
+#         If chartObj.chart.HasLegend Then
+#             legendCount = chartObj.chart.legend.LegendEntries.Count
+#             While legendCount >= 4
+#                 chartObj.chart.legend.LegendEntries(4).Delete
+#             Wend
+#         End If
+#     End If
+# Next ws
 
-End Sub
-"""
+# End Sub

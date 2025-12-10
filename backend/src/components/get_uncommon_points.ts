@@ -1,5 +1,5 @@
+import { Data_Map } from "../types/types.ts";
 import { aux_percentile } from "./segmentation/slope_segmentation.ts";
-import { Data_Map } from "./types.ts";
 
 export function mad_base_outliers(
   file_data: Data_Map
@@ -7,12 +7,14 @@ export function mad_base_outliers(
   const values = file_data.values.slice(0);
   const measurements = file_data.measurements;
 
-  const sorted = values.sort((a, b) => a - b);
+  const sorted: number[] = values.sort((a, b) => a - b);
   const median = getMedian(sorted);
 
-  const deviation = values.map((v) => Math.abs(v - median));
-  const mad = getMedian(deviation);
+  const deviation: number[] = values.map((v) =>
+    Number(Math.abs(v - median).toFixed(4))
+  );
 
+  const mad = getMedian(deviation.sort((a, b) => a - b));
   if (mad == 0) return [];
 
   const modifiedZScore = file_data.values
@@ -63,8 +65,6 @@ export function detect_outliers_IQR(file_data: Data_Map): {
 
   const lowerbound = q1 - 1.5 * iqr;
   const upperbound = q3 + 1.5 * iqr;
-
-  // console.log(lowerbound, upperbound);
 
   const data = values.map((val, idx) => {
     return { x: measurements[idx], y: val };

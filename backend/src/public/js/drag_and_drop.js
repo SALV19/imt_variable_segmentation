@@ -49,5 +49,5 @@ function draggableClick(e) {
   if (e.shiftKey) {
     e.target.classList.toggle("selected-draggable-item");
   }
-  changeForm(e.target.id);
+  if (!e.target.id.includes("static")) changeForm(e.target.id);
 }

@@ -1,9 +1,6 @@
-function create_data(json_response, id_selector) {
+function create_simple_segmentation(json_response, id_selector) {
   const measurements = json_response.file_data;
-  const filter = json_response.filter_measurements;
-  const segmentation = json_response.segmentation;
   const slopes = json_response.slopes;
-  const abnormalities = json_response.abnormalities;
 
   const slopes_data = get_slopes_data(slopes);
 
@@ -21,7 +18,6 @@ function create_data(json_response, id_selector) {
   ctx.parentElement.classList.remove("hide");
 
   let labels = measurements.measurements;
-  let values = measurements.values;
 
   options = {
     responsive: true,
@@ -128,35 +124,6 @@ function create_data(json_response, id_selector) {
               ctx.p0.parsed.y === ctx.p1.parsed.y ? "black" : "transparent",
           },
         },
-        {
-          label: "Abnormality",
-          data: abnormalities,
-          showLine: false,
-          pointRadius: 4,
-          borderRadius: 2,
-          borderColor: "red",
-          yAxisID: "y",
-        },
-        {
-          label: id_selector.toUpperCase(),
-          data: values,
-          borderColor: "blue",
-          yAxisID: "y",
-        },
-        {
-          label: "Filtrado",
-          data: filter,
-          borderColor: "green",
-          hidden: true,
-          yAxisID: "y",
-        },
-        {
-          label: "Segmentation",
-          data: segmentation,
-          borderColor: "red",
-          hidden: true,
-          yAxisID: "y1",
-        },
       ],
     },
     options: options,
@@ -182,10 +149,6 @@ function create_data(json_response, id_selector) {
         <td class="w-32">Total de segmentos</td>
         <td id="total_${id_selector}"></td>
       </tr>
-      <tr>
-        <td class="w-32">Método</td>
-        <td id="method_${id_selector}"></td>
-      </tr>
       </tbody>`;
   $("#table").append(table);
   const media = document.querySelector(`#media_${id_selector}`);
@@ -196,23 +159,4 @@ function create_data(json_response, id_selector) {
   min.innerHTML = measurements.min.toFixed(2);
   const total = document.querySelector(`#total_${id_selector}`);
   total.innerHTML = measurements.total.toFixed(2);
-  const method = document.querySelector(`#method_${id_selector}`);
-  method.innerHTML = json_response.method;
-}
-
-function get_slopes_data(slopes) {
-  return slopes
-    .map((val) => {
-      return [
-        {
-          x: val.start,
-          y: val.value,
-        },
-        {
-          x: val.end,
-          y: val.value,
-        },
-      ];
-    })
-    .flatMap((data) => data);
 }

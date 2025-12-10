@@ -2,38 +2,28 @@
 <div class="flex" id="form_selection">
   <aside class="border-r-2 border-gray-400 font-montserrat w-3/5 max-md:hidden">
     <nav class="grid grid-cols-3 border-b-2 border-gray-400">
-      <%- include("../components/atoms/change_button", {message: "¿Qué es?", id: "component_info", className: "selected"}) %>
-      <%- include("../components/atoms/change_button", {message: "¿Como se usa?", id: "component_como_usar", className: null}) %>
-      <%- include("../components/atoms/change_button", {message: "Configuración", id: "component_components", className: null}) %>
+      <%- include("../components/atoms/change_button", {message: "¿Qué es?", id:
+      "component_info", className: "selected"}) %> <%-
+      include("../components/atoms/change_button", {message: "¿Como se usa?",
+      id: "component_como_usar", className: null}) %> <%-
+      include("../components/atoms/change_button", {message: "Variables", id:
+      "component_components", className: null}) %>
     </nav>
     <section class="px-4 py-4">
-      <%- include("../molecules/information.ejs") %>
-      <%- include("../molecules/como_usar.ejs") %>
-      <%- include("../molecules/configuration.ejs") %>
+      <%- include("../molecules/information.ejs") %> <%-
+      include("../molecules/como_usar.ejs") %> <%-
+      include("../molecules/configuration.ejs") %>
     </section>
   </aside>
   <div class="w-4/5 flex">
     <div class="w-3/5 flex justify-center">
       <%- include ("../molecules/file_upload") %>
     </div>
-    
+
     <div class="w-full">
-      <div class="pl-4 ">
-        <nav class="grid grid-cols-2  border-b-2 border-l-2 border-gray-400 border-l-black w-full">
-          <%- include("../components/atoms/change_button", {message: "Parametros", id: "tab_parameter", className: "selected"}) %>
-          <%- include("../components/atoms/change_button", {message: "Segmentos Homogeneos", id: "tab_s_homogenous", className: null}) %>
-        </nav>
-        <aside class="border-l-2 border-gray-400">
-          <%- include("../organism/form", {id: "iri", input_class_id: "iri_input", name: "IRI", show: true}) %>
-          <%- include("../organism/form", {id: "friccion", input_class_id: "friccion_input", name: "Fricción", show: false}) %>
-          <%- include("../organism/form", {id: "deflexiones", input_class_id: "deflexiones_input", name: "Deflexiones", show: false}) %>
-          <%- include("../organism/form", {id: "agretamiento_por_fatiga", input_class_id: "agretamiento_por_fatiga_input", name: "Agretamiento por fatiga", show: false}) %>
-          <%- include("../organism/form", {id: "agrietamiento_longitudinal", input_class_id: "agrietamiento_longitudinal_input", name: "Agrietamiento longitudinal", show: false}) %>
-          <%- include("../organism/form", {id: "agrietamiento_transversal", input_class_id: "agrietamiento_transversal_input", name: "Agrietamiento transversal", show: false}) %>
-          <%- include("../organism/form", {id: "profundidad_rodera", input_class_id: "profundidad_rodera_input", name: "Profundidad de Rugosidad", show: false}) %>
-          <%- include("../organism/shomogenous", {id: "s_homogenea", input_class_id: "segmentacion_homogenea_input", name: "Segmentacion Homogenea", show: false}) %>
-        </aside>
-      </div>
+      <aside class="border-l-2 border-gray-400">
+        <%- include("../organism/form.ejs") %>
+      </aside>
     </div>
   </div>
 </div>

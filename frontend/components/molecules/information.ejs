@@ -1,11 +1,19 @@
 <div id="info_module">
-  <h2 class="text-2xl text-imt-dark font-semibold text-center mb-3">¿Qué es?</h2>
+  <h2 class="text-2xl text-imt-dark font-semibold text-center mb-3">
+    ¿Qué es?
+  </h2>
   <p class="text-justify w-2/3 mx-auto">
-    Esta herramienta divide un tramo de carretera mediante un algoritmo de
-    segmentación basado en el método de diferencias acumuladas que se describe en
-    la guía de diseño de pavimentos de AASHTO de 1993.
+    Esta herramienta divide un tramo de carretera en segmentos homogéneos a
+    partir de la variación de los indicadores que definen su estado físico (IRI,
+    agrietamiento por fatiga, deflexión central, etc.), su diseño estructural
+    (tipo de pavimento, espesores de las capas), el tránsito (volumen,
+    composición, tasa de crecimiento) y las características del entorno (tipo de
+    terreno, clima). Como parte del proceso, la herramienta aplica un algoritmo
+    de segmentación dinámica basado en la tendencia longitudinal de los
+    indicadores de condición.
   </p>
   <form action="/download_example" class="flex justify-center">
-    <%- include("../atoms/button.ejs", {name: "download_example", text: "Descargar ejemplo"}) %>  
+    <%- include("../atoms/button.ejs", {name: "download_example", text:
+    "Descargar ejemplo"}) %>
   </form>
 </div>

@@ -11,7 +11,6 @@ import { Data_Map, GeneralData, Slope } from "../types/types.ts";
 
 export async function create_data(data: GeneralData, file_data: Data_Map) {
   const join_segments = data.join_segments;
-  const singular_points = data.singular_points;
   const percentile = data.percentile ?? null;
 
   if (file_data.error) {
@@ -27,12 +26,6 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   // Get abnormal points
   const abnormal_points: { x: number; y: number }[] =
     mad_base_outliers(file_data);
-  // detect_outliers_IQR(file_data);
-
-  // const abnormal_points: { x: number; y: number }[] = detect_outliers_z_score(
-  //   file_data,
-  //   singular_points
-  // );
 
   const normal_measurements_iri: number[] = filter_outliers(
     file_data,

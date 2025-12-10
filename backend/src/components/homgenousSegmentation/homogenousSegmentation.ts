@@ -1,7 +1,8 @@
 import { SegmentationData, Slope } from "../../types/types.ts";
 
 export function homogenousSegmentation(
-  generated_data: any,
+  generatedData: any,
+  staticData: any,
   minimum_segment: number
 ): {
   parameters: Record<string, number>;
@@ -9,10 +10,23 @@ export function homogenousSegmentation(
   start: number;
   end: number;
 }[] {
-  const slopes: Record<string, Slope[]>[] = generated_data.map((value: any) => {
-    const key = Object.keys(value)[0];
-    return { [key]: value[key].generated_data.slopes };
-  });
+  const dynamicSlopes: Record<string, Slope[]>[] = generatedData.map(
+    (value: any) => {
+      const key = Object.keys(value)[0];
+      return { [key]: value[key].generated_data.slopes };
+    }
+  );
+
+  const staticSlopes: Record<string, Slope[]>[] = staticData.map(
+    (value: any) => {
+      const key = Object.keys(value)[0];
+      return { [key]: value[key].slopes };
+    }
+  );
+
+  const slopes = dynamicSlopes.concat(staticSlopes);
+
+  // console.dir(slopes, { depth: null });
 
   const slopesData: {
     idx: number;
@@ -20,6 +34,8 @@ export function homogenousSegmentation(
     divider: number;
     value: number;
   }[] = getSlopesData(slopes);
+
+  // console.dir(slopes, { depth: null });
 
   const orderedSlopesData: {
     idx: number;
@@ -39,37 +55,45 @@ export function homogenousSegmentation(
 
   const parameters: Map<string, number> = new Map();
   const values: Map<string, number> = new Map();
-  let start: number = 0;
-  let end: number = 0;
 
-  orderedSlopesData.forEach(({ idx, key, divider, value }) => {
-    function addPoint() {
-      parameters.set(key, idx);
-      values.set(key, value);
-      end = divider;
+  let start: number = orderedSlopesData[0]?.divider ?? 0;
+  let lastDivider = start;
+
+  orderedSlopesData.forEach(({ idx, key, divider, value }, i) => {
+    const isNewKey = !values.has(key);
+    const paramsChanged = values.get(key) !== value;
+
+    if (
+      !isNewKey &&
+      paramsChanged &&
+      divider - lastDivider >= minimum_segment
+    ) {
       hSegmentsData.push({
         parameters: new Map(parameters),
         values: new Map(values),
         start,
-        end,
+        end: divider,
       });
-      start = end;
+      start = divider;
     }
 
-    const paramsChanged =
-      parameters.get(key) != idx || values.get(key) != value;
+    // Update the parameter for next intervals
+    parameters.set(key, idx);
+    values.set(key, value);
 
-    if (!parameters.has(key)) {
-      parameters.set(key, idx);
-      values.set(key, value);
-      start = divider;
-    } else if (
-      (divider - start > minimum_segment && paramsChanged) ||
-      idx == orderedSlopesData.length - 1
-    ) {
-      addPoint();
+    lastDivider = divider;
+
+    if (i === orderedSlopesData.length - 1) {
+      hSegmentsData.push({
+        parameters: new Map(parameters),
+        values: new Map(values),
+        start,
+        end: divider,
+      });
     }
   });
+
+  // console.dir(orderedSlopesData, { depth: null });
 
   const hSegments = hSegmentsData.map((segment) => {
     return {

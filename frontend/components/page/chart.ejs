@@ -1,22 +1,41 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <main class="hidden" id="chartArea">
-  <button class="h-full block" onclick="location.reload()"><img src='/icon/back-arrow.svg' class="w-10 p-2"></button>
-  <div class="hide w-3/4 m-10 mb-10 flex flex-col gap-10" id="chart_container">
-  </div>
+  <button class="h-full block" onclick="location.reload()">
+    <img src="/icon/back-arrow.svg" class="w-10 p-2" />
+  </button>
+  <div
+    class="hide w-3/4 m-10 mb-10 flex flex-col gap-10"
+    id="chart_container"
+  ></div>
 
-  <section class="w-1/4 border-l-2 h-screen border-gray-400 pl-2 flex flex-col items-center pt-10">
+  <section
+    class="w-1/4 border-l-2 h-screen border-gray-400 pl-2 flex flex-col items-center pt-10"
+  >
     <h2 class="text-xl text-gob font-semibold text-center">Resultados</h2>
-    <table class="w-11/12 table-fixed mx-auto" id="table">
-    </table>
 
-    <form action="/create_chart">
-      <button class="mt-7 px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded-sm font-semibold">
-        Descargar Excel
-      </button>
-      </input>
+    <form action="/create_chart" class="w-full" id="download_excel">
+      <label for="chart_title" class="mt-7">
+        <p>Nombre del archivo</p>
+        <input
+          id="chart_title"
+          type="text"
+          placeholder="Nombre..."
+          class="border-2 border-black p-1 w-[90%]"
+        />
+      </label>
+      <div class="w-full flex justify-center">
+        <button
+          class="mt-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded-sm font-semibold"
+        >
+          Descargar Excel
+        </button>
+      </div>
     </form>
+    <table class="w-11/12 table-fixed mx-auto" id="table"></table>
   </section>
 
   <script src="/js/generate_chart.js"></script>
+  <script src="/js/create_simple_segmentation.js"></script>
+  <script src="/js/download_excel.js"></script>
 </main>

@@ -1,6 +1,8 @@
 import XLSX from "xlsx";
 import { file_types, Data_Map } from "../types/types.ts";
 
+import fs from "fs";
+
 // Read different sheets of excel into different objects
 export function read_file_info(
   file: Express.Multer.File
@@ -13,7 +15,12 @@ export function read_file_info(
   workbook.SheetNames.forEach((name) => {
     const worksheet = workbook.Sheets[name];
     const json_data: Object[] = XLSX.utils.sheet_to_json(worksheet);
-    const keys: string[] = Object.keys(json_data[0]);
+    let keys: string[];
+    try {
+      keys = Object.keys(json_data[0]);
+    } catch {
+      return;
+    }
 
     name = name
       .normalize("NFD")
@@ -63,33 +70,39 @@ function json_2_datamap(
   idx: number,
   keys: string[]
 ): Data_Map {
+  function addPoint(i: number) {
+    const measurements: number = curr[keys[i]];
+    const values: number = parseFloat(curr[keys[3]].toFixed(4));
+
+    acum.average += values;
+
+    acum.max = Math.max(acum.max, values);
+    acum.min = Math.min(acum.min, values);
+
+    try {
+      acum.measurements.push(measurements);
+      acum.values.push(values);
+    } catch {
+      acum.measurements = [measurements];
+      acum.values = [values];
+    }
+  }
+
   if (idx == 0) {
     const id = curr[keys[0]];
     acum.id = id;
     acum.average = 0;
     acum.max = 0;
     acum.min = Infinity;
+
+    addPoint(1);
   }
 
   if (curr[keys[3]] == undefined) {
     curr[keys[3]] = acum.values.at(-1);
   }
 
-  const measurements: number = curr[keys[1]];
-  const values: number = parseFloat(curr[keys[3]].toFixed(4));
-
-  acum.average += values;
-
-  acum.max = Math.max(acum.max, values);
-  acum.min = Math.min(acum.min, values);
-
-  try {
-    acum.measurements.push(measurements);
-    acum.values.push(values);
-  } catch {
-    acum.measurements = [measurements];
-    acum.values = [values];
-  }
+  addPoint(2);
 
   return acum;
 }

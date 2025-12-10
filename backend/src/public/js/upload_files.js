@@ -9,7 +9,7 @@ $("#percentile-avg").change(() => {
 });
 
 // Send files
-$("[id$=_form]").on("submit", (e) => {
+$("form[action='/upload_file']").on("submit", (e) => {
   e.preventDefault();
 
   let errors = 0;
@@ -32,15 +32,26 @@ $("[id$=_form]").on("submit", (e) => {
   // Load form information of selected configuration
   let input_values = {};
   let parameters_input_values = {};
+  let static_input_values = {};
   $("#selected")
     .children("p")
     .each((idx, element) => {
       const id = element.id;
 
+      if (id.includes("static")) {
+        static_input_values = {
+          ...static_input_values,
+          [id]: id,
+        };
+
+        return;
+      }
+
       input_values[`${id}_values`] = {};
 
       $(`.${id}_input`).each((_idx, element) => {
-        input_values[`${id}_values`][element.id] = element.value;
+        if (element.type != "hidden")
+          input_values[`${id}_values`][element.id] = element.value;
       });
 
       // data.append(id, JSON.stringify(input_values[`${id}_values`]));
@@ -51,11 +62,15 @@ $("[id$=_form]").on("submit", (e) => {
     });
 
   data.append("parameters", JSON.stringify(parameters_input_values));
+  data.append("static_values", JSON.stringify(static_input_values));
   data.append("h_segment_min", $("#s_homogenous_input_param")[0].value);
 
-  if (Object.keys(input_values).length <= 0) {
+  if (
+    Object.keys(input_values).length <= 0 &&
+    Object.keys(static_input_values).length <= 0
+  ) {
     send_error_message(
-      "Error: Selecciona al menos una opción en la sección de configuración"
+      "Error: Selecciona al menos una opción en la sección de variables"
     );
     errors = 1;
   }
@@ -72,11 +87,11 @@ $("[id$=_form]").on("submit", (e) => {
 
         throw res.json();
       })
-      .then(({ generated_data, hSegmentation }) => {
-        handleJSON(generated_data);
+      .then(({ generated_data, static_data, hSegmentation }) => {
+        handleJSON(generated_data, static_data);
       })
       .catch(async (error) => {
-        console.log("Houston, tenemos un problema");
+        console.log("Houston, tenemos un problema", error);
         error.then((errorMessage) => {
           $("#modal").show();
           $("#error_text").text(errorMessage.error);
