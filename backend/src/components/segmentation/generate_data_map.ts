@@ -17,7 +17,7 @@ async function generate_data_map(
               van a utilizar.`,
       parameter: key.charAt(0).toUpperCase() + key.slice(1),
     });
-    return;
+    throw Error(`Error, file page: ${key} not found`);
   }
   return {
     [key]: await generate_data_function(data_map, file_data),

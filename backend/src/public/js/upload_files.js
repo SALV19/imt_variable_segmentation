@@ -91,13 +91,17 @@ $("form[action='/upload_file']").on("submit", (e) => {
         handleJSON(generated_data, static_data);
       })
       .catch(async (error) => {
-        console.log("Houston, tenemos un problema", error);
-        error.then((errorMessage) => {
+        console.log("Houston, tenemos un problema", await error);
+        error.then(async (errorMessage) => {
           $("#modal").show();
           $("#error_text").text(errorMessage.error);
-          errorMessage.parameters.forEach((param) => {
-            $("#param").append(`<li>${param}</li>`);
-          });
+          try {
+            errorMessage.parameters.forEach((param) => {
+              $("#param").append(`<li>${param}</li>`);
+            });
+          } catch {
+            $("#param").append(`<li>${errorMessage.parameter}</li>`);
+          }
         });
       });
 });
