@@ -13,7 +13,7 @@ export function create_chart(
   hSegmentation: Object[]
 ) {
   const script_path = path.join(__dirname, "../python/generate_excel.py");
-  const python_path = path.join(__dirname, "../python/venv/Scripts/python");
+  const python_path = path.join(__dirname, "../python/venv/bin/python");
 
   const python_process = spawn(python_path, [script_path]);
 
