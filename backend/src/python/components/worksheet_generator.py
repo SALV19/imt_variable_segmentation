@@ -103,6 +103,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     c1.x_axis.scaling.max = measurements["measurements"][-1]
     c1.x_axis.scaling.orientation = "minMax"
     c1.x_axis.number_format = '0"+"000'
+    c1.roundedCorners = False
 
     # c1.x_axis.majorUnit = round(len(measurements["measurements"]) / 2)
     c1.x_axis.majorUnit = round(
