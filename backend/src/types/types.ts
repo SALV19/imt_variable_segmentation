@@ -63,3 +63,16 @@ export type SegmentationData = {
   generated_data: Segmentation | null;
   error: string | null;
 };
+
+export type SerializedSegmentation = {
+  param: string;
+  start: number;
+  end: number;
+  value: number;
+};
+
+export type MatrixRow = {
+  start: number;
+  end: number;
+  parameters: Record<string, number>;
+};

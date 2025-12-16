@@ -1,15 +1,10 @@
-import { SegmentationData, Slope } from "../../types/types.ts";
+import { MatrixRow, SerializedSegmentation, Slope } from "../../types/types.ts";
 
 export function homogenousSegmentation(
   generatedData: any,
   staticData: any,
-  minimum_segment: number
-): {
-  parameters: Record<string, number>;
-  values: Record<string, number>;
-  start: number;
-  end: number;
-}[] {
+  minimumSegment: number
+) {
   const dynamicSlopes: Record<string, Slope[]>[] = generatedData.map(
     (value: any) => {
       const key = Object.keys(value)[0];
@@ -24,110 +19,113 @@ export function homogenousSegmentation(
     }
   );
 
-  const slopes = dynamicSlopes.concat(staticSlopes);
+  const orderedDynamicSlopes =
+    serializeSlopes(dynamicSlopes).sort(sortFunction);
+  const orderedStaticSlopes = serializeSlopes(staticSlopes).sort(sortFunction);
 
-  // console.dir(slopes, { depth: null });
-
-  const slopesData: {
-    idx: number;
-    key: string;
-    divider: number;
-    value: number;
-  }[] = getSlopesData(slopes);
-
-  // console.dir(slopes, { depth: null });
-
-  const orderedSlopesData: {
-    idx: number;
-    key: string;
-    divider: number;
-    value: number;
-  }[] = slopesData.sort(({ divider: first }, { divider: second }) =>
-    sortFunction(first, second)
+  const matrix = buildMatrix(
+    orderedDynamicSlopes,
+    orderedStaticSlopes,
+    minimumSegment
   );
 
-  let hSegmentsData: {
-    parameters: Map<string, number>;
-    values: Map<string, number>;
-    start: number;
-    end: number;
-  }[] = [];
+  console.log(matrix);
 
-  const parameters: Map<string, number> = new Map();
-  const values: Map<string, number> = new Map();
-
-  let start: number = orderedSlopesData[0]?.divider ?? 0;
-  let lastDivider = start;
-
-  orderedSlopesData.forEach(({ idx, key, divider, value }, i) => {
-    const isNewKey = !values.has(key);
-    const paramsChanged = values.get(key) !== value;
-
-    if (
-      !isNewKey &&
-      paramsChanged &&
-      divider - lastDivider >= minimum_segment
-    ) {
-      hSegmentsData.push({
-        parameters: new Map(parameters),
-        values: new Map(values),
-        start,
-        end: divider,
-      });
-      start = divider;
-    }
-
-    // Update the parameter for next intervals
-    parameters.set(key, idx);
-    values.set(key, value);
-
-    lastDivider = divider;
-
-    if (i === orderedSlopesData.length - 1) {
-      hSegmentsData.push({
-        parameters: new Map(parameters),
-        values: new Map(values),
-        start,
-        end: divider,
-      });
-    }
-  });
-
-  // console.dir(orderedSlopesData, { depth: null });
-
-  const hSegments = hSegmentsData.map((segment) => {
-    return {
-      ...segment,
-      parameters: Object.fromEntries(segment.parameters),
-      values: Object.fromEntries(segment.values),
-    };
-  });
-
-  return hSegments;
+  throw Error("Early stop");
 }
 
-function getSlopesData(slopes: Record<string, Slope[]>[]) {
-  const slopesData: {
-    idx: number;
-    key: string;
-    divider: number;
-    value: number;
-  }[] = [];
+function sortFunction(
+  first: SerializedSegmentation,
+  second: SerializedSegmentation
+) {
+  if (first.start >= second.start) return 1;
+  else return -1;
+}
 
-  slopes.forEach((measurement) => {
-    const key = Object.keys(measurement)[0];
-    Object.values(measurement)[0].forEach((val, idx) => {
-      if (idx == 0) {
-        slopesData.push({ idx, key, divider: val.start, value: val.value });
-      }
-      slopesData.push({ idx, key, divider: val.end, value: val.value });
+function serializeSlopes(
+  slopes: Record<string, Slope[]>[]
+): SerializedSegmentation[] {
+  const dynamicSlopes: SerializedSegmentation[] = [];
+  slopes.forEach((value) => {
+    const parameter = Object.keys(value)[0];
+    Object.values(value)[0].forEach((data) => {
+      dynamicSlopes.push({
+        param: parameter,
+        start: data.start,
+        end: data.end,
+        value: data.value,
+      });
     });
   });
 
-  return slopesData;
+  return dynamicSlopes;
 }
 
-function sortFunction(first: number, second: number) {
-  if (first < second) return -1;
-  else return 1;
+type BoundaryKind = "static" | "dynamic";
+
+function buildMatrix(
+  dynamicSlopes: SerializedSegmentation[],
+  staticSlopes: SerializedSegmentation[],
+  minimumSegment: number
+): MatrixRow[] {
+  const events = new Map<number, SerializedSegmentation[]>();
+  const boundaries = new Map<number, Set<BoundaryKind>>();
+
+  function addBoundary(point: number, kind: BoundaryKind) {
+    if (!boundaries.has(point)) {
+      boundaries.set(point, new Set());
+    }
+    boundaries.get(point)!.add(kind);
+  }
+
+  // Dynamic boundaries
+  for (const s of dynamicSlopes) {
+    addBoundary(s.start, "dynamic");
+    addBoundary(s.end, "dynamic");
+
+    if (!events.has(s.start)) events.set(s.start, []);
+    events.get(s.start)!.push(s);
+  }
+
+  // Static boundaries
+  for (const s of staticSlopes) {
+    addBoundary(s.start, "static");
+    addBoundary(s.end, "static");
+
+    if (!events.has(s.start)) events.set(s.start, []);
+    events.get(s.start)!.push(s);
+  }
+
+  const points = Array.from(boundaries.keys()).sort((a, b) => a - b);
+
+  const currentValues: Record<string, number> = {};
+  const matrix: MatrixRow[] = [];
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const start = points[i];
+    const end = points[i + 1];
+    const length = end - start;
+
+    const boundaryKinds = boundaries.get(start)!;
+    const isStaticSplit = boundaryKinds.has("static");
+
+    if (!isStaticSplit && length < minimumSegment) continue;
+
+    // Apply all changes at this point
+    const updates = events.get(start);
+    if (updates) {
+      for (const u of updates) {
+        currentValues[u.param] = u.value;
+      }
+    }
+
+    // Create interval snapshot
+    matrix.push({
+      start: start,
+      end: end,
+      parameters: { ...currentValues },
+    });
+  }
+
+  return matrix;
 }
