@@ -39,9 +39,13 @@ export async function upload_file(req: Request, res: Response) {
   const staticPages = findPages(staticDataMap, file_data);
 
   if (dynamicPages.length > 0 && staticPages.length > 0) {
-    let missingFiles = [];
+    console.log(dynamicPages, staticPages);
+    let missingFiles: (string | undefined)[] = [];
     if (dynamicPages.length > 0) missingFiles = dynamicPages;
-    else missingFiles = staticPages;
+    if (staticPages.length > 0) {
+      missingFiles = missingFiles.concat(staticPages);
+    }
+
     res.status(400).json({
       error: `Uno de los parámetros seleccionados no se encuentra como una
             pestaña en el archivo de excel, recomendamos que verifique que

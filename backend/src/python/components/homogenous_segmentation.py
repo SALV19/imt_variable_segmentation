@@ -18,6 +18,6 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
         for key, val in value["values"].items():
             # write header once (when idx == 0)
             if idx == 0:
-                ws.cell(row=2, column=counter, value=key)
+                ws.cell(row=2, column=counter, value=key.capitalize())
             ws.cell(row=row_val, column=counter, value=(val + 1))
             counter += 1

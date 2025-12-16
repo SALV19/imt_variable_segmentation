@@ -115,7 +115,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     iri = Reference(ws, min_col=3, min_row=3, max_row=length)
 
     iri_series = Series(values=iri, xvalues=measurement_values, title=title)
-    iri_series.graphicalProperties.line.solidFill = "4444FF"
+    iri_series.graphicalProperties.line.solidFill = "0F9ED5 "
     iri_series.smooth = False
 
     def get_singular_points():
