@@ -1,15 +1,19 @@
 from openpyxl import Workbook
 from openpyxl.chart import ScatterChart, Reference, Series
-from openpyxl.chart.text import RichText
-from openpyxl.chart.axis import ChartLines
+from openpyxl.chart.text import RichText, Text
 from openpyxl.chart.layout import Layout, ManualLayout
 from openpyxl.drawing.text import (
     RichTextProperties,
     Paragraph,
     ParagraphProperties,
+    RegularTextRun,
     CharacterProperties,
+    Font as PlotFont,
 )
 from openpyxl.styles import Font
+from openpyxl.chart.title import Title
+
+from utils.get_singular_points import get_singular_points  # pylint: disable=E0401
 
 measure = {
     "IRI": "(m/km)",
@@ -27,14 +31,10 @@ static = ["TDPA"]
 
 def generate_sheet(wb: Workbook, title: str, generated_data):
     measurements = generated_data["file_data"]
-    # filter_measurements = generated_data["filter_measurements"]
-    # segmentation = generated_data["segmentation"]
     slopes = generated_data["slopes"]
     singularities = []
     if "abnormalities" in generated_data:
         singularities = generated_data["abnormalities"]
-
-    # distance = measurements["distance"]
 
     slope_values: map = map(
         lambda item: list(map(lambda value: item[value], item)), slopes
@@ -92,10 +92,44 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
             idx += 1
 
     c1 = ScatterChart()
+
+    text = Text()
+    char_props = CharacterProperties(
+        sz=1400,
+        solidFill="BBBBBB",
+        latin=PlotFont(typeface="Roboto"),
+    )
+
     if title in static:
-        c1.title = f"Segmentación para {title}"
+        paragraph = Paragraph(
+            pPr=ParagraphProperties(defRPr=char_props),
+            r=[RegularTextRun(t=f"Segmentación para {title}")],
+        )
+
+        rich_text = RichText(p=[paragraph])
+        text = Text(rich=rich_text)
+
     else:
-        c1.title = f"Segmentación dinámica para {title}"
+        measurement_values = Reference(ws, min_col=1, min_row=3, max_row=length)
+
+        iri = Reference(ws, min_col=3, min_row=3, max_row=length)
+
+        iri_series = Series(values=iri, xvalues=measurement_values, title=title)
+        iri_series.graphicalProperties.line.solidFill = "0F9ED5 "
+        iri_series.smooth = False
+
+        c1.series.append(iri_series)
+
+        paragraph = Paragraph(
+            pPr=ParagraphProperties(defRPr=char_props),
+            r=[RegularTextRun(t=f"Segmentación dinámica para {title}")],
+        )
+
+        rich_text = RichText(p=[paragraph])
+
+        text = Text(rich=rich_text)
+
+    c1.title = Title(text)
     c1.style = 2
     c1.y_axis.title = title + " " + measure[title]
     c1.x_axis.tickLblPos = "nextTo"
@@ -105,42 +139,12 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     c1.x_axis.number_format = '0"+"000'
     c1.roundedCorners = False
 
-    # c1.x_axis.majorUnit = round(len(measurements["measurements"]) / 2)
     c1.x_axis.majorUnit = round(
         (measurements["measurements"][-1] - measurements["measurements"][0]) / 10
     )
 
-    measurement_values = Reference(ws, min_col=1, min_row=3, max_row=length)
-
-    iri = Reference(ws, min_col=3, min_row=3, max_row=length)
-
-    iri_series = Series(values=iri, xvalues=measurement_values, title=title)
-    iri_series.graphicalProperties.line.solidFill = "0F9ED5 "
-    iri_series.smooth = False
-
-    def get_singular_points():
-        x_singular_points = Reference(
-            ws, min_col=9, min_row=3, max_row=singularities_length + 2
-        )
-        y_singular_points = Reference(
-            ws, min_col=10, min_row=3, max_row=singularities_length + 2
-        )
-
-        singular_points = Series(
-            values=y_singular_points,
-            xvalues=x_singular_points,
-            title="Puntos singulares",
-        )
-        singular_points.marker.symbol = "circle"
-        singular_points.marker.graphicalProperties.solidFill = "FF0000"
-        singular_points.marker.graphicalProperties.line.solidFill = "FF0000"
-        singular_points.graphicalProperties.line.noFill = True
-        return singular_points
-
-    c1.series.append(iri_series)
-
     if singularities_length:
-        singular_points = get_singular_points()
+        singular_points = get_singular_points(ws, singularities_length)
 
         c1.series.append(singular_points)
 
@@ -164,7 +168,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     c1.layout = Layout(
         manualLayout=ManualLayout(
             x=-0.02,
-            y=0.002,
+            y=0.01,
             h=0.9,
             w=0.78,
         )

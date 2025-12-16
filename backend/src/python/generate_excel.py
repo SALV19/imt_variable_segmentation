@@ -6,6 +6,10 @@ import sys
 from components.homogenous_segmentation import homogenous_segmentation
 from components.worksheet_generator import generate_sheet
 
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+
 dynamic_segmentation = input()
 generated_data = json.loads(dynamic_segmentation)
 
