@@ -194,7 +194,8 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     # Chart Styling
 
     # ---- Adjust line thickness and color ----
-    c1.series[0].graphicalProperties.line.width = 15000
+    if not title in static:
+        c1.series[0].graphicalProperties.line.width = 15000
 
     c1.legend.position = "b"
     c1.legend.layout = Layout(
