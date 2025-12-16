@@ -29,9 +29,7 @@ export function homogenousSegmentation(
     minimumSegment
   );
 
-  console.log(matrix);
-
-  throw Error("Early stop");
+  return matrix;
 }
 
 function sortFunction(
@@ -109,8 +107,6 @@ function buildMatrix(
     const boundaryKinds = boundaries.get(start)!;
     const isStaticSplit = boundaryKinds.has("static");
 
-    if (!isStaticSplit && length < minimumSegment) continue;
-
     // Apply all changes at this point
     const updates = events.get(start);
     if (updates) {
@@ -118,6 +114,8 @@ function buildMatrix(
         currentValues[u.param] = u.value;
       }
     }
+
+    if (!isStaticSplit && length < minimumSegment) continue;
 
     // Create interval snapshot
     matrix.push({
