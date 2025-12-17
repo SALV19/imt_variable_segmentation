@@ -66,6 +66,51 @@ function buildMatrix(
   staticSlopes: SerializedSegmentation[],
   minimumSegment: number
 ): MatrixRow[] {
+  const [events, boundaries] = getBoundaries(dynamicSlopes, staticSlopes);
+  const points = Array.from(boundaries.keys()).sort((a, b) => a - b);
+
+  const currentValues: Record<string, number> = {};
+  const matrix: MatrixRow[] = [];
+
+  let cursor = points[0];
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const boundary = points[i];
+    const next = points[i + 1];
+
+    // Apply updates at boundary
+    const updates = events.get(boundary);
+    if (updates) {
+      for (const u of updates) {
+        currentValues[u.param] = u.value;
+      }
+    }
+
+    const boundaryKinds = boundaries.get(next)!;
+    const isStaticSplit = boundaryKinds.has("static");
+
+    const length = next - cursor;
+
+    if (!isStaticSplit && length < minimumSegment) {
+      continue;
+    }
+
+    matrix.push({
+      start: cursor,
+      end: next,
+      parameters: { ...currentValues },
+    });
+
+    cursor = next;
+  }
+
+  return matrix;
+}
+
+function getBoundaries(
+  dynamicSlopes: SerializedSegmentation[],
+  staticSlopes: SerializedSegmentation[]
+): [Map<number, SerializedSegmentation[]>, Map<number, Set<BoundaryKind>>] {
   const events = new Map<number, SerializedSegmentation[]>();
   const boundaries = new Map<number, Set<BoundaryKind>>();
 
@@ -76,54 +121,17 @@ function buildMatrix(
     boundaries.get(point)!.add(kind);
   }
 
-  // Dynamic boundaries
   for (const s of dynamicSlopes) {
     addBoundary(s.start, "dynamic");
     addBoundary(s.end, "dynamic");
-
-    if (!events.has(s.start)) events.set(s.start, []);
-    events.get(s.start)!.push(s);
+    (events.get(s.start) ?? events.set(s.start, []).get(s.start)!).push(s);
   }
 
-  // Static boundaries
   for (const s of staticSlopes) {
     addBoundary(s.start, "static");
     addBoundary(s.end, "static");
-
-    if (!events.has(s.start)) events.set(s.start, []);
-    events.get(s.start)!.push(s);
+    (events.get(s.start) ?? events.set(s.start, []).get(s.start)!).push(s);
   }
 
-  const points = Array.from(boundaries.keys()).sort((a, b) => a - b);
-
-  const currentValues: Record<string, number> = {};
-  const matrix: MatrixRow[] = [];
-
-  for (let i = 0; i < points.length - 1; i++) {
-    const start = points[i];
-    const end = points[i + 1];
-    const length = end - start;
-
-    const boundaryKinds = boundaries.get(start)!;
-    const isStaticSplit = boundaryKinds.has("static");
-
-    // Apply all changes at this point
-    const updates = events.get(start);
-    if (updates) {
-      for (const u of updates) {
-        currentValues[u.param] = u.value;
-      }
-    }
-
-    if (!isStaticSplit && length < minimumSegment) continue;
-
-    // Create interval snapshot
-    matrix.push({
-      start: start,
-      end: end,
-      parameters: { ...currentValues },
-    });
-  }
-
-  return matrix;
+  return [events, boundaries];
 }
