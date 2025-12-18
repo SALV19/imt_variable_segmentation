@@ -33,6 +33,7 @@ function production(req: Request, res: Response, python_process: ChildProcess) {
 
   // Homogenous Segmentation
   python_process.stdin?.write(JSON.stringify(Object.values(hSegmentation)));
+  // console.log(hSegmentation);
 
   python_process.stdin?.end();
 

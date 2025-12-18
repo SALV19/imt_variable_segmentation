@@ -3,8 +3,10 @@ from openpyxl import load_workbook
 import json
 import sys
 
-from components.homogenous_segmentation import homogenous_segmentation
 from components.worksheet_generator import generate_sheet
+from components.homogenous_segmentation import (
+    homogenous_segmentation,
+)  # pylint: disable=E0611
 
 from pathlib import Path
 
