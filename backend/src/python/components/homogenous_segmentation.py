@@ -10,7 +10,19 @@ from openpyxl.drawing.text import (
     CharacterProperties,
     Font as PlotFont,
 )
-from openpyxl.chart import ScatterChart
+from openpyxl.chart import ScatterChart, Reference, Series
+from openpyxl.chart.marker import Marker
+
+titles = {
+    "iri": "IRI",  # (m/km)
+    "friccion": "CF",
+    "deflexiones": "Deflexión máxima",  # (mm)
+    "agrfatiga": "Agriet. fatiga",  # (%)
+    "grlong": "Agriet. long",  # (%)
+    "grtrans": "Agriet. transv",  # (%)
+    "pr": "PR",  # (mm)
+    "tdpa": "TDPA",
+}
 
 
 def homogenous_segmentation(wb: Workbook, h_segmentation):
@@ -43,41 +55,65 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
                 parameters[parameter] = [(segment["start"], value)]
             elif segment_idx < len(h_segmentation) - 1:
                 if parameters[parameter][-1][1] != value:
-                    parameters[parameter].append((segment["end"], value))
+                    parameters[parameter].append((segment["start"], value))
             else:
+                parameters[parameter].append((segment["start"], value))
                 parameters[parameter].append((segment["end"], value))
 
-    series = {}
+    chart = ScatterChart()
+
     for idx, (parameter, position_value) in enumerate(parameters.items()):
         # cell = ws.cell(row=2, column=18 + idx * 2 + 1, value=parameter)
         # cell.font = Font(color="FFFFFF")
-        x_series_cells = []
-        idx_series_cell = []
+
+        column = 18 + idx * 2
+
         for parameter_idx, (position, value) in enumerate(position_value):
             position_cell = ws.cell(
-                row=parameter_idx + 3, column=18 + idx * 2, value=position
+                row=parameter_idx + 3, column=column, value=position
             )
             position_cell.font = Font(color="FFFFFF")
 
-            idx_cell = ws.cell(
-                row=parameter_idx + 3, column=18 + idx * 2 + 1, value=idx + 1
-            )
+            idx_cell = ws.cell(row=parameter_idx + 3, column=column + 1, value=idx + 1)
             idx_cell.font = Font(color="FFFFFF")
 
-            x_series_cells.append(position_cell)
-            idx_series_cell.append(idx_cell)
+        length = len(parameters[parameter]) + 3
 
-        series["parameter"] = {
-            "x_series_cells": x_series_cells,
-            "idx_series_cell": idx_series_cell,
-        }
+        x_series_references = Reference(ws, min_col=column, min_row=3, max_row=length)
+        idx_series_reference = Reference(
+            ws, min_col=column + 1, min_row=3, max_row=length
+        )
 
-    chart = ScatterChart()
+        serie = Series(
+            values=idx_series_reference,
+            xvalues=x_series_references,
+            title=titles[parameter],
+        )
+        serie.marker = Marker("circle")
+        serie.marker.size = 8
+
+        chart.series.append(serie)
 
     # Chart customization
     chart.style = 2
     chart.y_axis.delete = True
+    chart.x_axis.delete = False
+    chart.x_axis.tickLblPos = "nextTo"
+    chart.x_axis.scaling.orientation = "minMax"
+    chart.x_axis.number_format = '0"+"000'
     chart.roundedCorners = False
+
+    chart.width = 30
+    chart.height = 15
+
+    chart.layout = Layout(
+        manualLayout=ManualLayout(
+            x=-0.02,
+            y=0.01,
+            h=0.9,
+            w=0.78,
+        )
+    )
 
     char_props = CharacterProperties(
         sz=1400,
