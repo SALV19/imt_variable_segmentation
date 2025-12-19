@@ -96,7 +96,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     text = Text()
     char_props = CharacterProperties(
         sz=1400,
-        solidFill="BBBBBB",
+        solidFill="999999",
         latin=PlotFont(typeface="Roboto"),
     )
 

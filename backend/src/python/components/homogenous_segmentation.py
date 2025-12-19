@@ -49,32 +49,37 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
 
     # Create matrix of segments
     parameters = {}
-    for segment_idx, segment in enumerate(h_segmentation):
-        for idx, (parameter, value) in enumerate(segment["parameters"].items()):
-            if segment_idx == 0:
-                parameters[parameter] = [(segment["start"], value)]
-            elif segment_idx < len(h_segmentation) - 1:
-                if parameters[parameter][-1][1] != value:
-                    parameters[parameter].append((segment["start"], value))
-            else:
-                parameters[parameter].append((segment["start"], value))
-                parameters[parameter].append((segment["end"], value))
+
+    # inicialización
+    for param in h_segmentation[0]["parameters"]:
+        parameters[param] = [h_segmentation[0]["start"]]
+
+    # detección de cambios
+    for i in range(1, len(h_segmentation)):
+        prev = h_segmentation[i - 1]
+        curr = h_segmentation[i]
+
+        for param, curr_val in curr["parameters"].items():
+            prev_val = prev["parameters"][param]
+
+            if curr_val != prev_val:
+                parameters[param].append(curr["start"])
+
+    # cierre al final
+    end_global = h_segmentation[-1]["end"]
+    for param in parameters:
+        parameters[param].append(end_global)
 
     chart = ScatterChart()
 
-    for idx, (parameter, position_value) in enumerate(parameters.items()):
-        # cell = ws.cell(row=2, column=18 + idx * 2 + 1, value=parameter)
-        # cell.font = Font(color="FFFFFF")
-
+    for idx, (parameter, positions) in enumerate(parameters.items()):
         column = 18 + idx * 2
 
-        for parameter_idx, (position, value) in enumerate(position_value):
-            position_cell = ws.cell(
-                row=parameter_idx + 3, column=column, value=position
-            )
+        for i, position in enumerate(positions):
+            position_cell = ws.cell(row=i + 3, column=column, value=position)
             position_cell.font = Font(color="FFFFFF")
 
-            idx_cell = ws.cell(row=parameter_idx + 3, column=column + 1, value=idx + 1)
+            idx_cell = ws.cell(row=i + 3, column=column + 1, value=idx + 1)
             idx_cell.font = Font(color="FFFFFF")
 
         length = len(parameters[parameter]) + 3
@@ -117,7 +122,7 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
 
     char_props = CharacterProperties(
         sz=1400,
-        solidFill="BBBBBB",
+        solidFill="999999",
         latin=PlotFont(typeface="Roboto"),
     )
 
