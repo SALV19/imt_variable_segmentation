@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 dynamic_segmentation = input()
 generated_data = json.loads(dynamic_segmentation)
 
-satic_segmentation = input()
+satic_segmentation = input() 
 static_data = json.loads(satic_segmentation)
 
 hsegment = input()
