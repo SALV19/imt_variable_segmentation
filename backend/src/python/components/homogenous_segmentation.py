@@ -12,6 +12,7 @@ from openpyxl.drawing.text import (
 )
 from openpyxl.chart import ScatterChart, Reference, Series
 from openpyxl.chart.marker import Marker
+from openpyxl.chart.label import DataLabelList
 
 titles = {
     "iri": "IRI",  # (m/km)

@@ -6,28 +6,41 @@
 >
   <div class="flex flex-col items-center align-bottom -my-4 py-4">
     <%- include("../molecules/parameter_form_content.ejs", {id: "iri",
-    input_class_id: "iri_input", name: "IRI", show: true}) %> <%-
-    include("../molecules/parameter_form_content.ejs", {id: "friccion",
-    input_class_id: "friccion_input", name: "Fricción", show: false}) %> <%-
-    include("../molecules/parameter_form_content.ejs", {id: "deflexiones",
+    input_class_id: "iri_input", name: "IRI", show: true}) %> 
+
+    <%- include("../molecules/parameter_form_content.ejs", {id: "friccion",
+    input_class_id: "friccion_input", name: "Fricción", show: false}) %> 
+
+    <%- include("../molecules/parameter_form_content.ejs", {id: "deflexiones",
     input_class_id: "deflexiones_input", name: "Deflexiones", show: false}) %>
+
     <%- include("../molecules/parameter_form_content.ejs", {id:
     "agretamiento_por_fatiga", input_class_id: "agretamiento_por_fatiga_input",
-    name: "Agretamiento por fatiga", show: false}) %> <%-
-    include("../molecules/parameter_form_content.ejs", {id:
+    name: "Agretamiento por fatiga", show: false}) %> 
+    
+    <%- include("../molecules/parameter_form_content.ejs", {id:
     "agrietamiento_longitudinal", input_class_id:
     "agrietamiento_longitudinal_input", name: "Agrietamiento longitudinal",
-    show: false}) %> <%- include("../molecules/parameter_form_content.ejs", {id:
+    show: false}) %> 
+
+    <%- include("../molecules/parameter_form_content.ejs", {id:
     "agrietamiento_transversal", input_class_id:
     "agrietamiento_transversal_input", name: "Agrietamiento transversal", show:
-    false}) %> <%- include("../molecules/parameter_form_content.ejs", {id:
+    false}) %> 
+
+    <%- include("../molecules/parameter_form_content.ejs", {id:
     "profundidad_rodera", input_class_id: "profundidad_rodera_input", name:
-    "Profundidad de Rugosidad", show: false}) %> <%-
-    include("../molecules/change_form") %>
+    "Profundidad de Rugosidad", show: false}) %> 
+    
+    <%-include("../molecules/change_form") %>
+
     <br class="mb-5" />
+    
     <%- include("../atoms/shomogenous", {id: "s_homogenea", input_class_id:
     "segmentacion_homogenea_input", name: "Segmentacion Homogenea", show:
-    false}) %> <%- include('../../components/atoms/button', {name: "send", text:
+    false}) %> 
+    
+    <%- include('../../components/atoms/button', {name: "send", text:
     'Ejecutar'}) %>
     <p id="error_message" class="text-red-600 hidden text-sm mt-2 pl-2"></p>
     <p class="hidden bg-red-600 hover:bg-red-700"></p>
