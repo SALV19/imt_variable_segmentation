@@ -5,6 +5,8 @@ function create_data(json_response, id_selector) {
   const slopes = json_response.slopes;
   const abnormalities = json_response.abnormalities;
 
+  slopes.at(-1).end = slopes.at(-1).end - measurements.distance
+
   const slopes_data = get_slopes_data(slopes);
 
   const titles = {
@@ -33,8 +35,8 @@ function create_data(json_response, id_selector) {
   const ctx = document.getElementById(id_selector + "_canvas");
   ctx.parentElement.classList.remove("hide");
 
-  let labels = measurements.measurements;
-  let values = measurements.values;
+  let labels = measurements.measurements.slice(0, -1)
+  let values = measurements.values.slice(1)
 
   options = {
     responsive: true,
@@ -48,6 +50,15 @@ function create_data(json_response, id_selector) {
           callback: (val, idx) => {
             const length = measurements.measurements.length;
             const ammount = Math.floor(length / 500);
+
+            if (idx == measurements.measurements.length - 2) {
+              return Math.floor((measurements.measurements[idx] 
+                + measurements.distance) / 1000) 
+                + "+" 
+                + ((measurements.measurements[idx] 
+                + measurements.distance) % 1000) / 100 + "00"
+            }
+            
             if (length > 500)
               return measurements.measurements[idx] % (500 * ammount) === 0
                 ? Math.floor(measurements.measurements[idx] / 1000) +
@@ -125,7 +136,7 @@ function create_data(json_response, id_selector) {
   };
 
   // Creating line chart
-  let myLineChart = new Chart(ctx, {
+  let _ = new Chart(ctx, {
     type: "line",
     data: {
       labels: labels,

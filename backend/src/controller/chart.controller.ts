@@ -50,7 +50,7 @@ function production(req: Request, res: Response, python_process: ChildProcess) {
     console.log("Python finished with code", code);
     const buffer = Buffer.concat(result);
     if (code != 0) {
-      res.status(500).send("Error");
+      res.status(500).end();
       return;
     }
 

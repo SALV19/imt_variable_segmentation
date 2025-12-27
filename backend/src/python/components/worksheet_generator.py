@@ -56,15 +56,25 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
 
     length = len(measurements["measurements"]) + 2
 
+    listMeasures = list(measurements["measurements"])
+
     # Medidas generales
     for idx, measurement in enumerate(measurements["measurements"]):
+        if idx == len(listMeasures) - 1:
+            break
+
         row_val = idx + 3
-        end_measurement = measurement + measurements["distance"]
+        end_measurement = measurements["measurements"][idx + 1]
+
         measurement_cell = ws.cell(row=row_val, column=1, value=measurement)
         end_measurement_cell = ws.cell(row=row_val, column=2, value=end_measurement)
+
         measurement_cell.number_format = '0"+"000'
         end_measurement_cell.number_format = '0"+"000'
-        value_cell = ws.cell(row=row_val, column=3, value=measurements["values"][idx])
+
+        value_cell = ws.cell(
+            row=row_val, column=3, value=measurements["values"][idx + 1]
+        )
         value_cell.number_format = "#,##0.00"
 
     slope_values = list(slope_values)
@@ -145,6 +155,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
 
     if singularities_length:
         singular_points = get_singular_points(ws, singularities_length)
+        singular_points.smooth = False
 
         c1.series.append(singular_points)
 
@@ -157,6 +168,7 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
             title=(lambda i: "Segmentos" if i == 0 else "Other")(i),
         )
         segmentation_series.graphicalProperties.line.solidFill = "000000"
+        segmentation_series.smooth = False
 
         c1.series.append(segmentation_series)
 

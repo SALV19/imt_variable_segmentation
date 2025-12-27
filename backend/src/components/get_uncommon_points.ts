@@ -32,7 +32,7 @@ export function mad_base_outliers(
   // Identify outliers
   modifiedZScore.forEach((z, i) => {
     if (Math.abs(z) > threshold) {
-      outliers.push({ x: measurements[i], y: file_data.values[i] });
+      outliers.push({ x: measurements[i-1], y: file_data.values[i] });
     }
   });
 
