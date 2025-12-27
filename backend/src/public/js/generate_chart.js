@@ -7,6 +7,19 @@ function create_data(json_response, id_selector) {
 
   const slopes_data = get_slopes_data(slopes);
 
+  const titles = {
+    iri: "IRI",
+    friccion: "Coeficiente de fricción",
+    deflexiones: "Deflexiones",
+    agrfatiga: "Agrietamiento por fatiga",
+    grlong: "Agrietamiento longitudinal",
+    grtrans: "Agrietamiento transversal",
+    pr: "Profundidad de rodera",
+    tdpa: "TDPA"
+  }
+  
+  const title = titles[id_selector]
+
   const chartArea = document.querySelector("#chartArea");
 
   $("#form_selection").hide();
@@ -55,7 +68,7 @@ function create_data(json_response, id_selector) {
         position: "left",
         title: {
           display: true,
-          text: id_selector.toUpperCase(),
+          text: title,
           font: {
             size: 20,
             weight: "bold",
@@ -138,7 +151,7 @@ function create_data(json_response, id_selector) {
           yAxisID: "y",
         },
         {
-          label: id_selector.toUpperCase(),
+          label: title,
           data: values,
           borderColor: "blue",
           yAxisID: "y",
@@ -165,7 +178,7 @@ function create_data(json_response, id_selector) {
   // Table data
   const table = `
     <tbody>
-      <tr><td><h1 class="font-bold mt-2">${id_selector.toUpperCase()}</h1></td></tr>
+      <tr><td><h1 class="font-bold mt-2">${title}</h1></td></tr>
       <tr>
         <td class="w-32">Media</td>
         <td id="media_${id_selector}"></td>
