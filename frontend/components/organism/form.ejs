@@ -1,3 +1,66 @@
+<% parameters = [ 
+  { 
+    id: "iri", 
+    input_class_id: `iri_input`,
+    name: "IRI", 
+    show: true 
+  }, 
+  { 
+    id: "friccion", 
+    input_class_id: `friccion_input`,
+    name: "Fricción",
+    show: false 
+  }, 
+  { 
+    id: "deflexiones", 
+    input_class_id: `deflexiones_input`,
+    name: "Deflexiones", 
+    show: false
+  }, 
+  {
+    id: "agretamiento_por_fatiga", 
+    input_class_id: `agretamiento_por_fatiga_input`,
+    name: "Agretamiento por fatiga", 
+    show: false
+  },
+  {
+    id: "agrietamiento_longitudinal", 
+    input_class_id: `agrietamiento_longitudinal_input`,
+    name: "Agrietamiento longitudinal", 
+    show: false
+  }, 
+  {
+    id: "agrietamiento_transversal", 
+    input_class_id: `agrietamiento_transversal_input`, 
+    name: "Agrietamiento transversal", 
+    show: false
+  }, 
+  {
+    id: "profundidad_rodera", 
+    input_class_id: `profundidad_rodera_input`,
+    name: "Profundidad de Roderas", 
+    show: false
+  },
+  {
+    id: "baches", 
+    input_class_id: `baches_input`,
+    name: "Baches", 
+    show: false
+  },
+  {
+    id: "desprendimientos", 
+    input_class_id: `desprendimientos_input`,
+    name: "Desprendimientos", 
+    show: false
+  },
+  {
+    id: "macrotextura", 
+    input_class_id: `macrotextura_input`,
+    name: "Macrotextura", 
+    show: false
+  },
+] %>
+
 <form
   action="/upload_file"
   method="POST"
@@ -5,40 +68,16 @@
   class="h-screen flex gap-10 max-md:flex-col max-md:items-center"
 >
   <div class="flex flex-col items-center align-bottom -my-4 py-4">
-    <%- include("../molecules/parameter_form_content.ejs", {id: "iri",
-    input_class_id: "iri_input", name: "IRI", show: true}) %> 
-
-    <%- include("../molecules/parameter_form_content.ejs", {id: "friccion",
-    input_class_id: "friccion_input", name: "Fricción", show: false}) %> 
-
-    <%- include("../molecules/parameter_form_content.ejs", {id: "deflexiones",
-    input_class_id: "deflexiones_input", name: "Deflexiones", show: false}) %>
-
-    <%- include("../molecules/parameter_form_content.ejs", {id:
-    "agretamiento_por_fatiga", input_class_id: "agretamiento_por_fatiga_input",
-    name: "Agretamiento por fatiga", show: false}) %> 
-    
-    <%- include("../molecules/parameter_form_content.ejs", {id:
-    "agrietamiento_longitudinal", input_class_id:
-    "agrietamiento_longitudinal_input", name: "Agrietamiento longitudinal",
-    show: false}) %> 
-
-    <%- include("../molecules/parameter_form_content.ejs", {id:
-    "agrietamiento_transversal", input_class_id:
-    "agrietamiento_transversal_input", name: "Agrietamiento transversal", show:
-    false}) %> 
-
-    <%- include("../molecules/parameter_form_content.ejs", {id:
-    "profundidad_rodera", input_class_id: "profundidad_rodera_input", name:
-    "Profundidad de Roderas", show: false}) %> 
-    
+    <% for (let i = 0; i < parameters.length; i++) { %> 
+      <%- include("../molecules/parameter_form_content.ejs", parameters[i]) %> 
+    <% } %>
     <%-include("../molecules/change_form") %>
 
     <br class="mb-5" />
-    
+
     <%- include("../atoms/shomogenous", {id: "s_homogenea", input_class_id:
-    "segmentacion_homogenea_input", name: "Segmentacion Homogenea", show:
-    false}) %> 
+    "segmentacion_homogenea_input", name: "Segmentacion Homogenea", 
+    show: false}) %> 
     
     <%- include('../../components/atoms/button', {name: "send", text:
     'Ejecutar'}) %>

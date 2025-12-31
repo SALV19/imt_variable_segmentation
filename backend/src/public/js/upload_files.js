@@ -62,7 +62,7 @@ $("form[action='/upload_file']").on("submit", (e) => {
     });
 
   data.append("parameters", JSON.stringify(parameters_input_values));
-  data.append("static_values", JSON.stringify(static_input_values));
+  data.append("static_values", JSON.stringify(static_input_values));                                                                                                                                              
   data.append("h_segment_min", $("#s_homogenous_input_param")[0].value);
 
   if (
@@ -91,7 +91,7 @@ $("form[action='/upload_file']").on("submit", (e) => {
         handleJSON(generated_data, static_data);
       })
       .catch(async (error) => {
-        console.log("Houston, tenemos un problema", await error);
+        console.error("Houston, tenemos un problema", await error);
         error.then(async (errorMessage) => {
           $("#modal").show();
           $("#error_text").text(errorMessage.error);

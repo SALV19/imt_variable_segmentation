@@ -6,6 +6,9 @@ const ids = [
   "agrietamiento_longitudinal",
   "agrietamiento_transversal",
   "profundidad_rodera",
+  "baches",
+  "desprendimientos",
+  "macrotextura",
 ];
 
 let count = 0;

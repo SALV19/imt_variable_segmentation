@@ -1,10 +1,19 @@
-<% let components = [ {iri: "IRI"}, {friccion: "Fricción"}, {deflexiones:
-"Deflexiones"}, {agretamiento_por_fatiga: "Agrietamiento por fatiga"},
-{agrietamiento_longitudinal: "Agrietamiento longitudinal"},
-{agrietamiento_transversal: "Agrietamiento transversal"}, {profundidad_rodera:
-"Profundidad de roderas"}, {static_transito: "TDPA"} ] %>
+<% let components = [ 
+  {iri: "IRI"}, 
+  {friccion: "Fricción"}, 
+  {deflexiones: "Deflexiones"}, 
+  {agretamiento_por_fatiga: "Agrietamiento por fatiga"},
+  {agrietamiento_longitudinal: "Agrietamiento longitudinal"},
+  {agrietamiento_transversal: "Agrietamiento transversal"}, 
+  {profundidad_rodera: "Profundidad de roderas"}, 
+  {static_transito: "TDPA"},
+  {baches: "Baches"},
+  {desprendimientos: "Desprendimientos"},
+  {macrotextura: "Macrotextura"},
+  {static_tipo_pavimento: "Tipo de pavimento"} 
+] %>
 
-<div class="flex justify-around h-[26rem]">
+<div class="flex justify-around h-[42rem]">
   <div class="flex items-center flex-col">
     <h1 class="text-xl font-semibold pb-2 text-center">
       Variables no seleccionadas
@@ -13,7 +22,7 @@
       id="unselected"
       ondrop="dropHandler(event)"
       ondragover="dragoverHandler(event)"
-      class="border-black border-2 w-72 h-[28rem]"
+      class="border-black border-2 w-72 h-[24rem]"
     >
       <% for (let i = 0; i < components.length; i++) {%> <%-
       include("../atoms/draggable_item.ejs", {id: Object.keys(components[i])[0],
@@ -36,7 +45,7 @@
       id="selected"
       ondrop="dropHandler(event)"
       ondragover="dragoverHandler(event)"
-      class="border-black border-2 w-72 h-[28rem]"
+      class="border-black border-2 w-72 h-[24rem]"
     ></div>
 
     <button

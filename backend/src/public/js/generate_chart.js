@@ -17,7 +17,11 @@ function create_data(json_response, id_selector) {
     grlong: "Agrietamiento longitudinal",
     grtrans: "Agrietamiento transversal",
     pr: "Profundidad de rodera",
-    tdpa: "TDPA"
+    tdpa: "TDPA",
+    baches: "Baches",
+    desprendimientos: "Desprendimientos",
+    macrotextura: "Macrotextura",
+    static_tipo_pavimento: "Tipo de Pavimento",
   }
   
   const title = titles[id_selector]

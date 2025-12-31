@@ -3,9 +3,10 @@ import { homogenousSegmentation } from "../components/homgenousSegmentation/homo
 import { read_file_info } from "../components/read_file_info.ts";
 import { Data_Map } from "../types/types.ts";
 import type { Request, Response } from "express";
-import fs from "fs";
 import create_static_data from "../components/segmentation/create_static_data.ts";
 import generate_data_map from "../components/segmentation/generate_data_map.ts";
+import parseFileName from "../components/parseFilename.ts";
+import findPages from "../components/findPages.ts";
 
 // GET
 export function get_home(req: Request, res: Response) {
@@ -17,6 +18,8 @@ export async function upload_file(req: Request, res: Response) {
   // Ingestion layer
   req.body.parameters = JSON.parse(req.body.parameters);
   req.body.static_values = JSON.parse(req.body.static_values);
+
+  console.log(req.body.parameters)
 
   // Get form information / values to do the analysis
   const dynamicDataMap: Record<string, any> = parseFileName(
@@ -97,36 +100,4 @@ export async function upload_file(req: Request, res: Response) {
 
   // Response
   res.status(200).json({ generated_data, static_data, hSegmentation });
-}
-
-function parseFileName(parameters: Object[]) {
-  const pair_titles: Record<string, string> = {
-    agretamiento_por_fatiga: "agrfatiga",
-    agrietamiento_longitudinal: "grlong",
-    agrietamiento_transversal: "grtrans",
-    profundidad_rodera: "pr",
-    static_transito: "tdpa",
-  };
-
-  return Object.keys(parameters).reduce(
-    (acum, key) => ({
-      ...acum,
-      // @ts-ignore
-      [pair_titles[key] ?? key]: parameters[key],
-    }),
-    {}
-  );
-}
-
-function findPages(
-  dataMap: Record<string, any>,
-  fileData: Record<string, Data_Map>
-): (string | undefined)[] {
-  return Object.keys(dataMap)
-    .map((key: string) => {
-      if (fileData[key] == undefined) {
-        return key;
-      }
-    })
-    .filter((notExists) => notExists);
 }
