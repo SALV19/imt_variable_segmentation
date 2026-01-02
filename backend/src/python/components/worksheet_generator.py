@@ -24,9 +24,13 @@ measure = {
     "Agriet. transv": "(%)",
     "PR": "(mm)",
     "TDPA": "",
+    "Baches": "",
+    "Desprendimientos": "(%)",
+    "Macrotextura": "(mm)",
+    "Tipo de pavimento": "",
 }
 
-static = ["TDPA"]
+static = ["TDPA", "Tipo de pavimento"]
 
 
 def generate_sheet(wb: Workbook, title: str, generated_data):

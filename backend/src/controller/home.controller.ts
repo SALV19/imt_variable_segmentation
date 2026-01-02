@@ -19,8 +19,6 @@ export async function upload_file(req: Request, res: Response) {
   req.body.parameters = JSON.parse(req.body.parameters);
   req.body.static_values = JSON.parse(req.body.static_values);
 
-  console.log(req.body.parameters)
-
   // Get form information / values to do the analysis
   const dynamicDataMap: Record<string, any> = parseFileName(
     req.body.parameters

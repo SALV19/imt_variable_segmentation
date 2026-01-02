@@ -22,6 +22,10 @@ titles = {
     "grtrans": "Agriet. transv",  # (%)
     "pr": "PR",  # (mm)
     "tdpa": "TDPA",
+    "baches": "Baches",
+    "desprendimientos": "Desprendimientos",  # (%)
+    "macrotextura": "Macrotextura",  # (mm)
+    "tipo de pavimento": "Tipo de pavimento",
 }
 
 
@@ -143,4 +147,4 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
         )
     )
 
-    ws.add_chart(chart, "M2")
+    ws.add_chart(chart, "R2")

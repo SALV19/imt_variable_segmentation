@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 dynamic_segmentation = input()
 generated_data = json.loads(dynamic_segmentation)
 
-satic_segmentation = input() 
+satic_segmentation = input()
 static_data = json.loads(satic_segmentation)
 
 hsegment = input()
@@ -33,6 +33,10 @@ titles = {
     "grtrans": "Agriet. transv",  # (%)
     "pr": "PR",  # (mm)
     "tdpa": "TDPA",
+    "baches": "Baches",
+    "desprendimientos": "Desprendimientos",  # (%)
+    "macrotextura": "Macrotextura",  # (mm)
+    "tipo de pavimento": "Tipo de pavimento",
 }
 
 for gd in generated_data:
