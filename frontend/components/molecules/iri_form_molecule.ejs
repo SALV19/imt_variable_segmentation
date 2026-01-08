@@ -48,7 +48,12 @@
     join_segments: 0.05,
     moving_average: 1000,
     distance: 100,
-  }
+  },
+  macrotextura: {
+    join_segments: 0.05,
+    moving_average: 1000,
+    distance: 100,
+  },
 } %>
 
 <%- include("../atoms/two_column_input", {label: 'Diferencia para unir segmentos adyacentes', type: "float", id: 'join_segments', placeholder: predefined_values[id].join_segments}) %>

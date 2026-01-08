@@ -696,10 +696,6 @@ video {
   height: 1.75rem;
 }
 
-.h-\[24rem\] {
-  height: 24rem;
-}
-
 .h-\[42rem\] {
   height: 42rem;
 }
@@ -710,6 +706,18 @@ video {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-\[25rem\] {
+  height: 25rem;
+}
+
+.h-\[26rem\] {
+  height: 26rem;
+}
+
+.h-\[26\.5rem\] {
+  height: 26.5rem;
 }
 
 .min-h-\[33\.33\%\] {
