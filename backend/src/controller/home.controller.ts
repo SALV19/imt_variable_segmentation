@@ -7,6 +7,7 @@ import create_static_data from "../components/segmentation/create_static_data.ts
 import generate_data_map from "../components/segmentation/generate_data_map.ts";
 import parseFileName from "../components/parseFilename.ts";
 import findPages from "../components/findPages.ts";
+import { objectFilter } from "../utils/objectFilter.ts";
 
 // GET
 export function get_home(req: Request, res: Response) {
@@ -39,27 +40,23 @@ export async function upload_file(req: Request, res: Response) {
   const dynamicPages = findPages(dynamicDataMap, file_data);
   const staticPages = findPages(staticDataMap, file_data);
 
-  if (dynamicPages.length > 0 && staticPages.length > 0) {
-    console.log(dynamicPages, staticPages);
-    let missingFiles: (string | undefined)[] = [];
+  let missingFiles: (string | undefined)[] = [];
+  if (dynamicPages.length > 0 || staticPages.length > 0) {
     if (dynamicPages.length > 0) missingFiles = dynamicPages;
     if (staticPages.length > 0) {
       missingFiles = missingFiles.concat(staticPages);
     }
 
-    res.status(400).json({
-      error: `Uno de los parámetros seleccionados no se encuentra como una
-            pestaña en el archivo de excel, recomendamos que verifique que
-            esté bien escrito, o que desceleccione los parámetros que no se
-            van a utilizar.`,
-      parameters: missingFiles,
-    });
-    return;
   }
+
+  const missingFilesSet = new Set(missingFiles);
+  
+  const existingDynamicData = objectFilter(dynamicDataMap, (curr) => missingFilesSet.has(curr))
+  const existingStaticData = objectFilter(staticDataMap, (curr) => missingFilesSet.has(curr))
 
   // Processing layer
   const generated_data = await Promise.all(
-    Object.keys(dynamicDataMap).map(async (key) => {
+    Object.keys(existingDynamicData).map(async (key) => {
       return generate_data_map(
         key,
         res,
@@ -71,12 +68,12 @@ export async function upload_file(req: Request, res: Response) {
   ).then((data) => data.filter((x) => !!x));
 
   const static_data = await Promise.all(
-    Object.keys(staticDataMap).map(async (key) =>
+    Object.keys(existingStaticData).map(async (key) =>
       generate_data_map(
         key,
         res,
         file_data[key],
-        staticDataMap[key],
+        existingStaticData[key],
         create_static_data
       )
     )
