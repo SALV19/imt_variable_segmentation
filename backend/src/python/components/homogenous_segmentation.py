@@ -26,6 +26,7 @@ titles = {
     "desprendimientos": "Desprendimientos",  # (%)
     "macrotextura": "Macrotextura",  # (mm)
     "tipo de pavimento": "Tipo de pavimento",
+    "areaagriet": "Área de agrietamiento",
 }
 
 

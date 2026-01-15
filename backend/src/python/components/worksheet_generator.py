@@ -28,6 +28,7 @@ measure = {
     "Desprendimientos": "(%)",
     "Macrotextura": "(mm)",
     "Tipo de pavimento": "",
+    "Área de agrietamiento": "%",
 }
 
 static = ["TDPA", "Tipo de pavimento"]

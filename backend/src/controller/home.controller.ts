@@ -46,9 +46,7 @@ export async function upload_file(req: Request, res: Response) {
     if (staticPages.length > 0) {
       missingFiles = missingFiles.concat(staticPages);
     }
-
   }
-
   const missingFilesSet = new Set(missingFiles);
   
   const existingDynamicData = objectFilter(dynamicDataMap, (curr) => missingFilesSet.has(curr))

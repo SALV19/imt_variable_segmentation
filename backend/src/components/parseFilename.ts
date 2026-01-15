@@ -9,7 +9,7 @@ export default function parseFileName(parameters: Object[]) {
     desprendimientos: "desprendimientos",
     macrotextura: "macrotextura",
     static_tipo_pavimento: "tipo de pavimento",
-    area_agrietamiento: "area agrietamiento"
+    area_agrietamiento: "areaagriet"
   };
 
   return Object.keys(parameters).reduce(
