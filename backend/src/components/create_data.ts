@@ -18,7 +18,7 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
     return { generated_data: null, error: file_data.error };
   }
 
-  const mov_avg = Math.round(data.moving_average / data.distance);
+  const mov_avg = Math.round(data.moving_average / file_data.distance);
 
   // Filter / Smooth data
   let filter_measurements: number[] = await filter(file_data, mov_avg);
