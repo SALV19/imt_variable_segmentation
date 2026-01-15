@@ -195,6 +195,10 @@ function create_data(json_response, id_selector) {
     <tbody>
       <tr><td><h1 class="font-bold mt-2">${title}</h1></td></tr>
       <tr>
+        <td class="w-32">Distancia entre mediciones</td>
+        <td id="distance_${id_selector}"></td>
+      </tr>
+      <tr>
         <td class="w-32">Media</td>
         <td id="media_${id_selector}"></td>
       </tr>
@@ -216,6 +220,8 @@ function create_data(json_response, id_selector) {
       </tr>
       </tbody>`;
   $("#table").append(table);
+  const distance = document.querySelector(`#distance_${id_selector}`);
+  distance.innerHTML = measurements.distance + " m";
   const media = document.querySelector(`#media_${id_selector}`);
   media.innerHTML = measurements.average.toFixed(2);
   const max = document.querySelector(`#max_${id_selector}`);

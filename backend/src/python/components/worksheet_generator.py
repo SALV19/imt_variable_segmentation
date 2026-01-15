@@ -147,14 +147,18 @@ def generate_sheet(wb: Workbook, title: str, generated_data):
     c1.style = 2
     c1.y_axis.title = title + " " + measure[title]
     c1.x_axis.tickLblPos = "nextTo"
-    c1.x_axis.scaling.min = measurements["measurements"][0]
-    c1.x_axis.scaling.max = measurements["measurements"][-1]
+    c1.x_axis.scaling.min = float(measurements["measurements"][0])
+    c1.x_axis.scaling.max = float(measurements["measurements"][-1])
     c1.x_axis.scaling.orientation = "minMax"
     c1.x_axis.number_format = '0"+"000'
     c1.roundedCorners = False
 
     c1.x_axis.majorUnit = round(
-        (measurements["measurements"][-1] - measurements["measurements"][0]) / 10
+        (
+            float(measurements["measurements"][-1])
+            - float(measurements["measurements"][0])
+        )
+        / 10
     )
 
     if singularities_length:
