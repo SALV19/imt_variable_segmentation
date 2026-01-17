@@ -19,12 +19,12 @@ export function slopeZ(
   const slope_zk: number[] = [];
 
   const length = file_data.measurements.length;
+  const copy_file_data = file_data.values.slice(0);
 
   const percentile_99_idx = aux_percentile(99, length);
-  const copy_file_data = file_data.values.slice(0);
   const percentile_99 = copy_file_data.sort((a, b) => a - b)[percentile_99_idx];
-
   let percentile_values: number[] = [];
+
   let acum = 0;
   let count = 0;
 
@@ -37,7 +37,7 @@ export function slopeZ(
   };
 
   curr_slope.start = file_data.measurements[0];
-  acum += file_data.values[0];
+  acum = file_data.values[0];
 
   for (let i = 1; i < length; i++) {
     const zk_val: number = aux_segmentation(
@@ -46,11 +46,7 @@ export function slopeZ(
       i
     );
 
-    if (percentile)
-      percentile_values.push(
-        aux_99_percentile(percentile_99, file_data.values[i])
-      );
-    else acum += aux_99_percentile(percentile_99, file_data.values[i]);
+    const value = aux_99_percentile(percentile_99, file_data.values[i]);
 
     if (
       // @ts-ignore
@@ -63,10 +59,11 @@ export function slopeZ(
           percentile,
           percentile_values.length
         );
-        const percentile_value = percentile_values.sort()[percentile_idx];
+        const percentile_value = percentile_values.sort((a, b) => a - b)[percentile_idx];
         curr_slope.value = percentile_value;
       } else {
         const avg = formatNumber(acum / (i - count));
+
         curr_slope.value = avg;
       }
 
@@ -82,6 +79,9 @@ export function slopeZ(
 
       last_slope = false;
     }
+
+    acum += value;
+    percentile_values.push(value)
 
     if (slope_zk.at(-1) != 0 && !last_slope) {
       last_slope = true;

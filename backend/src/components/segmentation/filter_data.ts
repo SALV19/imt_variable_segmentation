@@ -1,7 +1,7 @@
 // Filter data with a moving average
 
 import { formatNumber } from "../../utils/format_number.ts";
-import { Data_Map } from "../types.ts";
+import { Data_Map } from "../../types/types.ts";
 
 // O(n + m)
 export function filter(file_data: Data_Map, mov_avg: number): number[] {
@@ -19,7 +19,8 @@ export function filter(file_data: Data_Map, mov_avg: number): number[] {
   const length = file_data.values.length;
   for (let i = mov_avg; i < mov_avg * 2; i++) {
     acum += file_data.values[i];
-    xf.push(formatNumber(acum / i));
+    const filtered_value = formatNumber(acum / i);
+    xf.push(filtered_value);
   }
 
   // Get values within window until the end of the array
