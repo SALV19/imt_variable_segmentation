@@ -13,6 +13,7 @@ import { create_chart } from "../controller/chart.controller.ts";
 const routes = Router();
 
 routes.get("/", home.get_home);
+// routes.get("/deflexiones", deflexiones)
 routes.get("/download_example", download_example);
 routes.post("/upload_file", upload.single("file"), home.upload_file);
 routes.get("/create_chart", create_chart);

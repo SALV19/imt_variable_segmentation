@@ -8,7 +8,7 @@ import { ChildProcess } from "node:child_process";
 
 export function create_chart(req: Request, res: Response) {
   const script_path = path.join(__dirname, "../python/generate_excel.py");
-  const python_path = path.join(__dirname, "../python/venv/Scripts/python");
+  const python_path = path.join(__dirname, process.env.PYTHON_PATH!);
 
   const python_process = spawn(python_path, [script_path]);
 
