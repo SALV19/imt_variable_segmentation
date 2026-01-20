@@ -22,6 +22,7 @@ function create_data(json_response, id_selector) {
     desprendimientos: "Desprendimientos",
     macrotextura: "Macrotextura",
     static_tipo_pavimento: "Tipo de Pavimento",
+    areaagriet: "Área de agrietamiento"
   }
   
   const title = titles[id_selector]
