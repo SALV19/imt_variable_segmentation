@@ -20,19 +20,17 @@
   <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js"></script>
 </head>
 
-<a class="bg-gob font-gob flex align-middle text-white py-2 pl-2 z-10" href="https://www.gob.mx/imt">
-  <img src="/img/logo_gobierno.png" class="size-12" />
-  <div class="pl-2 flex flex-col items-center align-middle">
-    <h1>Gobierno de</h1>
-    <bold class="text-xl -mt-2 font-gob-bold font-bold">México</bold>
-  </div>
-</a>
+<nav class="bg-gob font-gob flex align-middle gap-5 text-white py-2 pl-2 z-10 font-semibold">
+  <a href="https://www.gob.mx/imt" class="flex">
+    <img src="/img/logo_gobierno.png" class="size-12" />
+    <div class="pl-2 flex flex-col items-center align-middle">
+      <h1>Gobierno de</h1>
+      <bold class="text-xl -mt-2 font-gob-bold font-bold">México</bold>
+    </div>
+  </a>
 
-<nav class="border-imt-dark border-b-4 flex justify-center">
-  <img src="/img/logo_gobierno2024.webp" class="absolute left-0 -z-10 h-40 -ml-10 -mt-6" />
-  <h1 class="font-gob text-golden text-5xl font-bold my-4 flex items-center">
-    Herramienta de segmentación de carreteras <img src="/img/imt.png" class="size-24 ml-6" />
-  </h1>
+  <%- include("../atoms/link.ejs", {route: "/", title: "Herramienta de segmentación"}) %>
+  <%- include("../atoms/link.ejs", {route: "/retrocalculo_pavimento", title: "Retrocálculo de pavimento"}) %>
 </nav>
 
 </html>
