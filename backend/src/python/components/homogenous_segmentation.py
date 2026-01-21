@@ -77,6 +77,30 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
 
     chart = ScatterChart()
 
+    for idx, segment in enumerate(h_segmentation):
+        column = 16
+        position_cell = ws.cell(row=idx + 3, column=column, value=segment["start"])
+        position_cell.font = Font(color="FFFFFF")
+
+        idx_cell = ws.cell(row=idx + 3, column=column + 1, value=1)
+        idx_cell.font = Font(color="FFFFFF")
+
+    length = len(h_segmentation) + 3
+
+    x_series_references = Reference(ws, min_col=column, min_row=3, max_row=length)
+    idx_series_reference = Reference(ws, min_col=column + 1, min_row=3, max_row=length)
+
+    serie = Series(
+        values=idx_series_reference,
+        xvalues=x_series_references,
+        title="Total",
+    )
+    serie.marker = Marker("circle")
+    serie.marker.size = 8
+
+    chart.series.append(serie)
+
+    # Generate chart data segments
     for idx, (parameter, positions) in enumerate(parameters.items()):
         column = 18 + idx * 2
 
@@ -84,7 +108,7 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
             position_cell = ws.cell(row=i + 3, column=column, value=position)
             position_cell.font = Font(color="FFFFFF")
 
-            idx_cell = ws.cell(row=i + 3, column=column + 1, value=idx + 1)
+            idx_cell = ws.cell(row=i + 3, column=column + 1, value=idx + 2)
             idx_cell.font = Font(color="FFFFFF")
 
         length = len(parameters[parameter]) + 3
