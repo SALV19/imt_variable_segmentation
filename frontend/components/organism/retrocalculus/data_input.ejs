@@ -1,0 +1,29 @@
+<style>
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    appearance: textfield;
+  }
+  
+  table, th, td {
+    border: 2px solid black;
+  }
+  input {
+    width: 100%;
+  }
+  input:disabled {
+    background-color: #DDD;
+  }
+</style>
+
+<form action="" class="flex flex-col">
+  <%- include("../../molecules/retrocalculus/general_input.ejs") %>
+
+  <%- include("./input_layers.ejs") %>
+  
+  <br class="mt-10">
+  <%- include("./input_sensors.ejs") %>
+</form>

@@ -75,9 +75,9 @@
 >
   <div class="flex flex-col items-center align-bottom -my-4 py-4">
     <% for (let i = 0; i < parameters.length; i++) { %> 
-      <%- include("../molecules/parameter_form_content.ejs", parameters[i]) %> 
+      <%- include("../molecules/segmentation/parameter_form_content.ejs", parameters[i]) %> 
     <% } %>
-    <%-include("../molecules/change_form") %>
+    <%-include("../molecules/segmentation/change_form") %>
 
     <br class="mb-5" />
 

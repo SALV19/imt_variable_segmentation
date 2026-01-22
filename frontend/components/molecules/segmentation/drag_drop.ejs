@@ -27,7 +27,7 @@
       class="border-black border-2 w-72 h-[26.5rem]"
     >
       <% for (let i = 0; i < components.length; i++) {%> <%-
-      include("../atoms/draggable_item.ejs", {id: Object.keys(components[i])[0],
+      include("../../atoms/draggable_item.ejs", {id: Object.keys(components[i])[0],
       label_name: Object.values(components[i])[0]}) %> <% } %>
     </div>
 
