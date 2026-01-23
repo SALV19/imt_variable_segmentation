@@ -35,7 +35,6 @@ function getSensorInputs() {
 // Smart paste all values
 $("#load").on("paste", (ev) => {
   ev.preventDefault()
-  console.log(ev)
 
   const inputs = getGeneralInputs();
   const paste = ev.originalEvent.clipboardData.getData('text');
@@ -64,8 +63,6 @@ $("#sensors :input").on("paste", (ev) => {
   const paste = ev.originalEvent.clipboardData.getData("text");
   const rows = paste.split("\n");
 
-  console.log(rows, inputs)
-
   rows.forEach((r, idx) => {
     if (!r) return
     pasteContent(r.split("\t"), Array.from(inputs).splice(idx * inputs.length / 3, inputs.length / 3 + idx * inputs.length))
@@ -77,7 +74,6 @@ function pasteContent(content, inputs) {
     if (idx >= inputs.length) return;
 
     const current = inputs[idx]
-    console.log(current)
     if (c) {
       current.value = c 
     }
