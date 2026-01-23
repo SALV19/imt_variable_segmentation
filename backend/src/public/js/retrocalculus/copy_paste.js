@@ -1,7 +1,11 @@
 // Erase previous content
 document.addEventListener("DOMContentLoaded", () => {
-  const inputs = getGeneralInputs()
-  inputs.each((idx, i) => {
+  const Ginputs = getGeneralInputs()
+  const Linputs = getLayerInputs()
+  Ginputs.each((idx, i) => {
+    i.value = null
+  })
+  Linputs.each((idx, i) => {
     i.value = null
   })
 })
@@ -9,6 +13,12 @@ document.addEventListener("DOMContentLoaded", () => {
 // Get general content input values
 function getGeneralInputs() {
   const inputs = $("#general_inputs :input");
+  return inputs;
+}
+
+// Get layers inputs
+function getLayerInputs() {
+  const inputs = $("#layers :input");
   return inputs;
 }
 
@@ -21,8 +31,20 @@ $("#load").on("paste", (ev) => {
   const paste = ev.originalEvent.clipboardData.getData('text');
   const content = paste.split("\n")
 
-  document.activeElement.value = null;
   pasteContent(content, inputs)
+})
+
+$("#layers :input, sensors :input").on("paste", (ev) => {
+  ev.preventDefault();
+
+  const inputs = getLayerInputs();
+  const paste = ev.originalEvent.clipboardData.getData("text");
+  const rows = paste.split("\n");
+
+  rows.forEach((r, idx) => {
+    if (!r) return
+    pasteContent(r.split("\t"), Array.from(inputs).splice(idx * inputs.length / 3, inputs.length / 3 + idx * inputs.length))
+  })
 })
 
 function pasteContent(content, inputs) {
@@ -30,6 +52,7 @@ function pasteContent(content, inputs) {
     if (idx >= inputs.length) return;
 
     const current = inputs[idx]
+    console.log(current)
     if (c) {
       current.value = c 
     }
