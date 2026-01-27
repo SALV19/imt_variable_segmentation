@@ -1,18 +1,18 @@
-// Erase previous content
-document.addEventListener("DOMContentLoaded", () => {
-  const Ginputs = getGeneralInputs()
-  const Linputs = getLayerInputs()
-  const Sinputs = getSensorInputs()
+// // Erase previous content
+document.addEventListener("DOMContentLoaded", function () {
+  const Ginputs = getGeneralInputs();
+  const Linputs = getLayerInputs();
+  const Sinputs = getSensorInputs();
   Ginputs.each((idx, i) => {
-    i.value = null
-  })
+    i.value = null;
+  });
   Linputs.each((idx, i) => {
-    i.value = null
-  })
+    i.value = null;
+  });
   Sinputs.each((idx, i) => {
-    i.value = null
-  })
-})
+    i.value = null;
+  });
+});
 
 // Get general content input values
 function getGeneralInputs() {
@@ -34,14 +34,14 @@ function getSensorInputs() {
 
 // Smart paste all values
 $("#load").on("paste", (ev) => {
-  ev.preventDefault()
+  ev.preventDefault();
 
   const inputs = getGeneralInputs();
-  const paste = ev.originalEvent.clipboardData.getData('text');
-  const content = paste.split("\n")
+  const paste = ev.originalEvent.clipboardData.getData("text");
+  const content = paste.split("\n");
 
-  pasteContent(content, inputs)
-})
+  pasteContent(content, inputs);
+});
 
 $("#layers :input").on("paste", (ev) => {
   ev.preventDefault();
@@ -51,10 +51,16 @@ $("#layers :input").on("paste", (ev) => {
   const rows = paste.split("\n");
 
   rows.forEach((r, idx) => {
-    if (!r) return
-    pasteContent(r.split("\t"), Array.from(inputs).splice(idx * inputs.length / 3, inputs.length / 3 + idx * inputs.length))
-  })
-})
+    if (!r) return;
+    pasteContent(
+      r.split("\t"),
+      Array.from(inputs).splice(
+        (idx * inputs.length) / 3,
+        inputs.length / 3 + idx * inputs.length,
+      ),
+    );
+  });
+});
 
 $("#sensors :input").on("paste", (ev) => {
   ev.preventDefault();
@@ -64,18 +70,24 @@ $("#sensors :input").on("paste", (ev) => {
   const rows = paste.split("\n");
 
   rows.forEach((r, idx) => {
-    if (!r) return
-    pasteContent(r.split("\t"), Array.from(inputs).splice(idx * inputs.length / 3, inputs.length / 3 + idx * inputs.length))
-  })
-})
+    if (!r) return;
+    pasteContent(
+      r.split("\t"),
+      Array.from(inputs).splice(
+        (idx * inputs.length) / 3,
+        inputs.length / 3 + idx * inputs.length,
+      ),
+    );
+  });
+});
 
 function pasteContent(content, inputs) {
   content.forEach((c, idx) => {
     if (idx >= inputs.length) return;
 
-    const current = inputs[idx]
+    const current = inputs[idx];
     if (c) {
-      current.value = c 
+      current.value = c;
     }
   });
 }
