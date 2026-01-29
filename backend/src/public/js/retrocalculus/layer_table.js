@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 $("#general_inputs :input, #layers :input").on("paste", (ev) => {
-  update_table();
+  update_layers();
 });
 
 $("#general_inputs :input, #layers :input").on("input", (ev) => {
-  update_table();
+  update_layers();
 });
 
-function update_table() {
+function update_layers() {
   $("#l2_he").val(l2_he().toFixed(2));
   $("#l2_fhe").val(l2_fhe().toFixed(2));
   $("#l3_he").val(l3_he().toFixed(2));
@@ -71,8 +71,6 @@ function l3_he() {
   const power = 1 / (3 - 2 * n_3);
 
   const result = Math.pow(composedPart / fifthPart, power);
-
-  console.log(result);
 
   return parseFloat(result);
 }

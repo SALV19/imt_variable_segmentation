@@ -7,29 +7,41 @@
   input[type="number"] {
     appearance: textfield;
   }
-  
-  table, th, td {
+
+  table,
+  th,
+  td {
     border: 2px solid black;
   }
   input {
     width: 100%;
   }
   input:disabled {
-    background-color: #DDD;
+    background-color: #ddd;
   }
 </style>
 
 <form action="" class="flex flex-col w-11/12 mx-auto mt-2">
   <%- include("./general_input.ejs") %>
 
-  <br class="mt-10">
+  <br class="mt-10" />
   <%- include("./input_layers.ejs") %>
-  
-  <br class="mt-10">
+
+  <br class="mt-10" />
   <%- include("./input_sensors.ejs") %>
-  
-  <button onclick="clear()" type="button">Limpiar</button>
+
+  <br class="mt-5" />
+  <div class="flex justify-center my-5">
+    <button
+      id="clean"
+      type="button"
+      class="hover:bg-imt-dark text-white font-xl font-semibold bg-imt-nat w-1/4 rounded-sm py-2"
+    >
+      Limpiar
+    </button>
+  </div>
 </form>
 
 <script src="/js/retrocalculus/copy_paste.js"></script>
 <script src="/js/retrocalculus/layer_table.js"></script>
+<script src="/js/retrocalculus/sensor_table.js"></script>

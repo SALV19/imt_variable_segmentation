@@ -1,18 +1,16 @@
 // // Erase previous content
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", clear());
+
+$("#clean").on("click", (ev) => clear());
+
+function clear() {
   const Ginputs = getGeneralInputs();
   const Linputs = getLayerInputs();
   const Sinputs = getSensorInputs();
-  Ginputs.each((idx, i) => {
-    i.value = null;
-  });
-  Linputs.each((idx, i) => {
-    i.value = null;
-  });
-  Sinputs.each((idx, i) => {
-    i.value = null;
-  });
-});
+  Ginputs.each((idx, i) => (i.value = null));
+  Linputs.each((idx, i) => (i.value = null));
+  Sinputs.each((idx, i) => (i.value = null));
+}
 
 // Get general content input values
 function getGeneralInputs() {
