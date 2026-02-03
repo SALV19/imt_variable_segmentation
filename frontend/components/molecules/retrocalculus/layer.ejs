@@ -1,24 +1,24 @@
 <tr>
   <td><%= layer %></td>
   <td>
-    <input id="l<%= layer %>_thickness" type="number">
+    <input id="l<%= layer %>_thickness" type="float">
   </td>
   <td>
-    <input id="l<%= layer %>_module" type="number">
+    <input id="l<%= layer %>_module" type="float">
   </td>
   <td>
-    <input id="l<%= layer %>_poisson" type="number">
+    <input id="l<%= layer %>_poisson" type="float">
   </td>
   <td>
-    <input id="l<%= layer %>_n" type="number" <%= disabled %>>
+    <input id="l<%= layer %>_n" type="float" <%= disabled %>>
   </td>
   <td>
-    <input id="l<%= layer %>_f" type="number" <%= disabled ? "" : "disabled" %>>
+    <input id="l<%= layer %>_f" type="float" <%= disabled ? "" : "disabled" %>>
   </td>
   <td>
-    <input id="l<%= layer %>_he" type="number" disabled>
+    <input id="l<%= layer %>_he" type="float" disabled>
   </td>
   <td>
-    <input id="l<%= layer %>_fhe" type="number" disabled>
+    <input id="l<%= layer %>_fhe" type="float" disabled>
   </td>
 </tr>

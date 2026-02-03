@@ -1,7 +1,7 @@
 // // Erase previous content
-document.addEventListener("DOMContentLoaded", clear());
+// document.addEventListener("DOMContentLoaded", clear());
 
-$("#clean").on("click", (ev) => clear());
+// $("#clean").on("click", (ev) => clear());
 
 function clear() {
   const Ginputs = getGeneralInputs();
