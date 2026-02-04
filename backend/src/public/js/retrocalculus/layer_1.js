@@ -3,20 +3,24 @@ $("#test").on("click", () => prueba());
 function prueba() {
   const d1 = new Desplazamiento_1();
   const d2 = new Desplazamiento_2();
+  const d3 = new Desplazamiento_3();
   d1.calculate_segments();
   d2.calculate_segments();
-  console.log(d1.sensors, d2.sensors);
+  d3.calculate_segments();
+  console.log(d1.sensors, d2.sensors, d3.sensors);
 }
 
 class Desplazamiento_1 {
   _desplazamiento_0 = 0;
   _desplazamiento_01 = parseFloat($("#l1_thickness").val());
 
+  _load = parseFloat($("#load").val());
+  _radius = parseFloat($("#radius").val());
+
   _pressure = parseFloat($("#pressure").val());
   _poisson = parseFloat($("#l1_poisson").val());
   _module = parseFloat($("#l1_module").val());
 
-  #load = parseFloat($("#load").val());
   #thickness = parseFloat($("#l1_thickness").val());
 
   sensors = new Array(9);
@@ -31,11 +35,11 @@ class Desplazamiento_1 {
   }
 
   _segment_formula(d) {
-    const radius = parseFloat($("#radius").val());
-    const seg_1 = (1 + this._poisson) * this._pressure * radius;
-    const seg_2 = 1 / Math.sqrt(1 + Math.pow(d / radius, 2));
+    const seg_1 = (1 + this._poisson) * this._pressure * this._radius;
+    const seg_2 = 1 / Math.sqrt(1 + Math.pow(d / this._radius, 2));
     const seg_3 = 1 - 2 * this._poisson;
-    const seg_4 = Math.sqrt(1 + Math.pow(d / radius, 2)) - d / radius;
+    const seg_4 =
+      Math.sqrt(1 + Math.pow(d / this._radius, 2)) - d / this._radius;
 
     const result = (seg_1 / this._module) * (seg_2 + seg_3 * seg_4);
 
@@ -51,7 +55,7 @@ class Desplazamiento_1 {
       const cos = this.#thickness / r;
 
       const des_z_1 =
-        (((1 + this._poisson) * this.#load) /
+        (((1 + this._poisson) * this._load) /
           2 /
           Math.PI /
           geofono /
@@ -59,7 +63,7 @@ class Desplazamiento_1 {
         (2 * (1 - this._poisson)) *
         1000;
       const des_z_2 =
-        (((1 + this._poisson) * this.#load) / 2 / Math.PI / r / this._module) *
+        (((1 + this._poisson) * this._load) / 2 / Math.PI / r / this._module) *
         (2 * (1 - this._poisson) + Math.pow(cos, 2)) *
         1000;
 

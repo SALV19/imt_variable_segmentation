@@ -47,7 +47,8 @@ function l2_fhe() {
 
 function l3_he() {
   const load = parseFloat($("#load").val());
-  const pressure = parseFloat($("#pressure").val());
+  // const pressure = parseFloat($("#pressure").val());
+  const pressure = parseFloat($("#atm_pressure").val());
 
   const thickness_2 = parseFloat($("#l2_thickness").val());
 
