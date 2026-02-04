@@ -1,15 +1,3 @@
-$("#test").on("click", () => prueba());
-
-function prueba() {
-  const d1 = new Desplazamiento_1();
-  const d2 = new Desplazamiento_2();
-  const d3 = new Desplazamiento_3();
-  d1.calculate_segments();
-  d2.calculate_segments();
-  d3.calculate_segments();
-  console.log(d1.sensors, d2.sensors, d3.sensors);
-}
-
 class Desplazamiento_1 {
   _desplazamiento_0 = 0;
   _desplazamiento_01 = parseFloat($("#l1_thickness").val());

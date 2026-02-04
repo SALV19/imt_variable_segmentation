@@ -12,12 +12,17 @@
   th,
   td {
     border: 2px solid black;
+    padding: 0;
+    margin: 0;
   }
   input {
     width: 100%;
   }
+
   input:disabled {
     background-color: #ddd;
+    margin: 0;
+    padding: 0;
   }
 </style>
 
@@ -29,24 +34,19 @@
 
   <br class="mt-10" />
   <%- include("./input_sensors.ejs") %>
-
+  
   <br class="mt-5" />
-  <div class="flex justify-center my-5">
-    <button
-      id="clean"
-      type="button"
-      class="hover:bg-imt-dark text-white font-xl font-semibold bg-imt-nat w-1/4 rounded-sm py-2"
-    >
-      Limpiar
-    </button>
-  </div>
+  <%- include("../../atoms/generic_button.ejs", {text: "Limpiar", id: "clean"}) %>
+  <%- include("../../atoms/generic_button.ejs", {text: "Ejecutar", id: "test"}) %>
 
-  <button id="test" type="button">Test</button>
+  <%- include("./result.ejs") %>
+  <br class="mb-10">
 </form>
 
 <script src="/js/retrocalculus/copy_paste.js"></script>
 <script src="/js/retrocalculus/layer_table.js"></script>
 <script src="/js/retrocalculus/sensor_table.js"></script>
+<script src="/js/retrocalculus/layer_analysis.js"></script>
 <script src="/js/retrocalculus/layer_1.js"></script>
 <script src="/js/retrocalculus/layer_2.js"></script>
 <script src="/js/retrocalculus/layer_3.js"></script>
