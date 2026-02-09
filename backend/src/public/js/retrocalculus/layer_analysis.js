@@ -26,6 +26,9 @@ function analize_layers() {
           ((Math.PI * geofono * curr) / 1000);
   });
   updateResultTable(deflexion, superficial_module);
+
+  radial_chart();
+  superficial_chart();
 }
 
 function updateResultTable(deflexion, superficial_module) {

@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
@@ -41,6 +43,9 @@
 
   <%- include("./result.ejs") %>
   <br class="mb-10">
+  
+  <canvas id="radial-chart"></canvas>
+  <canvas id="superficial-chart"></canvas>
 </form>
 
 <script src="/js/retrocalculus/copy_paste.js"></script>
@@ -50,3 +55,5 @@
 <script src="/js/retrocalculus/layer_1.js"></script>
 <script src="/js/retrocalculus/layer_2.js"></script>
 <script src="/js/retrocalculus/layer_3.js"></script>
+<script src="/js/retrocalculus/radial_chart.js"></script>
+<script src="/js/retrocalculus/superficial_chart.js"></script>
