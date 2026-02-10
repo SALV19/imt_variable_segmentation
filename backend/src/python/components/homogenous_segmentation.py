@@ -85,6 +85,13 @@ def homogenous_segmentation(wb: Workbook, h_segmentation):
         idx_cell = ws.cell(row=idx + 3, column=column + 1, value=1)
         idx_cell.font = Font(color="FFFFFF")
 
+    position_cell = ws.cell(
+        row=len(h_segmentation) + 3, column=16, value=h_segmentation[-1]["end"]
+    )
+    idx_cell = ws.cell(row=len(h_segmentation) + 3, column=16 + 1, value=1)
+    position_cell.font = Font(color="FFFFFF")
+    idx_cell.font = Font(color="FFFFFF")
+
     length = len(h_segmentation) + 3
 
     x_series_references = Reference(ws, min_col=column, min_row=3, max_row=length)

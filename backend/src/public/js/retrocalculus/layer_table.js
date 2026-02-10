@@ -18,6 +18,7 @@ function update_layers() {
   $("#l2_fhe").val(l2_fhe().toFixed(2));
   $("#l3_he").val(l3_he().toFixed(2));
   $("#l3_fhe").val(l3_fhe().toFixed(2));
+  analyze_layers();
 }
 
 function l2_he() {

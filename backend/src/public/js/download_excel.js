@@ -12,8 +12,8 @@ $("#download_excel").on("submit", (e) => {
   fetch(`/create_chart${title}`)
     .then((res) => {
       if (res.status == 500) {
-        console.log(res)
-        return alert("Error al generar el archivo")
+        console.log(res);
+        return alert("Error al generar el archivo");
       }
       const filename =
         res.headers
@@ -31,5 +31,5 @@ $("#download_excel").on("submit", (e) => {
       a.download = filename;
       a.click();
       window.URL.revokeObjectURL(url);
-    })
+    });
 });

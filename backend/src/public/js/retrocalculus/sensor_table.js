@@ -13,6 +13,8 @@ function update_sensors() {
     const cell = $(`#sensor_superficial_d${i}`);
     cell.val(getMsVal(i).toFixed(2));
   }
+
+  analyze_layers();
 }
 
 function getMs1() {

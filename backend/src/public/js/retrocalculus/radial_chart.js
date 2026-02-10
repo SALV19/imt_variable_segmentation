@@ -1,5 +1,12 @@
 function radial_chart() {
-  const ctx = document.getElementById("radial-chart");
+  const canva_container = document.getElementById("radial-chart");
+  // const ctx = document.getElementById("radial-chart");
+  const canva = document.createElement("canvas");
+  canva.id = "radial-chart-element";
+  canva_container.innerHTML = "";
+  canva_container.appendChild(canva);
+  const ctx = document.getElementById("radial-chart-element");
+  console.log(ctx);
 
   const geofonos = $("input[id^='sensor_geofon_d'");
   const labels = Array.from(geofonos.map((_idx, v) => v.value));
@@ -13,6 +20,7 @@ function radial_chart() {
   options = {
     responsive: true,
     showAllLabels: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         title: {
@@ -27,6 +35,7 @@ function radial_chart() {
         },
       },
       y: {
+        reverse: true,
         title: {
           display: true,
           text: "Deflexión (μm)",

@@ -1,13 +1,9 @@
 .env
-todo.txt
 */package-lock.json
 */node_modules
 
 /backend/src/uploads/*
 /backend/src/public/css/outpput.css
 /backend/src/test/*.xlsx
-/backend/src/python/myvenv
-/backend/src/python/venv
-/backend/src/python/testing.py
 
 NotasRicardo.txt

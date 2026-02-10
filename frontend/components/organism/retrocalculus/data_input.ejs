@@ -28,24 +28,29 @@
   }
 </style>
 
-<form action="" class="flex flex-col w-11/12 mx-auto mt-2">
-  <%- include("./general_input.ejs") %>
-
-  <br class="mt-10" />
-  <%- include("./input_layers.ejs") %>
-
-  <br class="mt-10" />
-  <%- include("./input_sensors.ejs") %>
+<form action="" class="flex gap-5 w-11/12 mx-auto mt-2">
+  <div class="w-1/2">
+    <div class="flex">
+      <%- include("./general_input.ejs") %>
+      <div class="w-1/3">
+        <%- include("../../atoms/generic_button.ejs", {text: "Limpiar", id: "clean"}) %>
+        <%- include("../../atoms/generic_button.ejs", {text: "Ejecutar", id: "test"}) %>
+      </div>
+    </div>
+    <br class="mt-10" />
+    <%- include("./input_layers.ejs") %>
+    <br class="mt-10" />
+    <%- include("./input_sensors.ejs") %>
+    
+    <br class="mt-5" />
+    <%- include("./result.ejs") %>
+    <br class="mb-10">
+  </div>
   
-  <br class="mt-5" />
-  <%- include("../../atoms/generic_button.ejs", {text: "Limpiar", id: "clean"}) %>
-  <%- include("../../atoms/generic_button.ejs", {text: "Ejecutar", id: "test"}) %>
-
-  <%- include("./result.ejs") %>
-  <br class="mb-10">
-  
-  <canvas id="radial-chart"></canvas>
-  <canvas id="superficial-chart"></canvas>
+  <div class="w-1/2 flex flex-col h-screen">
+    <div id="radial-chart" class="h-1/2"></div>
+    <div id="superficial-chart" class="h-1/2"></div>
+  </div>
 </form>
 
 <script src="/js/retrocalculus/copy_paste.js"></script>

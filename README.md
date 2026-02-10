@@ -15,6 +15,7 @@ git clone {URL del repositorio}
 cd backend/src/python
 
 python -m venv venv
+.\venv\Scripts\activate
 pip install -r requirements.txt
 
 # Para correr el prooyecto

@@ -1,6 +1,6 @@
-$("#test").on("click", () => analize_layers());
+$("#test").on("click", () => analyze_layers());
 
-function analize_layers() {
+function analyze_layers() {
   const d1 = new Desplazamiento_1();
   const d2 = new Desplazamiento_2();
   const d3 = new Desplazamiento_3();
@@ -25,6 +25,7 @@ function analize_layers() {
       : (load * (1 - Math.pow(poisson, 2))) /
           ((Math.PI * geofono * curr) / 1000);
   });
+  console.log(deflexion, superficial_module);
   updateResultTable(deflexion, superficial_module);
 
   radial_chart();

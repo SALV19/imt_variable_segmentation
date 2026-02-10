@@ -1,5 +1,11 @@
 function superficial_chart() {
-  const ctx = document.getElementById("superficial-chart");
+  // const ctx = document.getElementById("superficial-chart");
+  const canva_container = document.getElementById("superficial-chart");
+  const canva = document.createElement("canvas");
+  canva.id = "superficial-chart-element";
+  canva_container.innerHTML = "";
+  canva_container.appendChild(canva);
+  const ctx = document.getElementById("superficial-chart-element");
 
   const geofonos = $("input[id^='sensor_geofon_d'");
   const labels = Array.from(geofonos.map((_idx, v) => v.value));
@@ -17,6 +23,7 @@ function superficial_chart() {
   options = {
     responsive: true,
     showAllLabels: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         title: {
@@ -31,6 +38,7 @@ function superficial_chart() {
         },
       },
       y: {
+        reverse: true,
         title: {
           display: true,
           text: "Distancia radial (mm)",

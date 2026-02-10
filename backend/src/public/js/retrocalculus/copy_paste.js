@@ -88,4 +88,5 @@ function pasteContent(content, inputs) {
       current.value = c;
     }
   });
+  // analyze_layers();
 }
