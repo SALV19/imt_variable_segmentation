@@ -13,7 +13,7 @@ export function slopeZ(
   file_data: Data_Map,
   segmentation: number[],
   percentile: number | null,
-  difference: number
+  difference: number,
 ): Slope[] {
   let slpZ: Slope[] = [];
   const slope_zk: number[] = [];
@@ -23,6 +23,11 @@ export function slopeZ(
 
   const percentile_99_idx = aux_percentile(99, length);
   const percentile_99 = copy_file_data.sort((a, b) => a - b)[percentile_99_idx];
+  if (!percentile_99) {
+    throw Error(
+      `Error al calcular percentiles ${percentile_99}, ${percentile_99_idx}`,
+    );
+  }
   let percentile_values: number[] = [];
 
   let acum = 0;
@@ -43,7 +48,7 @@ export function slopeZ(
     const zk_val: number = aux_segmentation(
       segmentation,
       file_data.measurements,
-      i
+      i,
     );
 
     const value = aux_99_percentile(percentile_99, file_data.values[i]);
@@ -57,9 +62,11 @@ export function slopeZ(
       if (percentile) {
         const percentile_idx = aux_percentile(
           percentile,
-          percentile_values.length
+          percentile_values.length,
         );
-        const percentile_value = percentile_values.sort((a, b) => a - b)[percentile_idx];
+        const percentile_value = percentile_values.sort((a, b) => a - b)[
+          percentile_idx
+        ];
         curr_slope.value = percentile_value;
       } else {
         const avg = formatNumber(acum / (i - count));
@@ -81,7 +88,8 @@ export function slopeZ(
     }
 
     acum += value;
-    percentile_values.push(value)
+
+    percentile_values.push(value);
 
     if (slope_zk.at(-1) != 0 && !last_slope) {
       last_slope = true;
@@ -95,12 +103,15 @@ export function slopeZ(
 
 function aux_segmentation(segmentation: number[], iri: number[], i: number) {
   return parseFloat(
-    ((segmentation[i] - segmentation[i - 1]) / (iri[i] - iri[i - 1])).toFixed(4)
+    ((segmentation[i] - segmentation[i - 1]) / (iri[i] - iri[i - 1])).toFixed(
+      4,
+    ),
   );
 }
 
 export function aux_percentile(p: number, length: number) {
-  const index = Math.round((p / 100) * length);
+  let index = Math.round((p / 100) * length);
+  if (index >= length) index--;
   return index;
 }
 

@@ -13,13 +13,15 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   const join_segments = data.join_segments;
   const percentile = data.percentile ?? null;
 
+  file_data.distance = data.distance;
+
   if (file_data.error) {
     // res.status(400).send(file_data.error);
     return { generated_data: null, error: file_data.error };
   }
 
-  const mov_avg = Math.round(data.moving_average / file_data.distance);
-
+  let mov_avg = Math.round(data.moving_average / file_data.distance);
+  if (mov_avg <= 0) mov_avg = 1;
   // Filter / Smooth data
   let filter_measurements: number[] = await filter(file_data, mov_avg);
 
@@ -30,7 +32,7 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
   const normal_measurements_iri: number[] = filter_outliers(
     file_data,
     abnormal_points,
-    filter_measurements
+    filter_measurements,
   );
 
   const non_abnormal_values: Data_Map = {
@@ -46,7 +48,7 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
     non_abnormal_values,
     segmentation,
     percentile,
-    file_data.max - file_data.min
+    file_data.max - file_data.min,
   );
 
   // Join close segments and count total amount of segments in dataset
@@ -70,7 +72,7 @@ export async function create_data(data: GeneralData, file_data: Data_Map) {
 function close_segments(
   slopes: Slope[],
   join_segments: number,
-  measurements: Data_Map
+  measurements: Data_Map,
 ) {
   for (let i = 0; i < slopes.length; i++) {
     if (
@@ -79,7 +81,7 @@ function close_segments(
     ) {
       slopes[i - 1].end = slopes[i].end;
       slopes[i - 1].value = Number(
-        ((slopes[i].value + slopes[i - 1].value) / 2).toFixed(4)
+        ((slopes[i].value + slopes[i - 1].value) / 2).toFixed(4),
       );
       slopes.splice(i, 1);
 

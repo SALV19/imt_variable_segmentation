@@ -5,7 +5,7 @@ function create_data(json_response, id_selector) {
   const slopes = json_response.slopes;
   const abnormalities = json_response.abnormalities;
 
-  slopes.at(-1).end = slopes.at(-1).end - measurements.distance
+  slopes.at(-1).end = slopes.at(-1).end - measurements.distance;
 
   const slopes_data = get_slopes_data(slopes);
 
@@ -22,10 +22,10 @@ function create_data(json_response, id_selector) {
     desprendimientos: "Desprendimientos",
     macrotextura: "Macrotextura",
     static_tipo_pavimento: "Tipo de Pavimento",
-    areaagriet: "Área de agrietamiento"
-  }
-  
-  const title = titles[id_selector]
+    areaagriet: "Área de agrietamiento",
+  };
+
+  const title = titles[id_selector];
 
   const chartArea = document.querySelector("#chartArea");
 
@@ -40,8 +40,8 @@ function create_data(json_response, id_selector) {
   const ctx = document.getElementById(id_selector + "_canvas");
   ctx.parentElement.classList.remove("hide");
 
-  let labels = measurements.measurements.slice(0, -1)
-  let values = measurements.values.slice(1)
+  let labels = measurements.measurements.slice(0, -1);
+  let values = measurements.values.slice(1);
 
   options = {
     responsive: true,
@@ -57,13 +57,19 @@ function create_data(json_response, id_selector) {
             const ammount = Math.floor(length / 500);
 
             if (idx == measurements.measurements.length - 2) {
-              return Math.floor((measurements.measurements[idx] 
-                + measurements.distance) / 1000) 
-                + "+" 
-                + ((measurements.measurements[idx] 
-                + measurements.distance) % 1000) / 100 + "00"
+              return (
+                Math.floor(
+                  (measurements.measurements[idx] + measurements.distance) /
+                    1000,
+                ) +
+                "+" +
+                ((measurements.measurements[idx] + measurements.distance) %
+                  1000) /
+                  100 +
+                "00"
+              );
             }
-            
+
             if (length > 500)
               return measurements.measurements[idx] % (500 * ammount) === 0
                 ? Math.floor(measurements.measurements[idx] / 1000) +

@@ -2,7 +2,8 @@
   "apps": [
     {
       "script": "src/index.ts",
-      "interpreter": "tsx",
+      "interpreter": "node",
+      "interpreter_args": "--import tsx",
       "watch": ["src"],
       "env": {
         "PORT": 3000,
@@ -11,3 +12,4 @@
     }
   ]
 }
+

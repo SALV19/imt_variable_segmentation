@@ -22,10 +22,10 @@ export async function upload_file(req: Request, res: Response) {
 
   // Get form information / values to do the analysis
   const dynamicDataMap: Record<string, any> = parseFileName(
-    req.body.parameters
+    req.body.parameters,
   );
   const staticDataMap: Record<string, any> = parseFileName(
-    req.body.static_values
+    req.body.static_values,
   );
 
   // Receive file information
@@ -48,9 +48,13 @@ export async function upload_file(req: Request, res: Response) {
     }
   }
   const missingFilesSet = new Set(missingFiles);
-  
-  const existingDynamicData = objectFilter(dynamicDataMap, (curr) => missingFilesSet.has(curr))
-  const existingStaticData = objectFilter(staticDataMap, (curr) => missingFilesSet.has(curr))
+
+  const existingDynamicData = objectFilter(dynamicDataMap, (curr) =>
+    missingFilesSet.has(curr),
+  );
+  const existingStaticData = objectFilter(staticDataMap, (curr) =>
+    missingFilesSet.has(curr),
+  );
 
   // Processing layer
   const generated_data = await Promise.all(
@@ -60,9 +64,9 @@ export async function upload_file(req: Request, res: Response) {
         res,
         file_data[key],
         dynamicDataMap[key],
-        create_data
+        create_data,
       );
-    })
+    }),
   ).then((data) => data.filter((x) => !!x));
 
   const static_data = await Promise.all(
@@ -72,15 +76,15 @@ export async function upload_file(req: Request, res: Response) {
         res,
         file_data[key],
         existingStaticData[key],
-        create_static_data
-      )
-    )
+        create_static_data,
+      ),
+    ),
   ).then((data) => data.filter((x) => !!x));
 
   const hSegmentation = homogenousSegmentation(
     generated_data,
     static_data,
-    req.body.h_segment_min
+    req.body.h_segment_min,
   );
 
   // @ts-ignore

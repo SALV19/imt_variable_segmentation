@@ -62,7 +62,7 @@ $("form[action='/upload_file']").on("submit", (e) => {
     });
 
   data.append("parameters", JSON.stringify(parameters_input_values));
-  data.append("static_values", JSON.stringify(static_input_values));                                                                                                                                              
+  data.append("static_values", JSON.stringify(static_input_values));
   data.append("h_segment_min", $("#s_homogenous_input_param")[0].value);
 
   if (
@@ -70,7 +70,7 @@ $("form[action='/upload_file']").on("submit", (e) => {
     Object.keys(static_input_values).length <= 0
   ) {
     send_error_message(
-      "Error: Selecciona al menos una opción en la sección de variables"
+      "Error: Selecciona al menos una opción en la sección de variables",
     );
     errors = 1;
   }
