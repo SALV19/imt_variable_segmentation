@@ -8,6 +8,7 @@ function create_data(json_response, id_selector) {
   slopes.at(-1).end = slopes.at(-1).end - measurements.distance;
 
   const slopes_data = get_slopes_data(slopes);
+  console.log(slopes_data)
 
   const titles = {
     iri: "IRI",
@@ -49,40 +50,20 @@ function create_data(json_response, id_selector) {
     showAllLabels: true,
     scales: {
       x: {
+        type: "linear",
         ticks: {
           autoSkip: false,
           stepSize: 1,
-          callback: (val, idx) => {
-            const length = measurements.measurements.length;
-            const ammount = Math.floor(length / 500);
-
-            if (idx == measurements.measurements.length - 2) {
+          callback: (val) => {
+            if (val % 500 === 0) {
               return (
-                Math.floor(
-                  (measurements.measurements[idx] + measurements.distance) /
-                    1000,
-                ) +
+                Math.floor(val / 1000) +
                 "+" +
-                ((measurements.measurements[idx] + measurements.distance) %
-                  1000) /
-                  100 +
+                Math.floor((val % 1000) / 100) +
                 "00"
               );
             }
-
-            if (length > 500)
-              return measurements.measurements[idx] % (500 * ammount) === 0
-                ? Math.floor(measurements.measurements[idx] / 1000) +
-                    "+" +
-                    (measurements.measurements[idx] % 1000) / 100 +
-                    "00"
-                : "";
-            return measurements.measurements[idx] % 500 === 0
-              ? Math.floor(measurements.measurements[idx] / 1000) +
-                  "+" +
-                  (measurements.measurements[idx] % 1000) / 100 +
-                  "00"
-              : "";
+            return "";
           },
         },
       },
@@ -242,6 +223,7 @@ function create_data(json_response, id_selector) {
 }
 
 function get_slopes_data(slopes) {
+  console.log(slopes)
   return slopes
     .map((val) => {
       return [
