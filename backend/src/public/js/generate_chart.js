@@ -41,8 +41,9 @@ function create_data(json_response, id_selector) {
   const ctx = document.getElementById(id_selector + "_canvas");
   ctx.parentElement.classList.remove("hide");
 
-  let labels = measurements.measurements.slice(0, -1);
-  let values = measurements.values.slice(1);
+  let labels = measurements.measurements.slice(0);
+  let values = measurements.values.slice(0);
+  console.log(values)
 
   options = {
     responsive: true,

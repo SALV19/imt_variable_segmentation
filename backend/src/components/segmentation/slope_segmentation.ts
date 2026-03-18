@@ -6,7 +6,9 @@ function segmentationBoolFunc(slope_val: number, join: number) {
   if (join < 1) {
     return slope_val == 0;
   }
-  return slope_val >= -0.005 && slope_val <= 0.005;
+  const result = slope_val >= -0.005 && slope_val <= 0.005;
+  console.log(result)
+  return result
 }
 
 export function slopeZ(
@@ -53,6 +55,7 @@ export function slopeZ(
 
     const value = aux_99_percentile(percentile_99, file_data.values[i]);
 
+    console.log(segmentationBoolFunc(slope_zk.at(-1) ?? 0, difference))
     if (
       // @ts-ignore
       (segmentationBoolFunc(slope_zk.at(-1), difference) || i == length - 1) &&
